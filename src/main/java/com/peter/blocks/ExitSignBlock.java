@@ -3,9 +3,6 @@ package com.peter.blocks;
 import com.peter.CityBlocks;
 
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -76,8 +73,7 @@ public class ExitSignBlock extends VariantPartialBlock {
 
     public static final VariantPartialBlock BLOCK = new ExitSignBlock(
             new VariantSettings().setVariants(12).nonOpaque().luminance((state) -> 1));
-    public static final BlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new BlockItem(BLOCK, new Item.Settings()));
+    public static final BlockItem ITEM = BLOCK.item;
 
     public ExitSignBlock(Settings settings) {
         super(settings, NAME, SHAPES);
