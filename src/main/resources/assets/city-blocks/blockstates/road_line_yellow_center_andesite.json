@@ -1,0 +1,69 @@
+{
+    "variants": {
+
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_center"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_center", "y": 90
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_center", "y": 180
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_center", "y": 270
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_double"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_double", "y": 90
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_double", "y": 180
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_double", "y": 270
+        },
+
+        "variant=2,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_double_single"
+        },
+        "variant=2,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_double_single", "y": 90
+        },
+        "variant=2,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_double_single", "y": 180
+        },
+        "variant=2,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_double_single", "y": 270
+        },
+
+        "variant=3,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_double_single_reflector"
+        },
+        "variant=3,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_double_single_reflector", "y": 90
+        },
+        "variant=3,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_double_single_reflector", "y": 180
+        },
+        "variant=3,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_double_single_reflector", "y": 270
+        },
+
+        "variant=4,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_center_reflector"
+        },
+        "variant=4,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_center_reflector", "y": 90
+        },
+        "variant=4,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_center_reflector", "y": 180
+        },
+        "variant=4,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_center_reflector", "y": 270
+        }
+    }
+}

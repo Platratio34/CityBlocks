@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=north": {
+            "model": "city-blocks:block/pedestrian_signal"
+        },
+        "facing=east": {
+            "model": "city-blocks:block/pedestrian_signal", "y": 90
+        },
+        "facing=south": {
+            "model": "city-blocks:block/pedestrian_signal", "y": 180
+        },
+        "facing=west": {
+            "model": "city-blocks:block/pedestrian_signal", "y": 270
+        }
+    }
+}

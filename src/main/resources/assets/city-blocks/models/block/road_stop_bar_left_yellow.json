@@ -1,0 +1,7 @@
+{
+    "parent": "minecraft:block/cube_column",
+    "textures": {
+        "end": "city-blocks:block/road_stop_bar_left_yellow",
+        "side": "minecraft:block/blackstone"
+    }
+}

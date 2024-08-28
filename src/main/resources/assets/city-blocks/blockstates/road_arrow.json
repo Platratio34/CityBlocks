@@ -1,0 +1,17 @@
+{
+    "variants": {
+
+        "facing=north": {
+            "model": "city-blocks:block/road_arrow"
+        },
+        "facing=east": {
+            "model": "city-blocks:block/road_arrow", "y": 90
+        },
+        "facing=south": {
+            "model": "city-blocks:block/road_arrow", "y": 180
+        },
+        "facing=west": {
+            "model": "city-blocks:block/road_arrow", "y": 270
+        }
+    }
+}

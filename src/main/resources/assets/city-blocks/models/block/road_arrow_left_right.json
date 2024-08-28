@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "city-blocks:block/road_arrow_left_right"
+    }
+}

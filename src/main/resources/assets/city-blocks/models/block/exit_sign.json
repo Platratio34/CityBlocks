@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "city-blocks:block/exit_sign",
+		"particle": "city-blocks:block/exit_sign_right"
+	},
+	"elements": [
+		{
+			"name": "center",
+			"from": [3, 1, 0],
+			"to": [13, 7, 2],
+			"faces": {
+				"north": {"uv": [2, 10, 12, 16], "texture": "#0", "cullface": "north"},
+				"east": {"uv": [12, 2, 14, 8], "texture": "#0"},
+				"south": {"uv": [2, 2, 12, 8], "texture": "#0"},
+				"west": {"uv": [0, 2, 2, 8], "texture": "#0"},
+				"up": {"uv": [2, 0, 12, 2], "texture": "#0"},
+				"down": {"uv": [2, 8, 12, 10], "texture": "#0"}
+			}
+		}
+	]
+}

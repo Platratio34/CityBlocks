@@ -1,0 +1,29 @@
+{
+    "variants": {
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/celling_light_0"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/celling_light_0", "y": 90, "uvlock": true
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/celling_light_0", "y": 180, "uvlock": true
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/celling_light_0", "y": 270, "uvlock": true
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/celling_light_1"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/celling_light_1", "y": 90, "uvlock": true
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/celling_light_1", "y": 180, "uvlock": true
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/celling_light_1", "y": 270, "uvlock": true
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "variants": {
+
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/road_line_white_center"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/road_line_white_center", "y": 90
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/road_line_white_center", "y": 180
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/road_line_white_center", "y": 270
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/road_line_white_center_reflector"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/road_line_white_center_reflector", "y": 90
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/road_line_white_center_reflector", "y": 180
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/road_line_white_center_reflector", "y": 270
+        }
+    }
+}

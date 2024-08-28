@@ -1,0 +1,31 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "block/iron_block",
+		"2": "city-blocks:block/street_sign_2",
+		"particle": "block/iron_block"
+	},
+	"elements": [
+		{
+			"from": [1, 1, 0],
+			"to": [15, 15, 1],
+			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 0]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#1"},
+				"east": {"uv": [0, 1, 1, 15], "texture": "#1"},
+				"south": {"uv": [0, 0, 14, 14], "texture": "#2"},
+				"west": {"uv": [15, 1, 16, 15], "texture": "#1"},
+				"up": {"uv": [15, 1, 1, 0], "texture": "#1"},
+				"down": {"uv": [15, 15, 1, 16], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "street_sign_2_b",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

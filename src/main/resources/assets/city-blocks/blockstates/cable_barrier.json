@@ -1,0 +1,56 @@
+{
+    "variants": {
+
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/cable_barrier_post_middle"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/cable_barrier_post_middle", "y": 90
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/cable_barrier_post_middle", "y": 180
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/cable_barrier_post_middle", "y": 270
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/cable_barrier_cable_middle"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/cable_barrier_cable_middle", "y": 90
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/cable_barrier_cable_middle", "y": 180
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/cable_barrier_cable_middle", "y": 270
+        },
+
+        "variant=2,facing=north": {
+            "model": "city-blocks:block/cable_barrier_post_end"
+        },
+        "variant=2,facing=east": {
+            "model": "city-blocks:block/cable_barrier_post_end", "y": 90
+        },
+        "variant=2,facing=south": {
+            "model": "city-blocks:block/cable_barrier_post_end", "y": 180
+        },
+        "variant=2,facing=west": {
+            "model": "city-blocks:block/cable_barrier_post_end", "y": 270
+        },
+
+        "variant=3,facing=north": {
+            "model": "city-blocks:block/cable_barrier_cable_end"
+        },
+        "variant=3,facing=east": {
+            "model": "city-blocks:block/cable_barrier_cable_end", "y": 90
+        },
+        "variant=3,facing=south": {
+            "model": "city-blocks:block/cable_barrier_cable_end", "y": 180
+        },
+        "variant=3,facing=west": {
+            "model": "city-blocks:block/cable_barrier_cable_end", "y": 270
+        }
+    }
+}

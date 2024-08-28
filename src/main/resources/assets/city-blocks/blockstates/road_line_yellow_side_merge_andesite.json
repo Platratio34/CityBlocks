@@ -1,0 +1,95 @@
+{
+    "variants": {
+
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1", "y": 90
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1", "y": 180
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1", "y": 270
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2", "y": 90
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2", "y": 180
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2", "y": 270
+        },
+
+        "variant=2,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1f"
+        },
+        "variant=2,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1f", "y": 90
+        },
+        "variant=2,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1f", "y": 180
+        },
+        "variant=2,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge1f", "y": 270
+        },
+
+        "variant=3,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2f"
+        },
+        "variant=3,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2f", "y": 90
+        },
+        "variant=3,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2f", "y": 180
+        },
+        "variant=3,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge2f", "y": 270
+        },
+
+        "variant=4,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_corner"
+        },
+        "variant=4,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_corner", "y": 90
+        },
+        "variant=4,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_corner", "y": 180
+        },
+        "variant=4,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_corner", "y": 270
+        },
+
+        "variant=5,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_cornerf"
+        },
+        "variant=5,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_cornerf", "y": 90
+        },
+        "variant=5,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_cornerf", "y": 180
+        },
+        "variant=5,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_cornerf", "y": 270
+        },
+
+        "variant=6,facing=north": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_double"
+        },
+        "variant=6,facing=east": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_double", "y": 90
+        },
+        "variant=6,facing=south": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_double", "y": 180
+        },
+        "variant=6,facing=west": {
+            "model": "city-blocks:block/road_line_yellow_side_merge_double", "y": 270
+        }
+    }
+}

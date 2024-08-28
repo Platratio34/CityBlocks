@@ -1,0 +1,159 @@
+{
+    "variants": {
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/exit_sign"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/exit_sign", "y": 90
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/exit_sign", "y": 180
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/exit_sign", "y": 270
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/exit_sign_left"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/exit_sign_left", "y": 90
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/exit_sign_left", "y": 180
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/exit_sign_left", "y": 270
+        },
+        
+        "variant=2,facing=north": {
+            "model": "city-blocks:block/exit_sign_right"
+        },
+        "variant=2,facing=east": {
+            "model": "city-blocks:block/exit_sign_right", "y": 90
+        },
+        "variant=2,facing=south": {
+            "model": "city-blocks:block/exit_sign_right", "y": 180
+        },
+        "variant=2,facing=west": {
+            "model": "city-blocks:block/exit_sign_right", "y": 270
+        },
+
+        "variant=3,facing=north": {
+            "model": "city-blocks:block/exit_sign_offset"
+        },
+        "variant=3,facing=east": {
+            "model": "city-blocks:block/exit_sign_offset", "y": 90
+        },
+        "variant=3,facing=south": {
+            "model": "city-blocks:block/exit_sign_offset", "y": 180
+        },
+        "variant=3,facing=west": {
+            "model": "city-blocks:block/exit_sign_offset", "y": 270
+        },
+
+        "variant=4,facing=north": {
+            "model": "city-blocks:block/exit_sign_offset_left"
+        },
+        "variant=4,facing=east": {
+            "model": "city-blocks:block/exit_sign_offset_left", "y": 90
+        },
+        "variant=4,facing=south": {
+            "model": "city-blocks:block/exit_sign_offset_left", "y": 180
+        },
+        "variant=4,facing=west": {
+            "model": "city-blocks:block/exit_sign_offset_left", "y": 270
+        },
+        
+        "variant=5,facing=north": {
+            "model": "city-blocks:block/exit_sign_offset_right"
+        },
+        "variant=5,facing=east": {
+            "model": "city-blocks:block/exit_sign_offset_right", "y": 90
+        },
+        "variant=5,facing=south": {
+            "model": "city-blocks:block/exit_sign_offset_right", "y": 180
+        },
+        "variant=5,facing=west": {
+            "model": "city-blocks:block/exit_sign_offset_right", "y": 270
+        },
+
+        "variant=6,facing=north": {
+            "model": "city-blocks:block/exit_sign_top"
+        },
+        "variant=6,facing=east": {
+            "model": "city-blocks:block/exit_sign_top", "y": 90
+        },
+        "variant=6,facing=south": {
+            "model": "city-blocks:block/exit_sign_top", "y": 180
+        },
+        "variant=6,facing=west": {
+            "model": "city-blocks:block/exit_sign_top", "y": 270
+        },
+
+        "variant=7,facing=north": {
+            "model": "city-blocks:block/exit_sign_top_left"
+        },
+        "variant=7,facing=east": {
+            "model": "city-blocks:block/exit_sign_top_left", "y": 90
+        },
+        "variant=7,facing=south": {
+            "model": "city-blocks:block/exit_sign_top_left", "y": 180
+        },
+        "variant=7,facing=west": {
+            "model": "city-blocks:block/exit_sign_top_left", "y": 270
+        },
+        
+        "variant=8,facing=north": {
+            "model": "city-blocks:block/exit_sign_top_right"
+        },
+        "variant=8,facing=east": {
+            "model": "city-blocks:block/exit_sign_top_right", "y": 90
+        },
+        "variant=8,facing=south": {
+            "model": "city-blocks:block/exit_sign_top_right", "y": 180
+        },
+        "variant=8,facing=west": {
+            "model": "city-blocks:block/exit_sign_top_right", "y": 270
+        },
+
+        "variant=9,facing=north": {
+            "model": "city-blocks:block/exit_sign_top_offset"
+        },
+        "variant=9,facing=east": {
+            "model": "city-blocks:block/exit_sign_top_offset", "y": 90
+        },
+        "variant=9,facing=south": {
+            "model": "city-blocks:block/exit_sign_top_offset", "y": 180
+        },
+        "variant=9,facing=west": {
+            "model": "city-blocks:block/exit_sign_top_offset", "y": 270
+        },
+
+        "variant=10,facing=north": {
+            "model": "city-blocks:block/exit_sign_top_offset_left"
+        },
+        "variant=10,facing=east": {
+            "model": "city-blocks:block/exit_sign_top_offset_left", "y": 90
+        },
+        "variant=10,facing=south": {
+            "model": "city-blocks:block/exit_sign_top_offset_left", "y": 180
+        },
+        "variant=10,facing=west": {
+            "model": "city-blocks:block/exit_sign_top_offset_left", "y": 270
+        },
+        
+        "variant=11,facing=north": {
+            "model": "city-blocks:block/exit_sign_top_offset_right"
+        },
+        "variant=11,facing=east": {
+            "model": "city-blocks:block/exit_sign_top_offset_right", "y": 90
+        },
+        "variant=11,facing=south": {
+            "model": "city-blocks:block/exit_sign_top_offset_right", "y": 180
+        },
+        "variant=11,facing=west": {
+            "model": "city-blocks:block/exit_sign_top_offset_right", "y": 270
+        }
+    }
+}

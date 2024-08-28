@@ -1,0 +1,6 @@
+{
+    "parent": "city-blocks:block/exit_sign",
+    "textures": {
+        "0": "city-blocks:block/exit_sign_left"
+    }
+}

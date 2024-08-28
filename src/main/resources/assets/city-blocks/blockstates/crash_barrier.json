@@ -1,0 +1,81 @@
+{
+    "variants": {
+        "variant=0,facing=north": {
+            "model": "city-blocks:block/crash_barrier_straight"
+        },
+        "variant=0,facing=east": {
+            "model": "city-blocks:block/crash_barrier_straight", "y": 90
+        },
+        "variant=0,facing=south": {
+            "model": "city-blocks:block/crash_barrier_straight", "y": 180
+        },
+        "variant=0,facing=west": {
+            "model": "city-blocks:block/crash_barrier_straight", "y": 270
+        },
+
+        "variant=1,facing=north": {
+            "model": "city-blocks:block/crash_barrier_outside"
+        },
+        "variant=1,facing=east": {
+            "model": "city-blocks:block/crash_barrier_outside", "y": 90
+        },
+        "variant=1,facing=south": {
+            "model": "city-blocks:block/crash_barrier_outside", "y": 180
+        },
+        "variant=1,facing=west": {
+            "model": "city-blocks:block/crash_barrier_outside", "y": 270
+        },
+
+        "variant=2,facing=north": {
+            "model": "city-blocks:block/crash_barrier_inside"
+        },
+        "variant=2,facing=east": {
+            "model": "city-blocks:block/crash_barrier_inside", "y": 90
+        },
+        "variant=2,facing=south": {
+            "model": "city-blocks:block/crash_barrier_inside", "y": 180
+        },
+        "variant=2,facing=west": {
+            "model": "city-blocks:block/crash_barrier_inside", "y": 270
+        },
+
+        "variant=3,facing=north": {
+            "model": "city-blocks:block/crash_barrier_end1"
+        },
+        "variant=3,facing=east": {
+            "model": "city-blocks:block/crash_barrier_end1", "y": 90
+        },
+        "variant=3,facing=south": {
+            "model": "city-blocks:block/crash_barrier_end1", "y": 180
+        },
+        "variant=3,facing=west": {
+            "model": "city-blocks:block/crash_barrier_end1", "y": 270
+        },
+
+        "variant=4,facing=north": {
+            "model": "city-blocks:block/crash_barrier_end2"
+        },
+        "variant=4,facing=east": {
+            "model": "city-blocks:block/crash_barrier_end2", "y": 90
+        },
+        "variant=4,facing=south": {
+            "model": "city-blocks:block/crash_barrier_end2", "y": 180
+        },
+        "variant=4,facing=west": {
+            "model": "city-blocks:block/crash_barrier_end2", "y": 270
+        },
+
+        "variant=5,facing=north": {
+            "model": "city-blocks:block/crash_barrier_straight_no_post"
+        },
+        "variant=5,facing=east": {
+            "model": "city-blocks:block/crash_barrier_straight_no_post", "y": 90
+        },
+        "variant=5,facing=south": {
+            "model": "city-blocks:block/crash_barrier_straight_no_post", "y": 180
+        },
+        "variant=5,facing=west": {
+            "model": "city-blocks:block/crash_barrier_straight_no_post", "y": 270
+        }
+    }
+}

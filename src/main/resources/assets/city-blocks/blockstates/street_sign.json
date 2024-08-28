@@ -1,0 +1,159 @@
+{
+    "variants": {
+        "model=0,facing=north": {
+            "model": "city-blocks:block/street_sign_1"
+        },
+        "model=0,facing=east": {
+            "model": "city-blocks:block/street_sign_1", "y": 90
+        },
+        "model=0,facing=south": {
+            "model": "city-blocks:block/street_sign_1", "y": 180
+        },
+        "model=0,facing=west": {
+            "model": "city-blocks:block/street_sign_1", "y": 270
+        },
+
+        "model=1,facing=north": {
+            "model": "city-blocks:block/street_sign_1_b"
+        },
+        "model=1,facing=east": {
+            "model": "city-blocks:block/street_sign_1_b", "y": 90
+        },
+        "model=1,facing=south": {
+            "model": "city-blocks:block/street_sign_1_b", "y": 180
+        },
+        "model=1,facing=west": {
+            "model": "city-blocks:block/street_sign_1_b", "y": 270
+        },
+
+        "model=2,facing=north": {
+            "model": "city-blocks:block/street_sign_1_b"
+        },
+        "model=2,facing=east": {
+            "model": "city-blocks:block/street_sign_1_b", "y": 90
+        },
+        "model=2,facing=south": {
+            "model": "city-blocks:block/street_sign_1_b", "y": 180
+        },
+        "model=2,facing=west": {
+            "model": "city-blocks:block/street_sign_1_b", "y": 270
+        },
+
+        "model=3,facing=north": {
+            "model": "city-blocks:block/street_sign_1_c"
+        },
+        "model=3,facing=east": {
+            "model": "city-blocks:block/street_sign_1_c", "y": 90
+        },
+        "model=3,facing=south": {
+            "model": "city-blocks:block/street_sign_1_c", "y": 180
+        },
+        "model=3,facing=west": {
+            "model": "city-blocks:block/street_sign_1_c", "y": 270
+        },
+
+        "model=4,facing=north": {
+            "model": "city-blocks:block/street_sign_2"
+        },
+        "model=4,facing=east": {
+            "model": "city-blocks:block/street_sign_2", "y": 90
+        },
+        "model=4,facing=south": {
+            "model": "city-blocks:block/street_sign_2", "y": 180
+        },
+        "model=4,facing=west": {
+            "model": "city-blocks:block/street_sign_2", "y": 270
+        },
+
+        "model=5,facing=north": {
+            "model": "city-blocks:block/street_sign_2_b"
+        },
+        "model=5,facing=east": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 90
+        },
+        "model=5,facing=south": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 180
+        },
+        "model=5,facing=west": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 270
+        },
+
+        "model=6,facing=north": {
+            "model": "city-blocks:block/street_sign_2_b"
+        },
+        "model=6,facing=east": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 90
+        },
+        "model=6,facing=south": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 180
+        },
+        "model=6,facing=west": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 270
+        },
+
+        "model=7,facing=north": {
+            "model": "city-blocks:block/street_sign_2_b"
+        },
+        "model=7,facing=east": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 90
+        },
+        "model=7,facing=south": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 180
+        },
+        "model=7,facing=west": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 270
+        },
+
+        "model=8,facing=north": {
+            "model": "city-blocks:block/street_sign_2_b"
+        },
+        "model=8,facing=east": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 90
+        },
+        "model=8,facing=south": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 180
+        },
+        "model=8,facing=west": {
+            "model": "city-blocks:block/street_sign_2_b", "y": 270
+        },
+
+        "model=9,facing=north": {
+            "model": "city-blocks:block/street_sign_3"
+        },
+        "model=9,facing=east": {
+            "model": "city-blocks:block/street_sign_3", "y": 90
+        },
+        "model=9,facing=south": {
+            "model": "city-blocks:block/street_sign_3", "y": 180
+        },
+        "model=9,facing=west": {
+            "model": "city-blocks:block/street_sign_3", "y": 270
+        },
+
+        "model=10,facing=north": {
+            "model": "city-blocks:block/street_sign_3_b"
+        },
+        "model=10,facing=east": {
+            "model": "city-blocks:block/street_sign_3_b", "y": 90
+        },
+        "model=10,facing=south": {
+            "model": "city-blocks:block/street_sign_3_b", "y": 180
+        },
+        "model=10,facing=west": {
+            "model": "city-blocks:block/street_sign_3_b", "y": 270
+        },
+
+        "model=11,facing=north": {
+            "model": "city-blocks:block/street_sign_4a"
+        },
+        "model=11,facing=east": {
+            "model": "city-blocks:block/street_sign_4a", "y": 90
+        },
+        "model=11,facing=south": {
+            "model": "city-blocks:block/street_sign_4a", "y": 180
+        },
+        "model=11,facing=west": {
+            "model": "city-blocks:block/street_sign_4a", "y": 270
+        }
+    }
+}

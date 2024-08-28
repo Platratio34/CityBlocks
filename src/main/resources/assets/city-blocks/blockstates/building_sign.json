@@ -1,0 +1,42 @@
+{
+    "variants": {
+        "model=0,facing=north": {
+            "model": "city-blocks:block/building_sign_address"
+        },
+        "model=0,facing=east": {
+            "model": "city-blocks:block/building_sign_address", "y": 90
+        },
+        "model=0,facing=south": {
+            "model": "city-blocks:block/building_sign_address", "y": 180
+        },
+        "model=0,facing=west": {
+            "model": "city-blocks:block/building_sign_address", "y": 270
+        },
+        
+        "model=1,facing=north": {
+            "model": "city-blocks:block/building_sign_room_left"
+        },
+        "model=1,facing=east": {
+            "model": "city-blocks:block/building_sign_room_left", "y": 90
+        },
+        "model=1,facing=south": {
+            "model": "city-blocks:block/building_sign_room_left", "y": 180
+        },
+        "model=1,facing=west": {
+            "model": "city-blocks:block/building_sign_room_left", "y": 270
+        },
+        
+        "model=2,facing=north": {
+            "model": "city-blocks:block/building_sign_room_right"
+        },
+        "model=2,facing=east": {
+            "model": "city-blocks:block/building_sign_room_right", "y": 90
+        },
+        "model=2,facing=south": {
+            "model": "city-blocks:block/building_sign_room_right", "y": 180
+        },
+        "model=2,facing=west": {
+            "model": "city-blocks:block/building_sign_room_right", "y": 270
+        }
+    }
+}

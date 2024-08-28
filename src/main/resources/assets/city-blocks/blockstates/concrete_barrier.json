@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "city-blocks:block/concrete_barrier" },
+        "facing=east": { "model": "city-blocks:block/concrete_barrier", "y": 90 },
+        "facing=south": { "model": "city-blocks:block/concrete_barrier", "y": 180 },
+        "facing=west": { "model": "city-blocks:block/concrete_barrier", "y": 270 }
+    }
+}

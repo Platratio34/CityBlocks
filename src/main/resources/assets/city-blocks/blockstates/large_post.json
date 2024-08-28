@@ -1,0 +1,52 @@
+{
+    "multipart": [
+        {
+            "apply": { "model": "city-blocks:block/large_post_v_1" },
+            "when": { "OR": [ { "facing": "up|down", "size": 1 }, { "facing": "up|down", "size": 2 } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_v_2" },
+            "when": { "OR": [ { "facing": "up|down", "size": 3 }, { "facing": "up|down", "size": 4 }, { "facing": "up|down", "size": 5 } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_v_3" },
+            "when": { "OR": [ { "facing": "up|down", "size": 6 }, { "facing": "up|down", "size": 7 }, { "facing": "up|down", "size": 8 } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_v_4" },
+            "when": { "OR": [ { "facing": "up|down", "size": 9 } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_v_1", "x": 90 },
+            "when": { "OR": [ { "facing": "north|south" } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_v_1", "x": 90, "y": 90 },
+            "when": { "OR": [ { "facing": "east|west" } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_attach" },
+            "when": { "OR": [ { "facing": "up|down", "north": true }, { "facing": "east|west", "north": true } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_attach", "y": 90 },
+            "when": { "OR": [ { "facing": "up|down", "east": true }, { "facing": "north|south", "east": true } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_attach", "y": 180 },
+            "when": { "OR": [ { "facing": "up|down", "south": true }, { "facing": "east|west", "south": true } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_attach", "y": 270 },
+            "when": { "OR": [ { "facing": "up|down", "west": true }, { "facing": "north|south", "west": true } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_attach", "x": 270 },
+            "when": { "OR": [ { "facing": "north|south", "up": true }, { "facing": "east|west", "up": true } ] }
+        },
+        {
+            "apply": { "model": "city-blocks:block/large_post_attach", "x": 90 },
+            "when": { "OR": [ { "facing": "north|south", "down": true }, { "facing": "east|west", "down": true } ] }
+        }
+    ]
+}

@@ -1,0 +1,159 @@
+{
+    "variants": {
+        "variant=0,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_10", "y": 0 }
+        ],
+        "variant=0,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_10", "y": 90 }
+        ],
+        "variant=0,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_10", "y": 180 }
+        ],
+        "variant=0,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_10", "y": 270 }
+        ],
+        
+        "variant=1,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_15", "y": 0 }
+        ],
+        "variant=1,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_15", "y": 90 }
+        ],
+        "variant=1,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_15", "y": 180 }
+        ],
+        "variant=1,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_15", "y": 270 }
+        ],
+        
+        "variant=2,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_20", "y": 0 }
+        ],
+        "variant=2,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_20", "y": 90 }
+        ],
+        "variant=2,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_20", "y": 180 }
+        ],
+        "variant=2,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_20", "y": 270 }
+        ],
+        
+        "variant=3,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_25", "y": 0 }
+        ],
+        "variant=3,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_25", "y": 90 }
+        ],
+        "variant=3,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_25", "y": 180 }
+        ],
+        "variant=3,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_25", "y": 270 }
+        ],
+        
+        "variant=4,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_30", "y": 0 }
+        ],
+        "variant=4,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_30", "y": 90 }
+        ],
+        "variant=4,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_30", "y": 180 }
+        ],
+        "variant=4,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_30", "y": 270 }
+        ],
+        
+        "variant=5,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_35", "y": 0 }
+        ],
+        "variant=5,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_35", "y": 90 }
+        ],
+        "variant=5,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_35", "y": 180 }
+        ],
+        "variant=5,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_35", "y": 270 }
+        ],
+        
+        "variant=6,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_40", "y": 0 }
+        ],
+        "variant=6,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_40", "y": 90 }
+        ],
+        "variant=6,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_40", "y": 180 }
+        ],
+        "variant=6,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_40", "y": 270 }
+        ],
+        
+        "variant=7,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_45", "y": 0 }
+        ],
+        "variant=7,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_45", "y": 90 }
+        ],
+        "variant=7,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_45", "y": 180 }
+        ],
+        "variant=7,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_45", "y": 270 }
+        ],
+        
+        "variant=8,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_50", "y": 0 }
+        ],
+        "variant=8,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_50", "y": 90 }
+        ],
+        "variant=8,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_50", "y": 180 }
+        ],
+        "variant=8,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_50", "y": 270 }
+        ],
+        
+        "variant=9,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_55", "y": 0 }
+        ],
+        "variant=9,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_55", "y": 90 }
+        ],
+        "variant=9,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_55", "y": 180 }
+        ],
+        "variant=9,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_55", "y": 270 }
+        ],
+        
+        "variant=10,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_60", "y": 0 }
+        ],
+        "variant=10,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_60", "y": 90 }
+        ],
+        "variant=10,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_60", "y": 180 }
+        ],
+        "variant=10,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_60", "y": 270 }
+        ],
+        
+        "variant=11,facing=north": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_65", "y": 0 }
+        ],
+        "variant=11,facing=east": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_65", "y": 90 }
+        ],
+        "variant=11,facing=south": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_65", "y": 180 }
+        ],
+        "variant=11,facing=west": [
+            { "model": "city-blocks:block/sign_post_sign_1_spd_65", "y": 270 }
+        ]
+    }
+}

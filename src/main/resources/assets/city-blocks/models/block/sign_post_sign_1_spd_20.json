@@ -1,0 +1,6 @@
+{
+    "parent": "city-blocks:block/sign_post_sign_1",
+    "textures": {
+        "1": "city-blocks:block/sign_1/sign_1_spd_20"
+    }
+}

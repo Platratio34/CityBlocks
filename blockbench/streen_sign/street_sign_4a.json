@@ -1,0 +1,32 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"1": "block/iron_block",
+		"40": "street_sign_4a",
+		"particle": "block/iron_block"
+	},
+	"elements": [
+		{
+			"from": [5, 0, 7.5],
+			"to": [11, 16, 8.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 0, 7]},
+			"faces": {
+				"north": {"uv": [1, 0, 7, 16], "texture": "#1"},
+				"east": {"uv": [0, 0, 1, 16], "texture": "#1"},
+				"south": {"uv": [0, 0, 6, 16], "texture": "#40"},
+				"west": {"uv": [15, 0, 16, 16], "texture": "#1"},
+				"up": {"uv": [1, 0, 7, 1], "texture": "#1"},
+				"down": {"uv": [1, 15, 7, 16], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "street_sign_4a",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0]
+		}
+	]
+}

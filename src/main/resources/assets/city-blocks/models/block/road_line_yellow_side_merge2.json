@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "city-blocks:block/road_line_yellow_side_merge2"
+    }
+}
