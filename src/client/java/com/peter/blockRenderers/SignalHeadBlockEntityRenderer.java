@@ -130,7 +130,7 @@ public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<Signal
         VertexConsumer vertexConsumer = spriteId.getVertexConsumer(vertexConsumerProvider, RenderLayer::getEntitySolid);
         
         Sprite sprite = spriteId.getSprite();
-        float fullUV = 7f / 8f;
+        float fullUV = 7f / 16f;
         float uSize = sprite.getMaxU() - sprite.getMinU();
         float vSize = sprite.getMaxV() - sprite.getMinV();
         float minU = sprite.getMinU();
