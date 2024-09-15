@@ -1,5 +1,6 @@
 package com.peter.blocks.signal;
 
+import com.peter.CityBlocks;
 import com.peter.networking.SignalControllerUpdatePayload;
 import com.peter.networking.SignalHeadUpdatePayload;
 
@@ -9,6 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 public class SignalNetworking {
 
     public static void registerServer() {
+        CityBlocks.LOGGER.debug("Registering Signal packet receivers");
         PayloadTypeRegistry.playC2S().register(SignalHeadUpdatePayload.ID, SignalHeadUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(SignalHeadUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {

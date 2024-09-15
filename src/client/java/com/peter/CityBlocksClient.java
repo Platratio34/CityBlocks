@@ -39,6 +39,8 @@ public class CityBlocksClient implements ClientModInitializer {
                 CustomSignBlockEntityRenderer::new);
         
         CityBlocksScreens.register();
+
+        CityBlocks.LOGGER.info("City Blocks Client initialized");
     }
     
     public static SpriteIdentifier blockTexture(String texture) {

@@ -33,7 +33,7 @@ public record CustomSignUpdatePayload(RegistryKey<World> world, BlockPos pos, in
     }
     
     public static void registerServer() {
-        CityBlocks.LOGGER.info("Registering Custom Sign Packet receiver");
+        CityBlocks.LOGGER.debug("Registering Custom Sign Packet receiver");
         PayloadTypeRegistry.playC2S().register(CustomSignUpdatePayload.ID, CustomSignUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(CustomSignUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
