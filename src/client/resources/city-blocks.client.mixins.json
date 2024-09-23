@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "com.peter.mixin.client",
+	"package": "com.peter.cityblocks.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 	],

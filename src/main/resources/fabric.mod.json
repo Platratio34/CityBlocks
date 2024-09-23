@@ -16,10 +16,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.peter.CityBlocks"
+			"com.peter.cityblocks.CityBlocks"
 		],
 		"client": [
-			"com.peter.CityBlocksClient"
+			"com.peter.cityblocks.CityBlocksClient"
 		]
 	},
 	"mixins": [

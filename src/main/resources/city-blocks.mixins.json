@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "com.peter.mixin",
+	"package": "com.peter.cityblocks.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		
