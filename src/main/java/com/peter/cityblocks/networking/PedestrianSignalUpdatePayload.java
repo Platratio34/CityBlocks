@@ -32,10 +32,11 @@ public record PedestrianSignalUpdatePayload(RegistryKey<World> world, BlockPos p
     }
 
     public static void registerServer() {
-        CityBlocks.LOGGER.debug("Registering Pedestrian Signal Packet receiver");
+        CityBlocks.LOGGER.info("Registering Pedestrian Signal Packet receiver");
         PayloadTypeRegistry.playC2S().register(PedestrianSignalUpdatePayload.ID, PedestrianSignalUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(PedestrianSignalUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
+                CityBlocks.LOGGER.info("Received Pedestrian Signal Update");
                 PedestrianSignalBlockEntity entity = (PedestrianSignalBlockEntity) context.server()
                         .getWorld(payload.world())
                         .getBlockEntity(payload.pos());

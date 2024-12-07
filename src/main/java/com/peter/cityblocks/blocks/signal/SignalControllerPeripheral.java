@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.peter.cityblocks.CityBlocks;
+
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -17,6 +19,7 @@ public class SignalControllerPeripheral implements IPeripheral {
 
     public SignalControllerPeripheral(SignalControllerBlockEntity controller) {
         this.controller = controller;
+        CityBlocks.LOGGER.info("Creating new SignalControllerPeripheral");
     }
 
     @Override

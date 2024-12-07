@@ -55,6 +55,7 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
 
     public SignalHeadBlockEntity(BlockPos pos, BlockState state) {
         super(BLOCK_ENTITY_TYPE, pos, state);
+        CityBlocks.LOGGER.info("Creating new SignalHeadBlockEntity");
     }
 
     @Override

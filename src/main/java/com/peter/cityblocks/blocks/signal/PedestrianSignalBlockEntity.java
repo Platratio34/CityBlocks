@@ -48,6 +48,7 @@ public class PedestrianSignalBlockEntity extends BlockEntity implements Extended
 
     public PedestrianSignalBlockEntity(BlockPos pos, BlockState state) {
         super(BLOCK_ENTITY_TYPE, pos, state);
+        CityBlocks.LOGGER.info("Creating new PedestrianSignalBlockEntity");
     }
 
     @Override

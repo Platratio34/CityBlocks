@@ -34,6 +34,9 @@ public class CityBlocks implements ModInitializer {
         LOGGER.info("  ##  ###   #    #         ##   ###   #    ##  # #  ##  ");
         LOGGER.info("--------------------------------------------------------");
 
+        LOGGER.info(LOGGER.isDebugEnabled() + "");
+        LOGGER.info("Debug test");
+
         Blocks.init();
         Items.init();
 
