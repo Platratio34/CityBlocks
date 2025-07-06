@@ -1,6 +1,0 @@
-{
-    "parent": "item/generated",
-    "textures": {
-      "layer0": "city-blocks:item/signal_linker"
-    }
-}

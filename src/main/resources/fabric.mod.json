@@ -20,7 +20,10 @@
 		],
 		"client": [
 			"com.peter.cityblocks.CityBlocksClient"
-		]
+		],
+        "fabric-datagen": [
+            "com.peter.cityblocks.datagen.CityBlocksDataGenerator"
+        ]
 	},
 	"mixins": [
 		"city-blocks.mixins.json",
