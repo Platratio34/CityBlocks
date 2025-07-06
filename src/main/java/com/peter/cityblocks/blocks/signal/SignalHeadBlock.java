@@ -2,6 +2,7 @@ package com.peter.cityblocks.blocks.signal;
 
 import com.mojang.serialization.MapCodec;
 import com.peter.cityblocks.CityBlocks;
+import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.VariantBlock;
 import com.peter.cityblocks.blocks.VariantPartialBlock;
 import com.peter.cityblocks.items.SignalLinker;
@@ -23,7 +24,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
@@ -32,7 +33,6 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -53,14 +53,13 @@ public class SignalHeadBlock extends BlockWithEntity {
     };
     public static final MapCodec<SignalHeadBlock> CODEC = createCodec(SignalHeadBlock::new);
 
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
     public static final int MAX_LAMPS = 3;
     public static final IntProperty LAMP_COUNT = IntProperty.of("lamps", 1, MAX_LAMPS);
 
     public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
             new SignalHeadBlock(Settings.create().nonOpaque()));
-    public static final BlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new BlockItem(BLOCK, new Item.Settings()));
+    public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
 
     public static final Identifier BLOCK_ENTITY_ID = SignalHeadBlockEntity.ID;
 
@@ -100,7 +99,7 @@ public class SignalHeadBlock extends BlockWithEntity {
     }
 
     @Override
-    protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    protected VoxelShape getCullingShape(BlockState state) {
         return getShape(state);
     }
 
@@ -143,17 +142,17 @@ public class SignalHeadBlock extends BlockWithEntity {
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
+    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient && stack.isOf(SignalLinker.ITEM)) {
             SignalControllerBlockEntity controller = SignalLinker.getLinkedController(world, stack);
             if (controller != null) {
                 if (controller.link(pos))
-                    player.sendMessage(CityBlocks.translatableText("chat", "signal_head.linked"));
+                    player.sendMessage(CityBlocks.translatableText("chat", "signal_head.linked"), false);
                 else
-                player.sendMessage(CityBlocks.translatableText("chat", "signal_head.un_linked"));
+                player.sendMessage(CityBlocks.translatableText("chat", "signal_head.un_linked"), false);
             }
-            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+            return ActionResult.CONSUME;
         }
         return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }

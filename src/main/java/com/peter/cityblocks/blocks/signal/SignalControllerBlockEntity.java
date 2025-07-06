@@ -1,5 +1,6 @@
 package com.peter.cityblocks.blocks.signal;
 
+import com.mojang.serialization.Codec;
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.networking.BlockPosScreenPacket;
 import com.peter.cityblocks.gui.SignalControllerScreenHandler;
@@ -7,7 +8,10 @@ import com.peter.cityblocks.gui.SignalControllerScreenHandler;
 import dan200.computercraft.api.peripheral.PeripheralLookup;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,8 +20,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtIntArray;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -26,6 +28,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -38,7 +42,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     public static final Identifier ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<SignalControllerBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
             Registries.BLOCK_ENTITY_TYPE, ID,
-            BlockEntityType.Builder.create(SignalControllerBlockEntity::new, SignalControllerBlock.BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(SignalControllerBlockEntity::new, SignalControllerBlock.BLOCK).build());
 
     public static void register() {
         PeripheralLookup.get().registerForBlockEntity(SignalControllerBlockEntity::getPeripheral, BLOCK_ENTITY_TYPE);
@@ -119,7 +123,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
 
     public void cycle(PlayerEntity player) {
         cycle();
-        player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.cycle",cPhase));
+        player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.cycle",cPhase), false);
     }
 
     public void cycle() {
@@ -343,69 +347,77 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     private static final String NBT_PEDESTRIAN = "pedestrian";
     private static final String NBT_TEMP_STATE = "tempState";
 
+    private static final Codec<List<List<Integer>>> INT_ARR_ARR_CODEC = Codec.list(Codec.list(Codec.INT));
+
     @Override
-    protected void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        nbt.putInt(NBT_CYCLE_MODE, cycleMode);
-        nbt.putInt(NBT_C_PHASE, cPhase);
-        nbt.putInt(NBT_C_TIME, cTime);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+
+        view.putInt(NBT_CYCLE_MODE, cycleMode);
+        view.putInt(NBT_C_PHASE, cPhase);
+        view.putInt(NBT_C_TIME, cTime);
         
-        NbtList headsNbt = new NbtList();
+        List<List<Integer>> headsList = new ArrayList<>();
         for (BlockPos head : heads) {
-            headsNbt.add(new NbtIntArray(new int[] { head.getX(), head.getY(), head.getZ() }));
+            headsList.add(List.of(head.getX(), head.getY(), head.getZ()));
         }
-        nbt.put(NBT_HEADS, headsNbt);
+        view.put(NBT_HEADS, INT_ARR_ARR_CODEC, headsList);
 
-        NbtList pedestriansNbt = new NbtList();
+        List<List<Integer>> pedestriansList = new ArrayList<>();
         for (BlockPos signal : pedestrians) {
-            pedestriansNbt.add(new NbtIntArray(new int[] { signal.getX(), signal.getY(), signal.getZ() }));
+            pedestriansList.add(List.of(signal.getX(), signal.getY(), signal.getZ()));
         }
-        nbt.put(NBT_PEDESTRIAN, pedestriansNbt);
+        view.put(NBT_PEDESTRIAN, INT_ARR_ARR_CODEC, pedestriansList);
 
-        NbtList tempStateNbt = new NbtList();
+        List<List<Integer>> tempStateList = new ArrayList<>();
         for (int i = 0; i < tempState.length; i++) {
-            tempStateNbt.add(new NbtIntArray(LampState.toIntArray(tempState[i])));
+            tempStateList.add(LampState.toIntList(tempState[i]));
         }
-        nbt.put(NBT_TEMP_STATE, tempStateNbt);
-
-        super.writeNbt(nbt, registryLookup);
+        view.put(NBT_TEMP_STATE, INT_ARR_ARR_CODEC, tempStateList);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
 
-        if (nbt.contains(NBT_CYCLE_MODE)) {
-            cycleMode = nbt.getInt(NBT_CYCLE_MODE);
+        Optional<Integer> optMode = view.getOptionalInt(NBT_CYCLE_MODE);
+        if (optMode.isPresent()) {
+            cycleMode = optMode.get();
         }
-        if (nbt.contains(NBT_C_PHASE)) {
-            cPhase = nbt.getInt(NBT_C_PHASE);
+        Optional<Integer> optPhase = view.getOptionalInt(NBT_C_PHASE);
+        if (optPhase.isPresent()) {
+            cPhase = optPhase.get();
             if (cPhase < 0) {
                 cPhase = 0;
             }
         }
-        if (nbt.contains(NBT_C_TIME)) {
-            cTime = nbt.getInt(NBT_C_TIME);
+        Optional<Integer> optTime = view.getOptionalInt(NBT_C_TIME);
+        if (optTime.isPresent()) {
+            cTime = optTime.get();
         }
         
-        if (nbt.contains(NBT_HEADS)) {
-            NbtList headsNbt = (NbtList) nbt.get(NBT_HEADS);
-            for (int i = 0; i < headsNbt.size(); i++) {
-                int[] pos = headsNbt.getIntArray(i);
-                heads.add(new BlockPos(pos[0], pos[1], pos[2]));
+        Optional<List<List<Integer>>> optHeads = view.read(NBT_HEADS, INT_ARR_ARR_CODEC);
+        if (optHeads.isPresent()) {
+            List<List<Integer>> list = optHeads.get();
+            for (int i = 0; i < list.size(); i++) {
+                List<Integer> pos = list.get(i);
+                heads.add(new BlockPos(pos.get(0), pos.get(1), pos.get(2)));
             }
         }
-        if (nbt.contains(NBT_PEDESTRIAN)) {
-            NbtList pedestriansNbt = (NbtList) nbt.get(NBT_PEDESTRIAN);
-            for (int i = 0; i < pedestriansNbt.size(); i++) {
-                int[] pos = pedestriansNbt.getIntArray(i);
-                pedestrians.add(new BlockPos(pos[0], pos[1], pos[2]));
+        Optional<List<List<Integer>>> optPed = view.read(NBT_PEDESTRIAN, INT_ARR_ARR_CODEC);
+        if (optPed.isPresent()) {
+            List<List<Integer>> list = optPed.get();
+            for (int i = 0; i < list.size(); i++) {
+                List<Integer> pos = list.get(i);
+                pedestrians.add(new BlockPos(pos.get(0), pos.get(1), pos.get(2)));
             }
         }
 
-        if (nbt.contains(NBT_TEMP_STATE)) {
-            NbtList tempStateNbt = (NbtList) nbt.get(NBT_TEMP_STATE);
-            for(int i = 0; i < tempStateNbt.size(); i++) {
-                tempState[i] = LampState.fromIntArray(tempStateNbt.getIntArray(i));
+        Optional<List<List<Integer>>> optState = view.read(NBT_TEMP_STATE, INT_ARR_ARR_CODEC);
+        if (optState.isPresent()) {
+            List<List<Integer>> list = optState.get();
+            for(int i = 0; i < list.size(); i++) {
+                tempState[i] = LampState.fromIntList(list.get(i));
             }
         }
     }

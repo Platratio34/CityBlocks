@@ -1,9 +1,12 @@
 package com.peter.cityblocks.blocks.signal;
 
+import java.util.Optional;
+
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.networking.BlockPosScreenPacket;
 import com.peter.cityblocks.gui.SignalHeadScreenHandler;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +23,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +36,7 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
     public static final Identifier ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<SignalHeadBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
             Registries.BLOCK_ENTITY_TYPE, ID,
-            BlockEntityType.Builder.create(SignalHeadBlockEntity::new, SignalHeadBlock.BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(SignalHeadBlockEntity::new, SignalHeadBlock.BLOCK).build());
 
     protected LampState[] states = new LampState[] {
             LampState.SOLID_FLASH,
@@ -59,39 +64,42 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
+    protected void writeData(WriteView view) {
         int[] stateIntArray = new int[states.length];
         int[] colorIntArray = new int[colors.length];
         for (int i = 0; i < SignalHeadBlock.MAX_LAMPS; i++) {
             stateIntArray[i] = states[i].code;
             colorIntArray[i] = colors[i].code;
         }
-        nbt.putIntArray(NBT_STATES_ARRAY, stateIntArray);
-        nbt.putIntArray(NBT_COLORS_ARRAY, colorIntArray);
+        view.putIntArray(NBT_STATES_ARRAY, stateIntArray);
+        view.putIntArray(NBT_COLORS_ARRAY, colorIntArray);
 
-        nbt.putInt(NBT_HEAD_ID, headId);
+        view.putInt(NBT_HEAD_ID, headId);
 
-        super.writeNbt(nbt, registryLookup);
+        super.writeData(view);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
 
-        if (nbt.contains(NBT_STATES_ARRAY)) {
-            int[] intArray = nbt.getIntArray(NBT_STATES_ARRAY);
+        Optional<int[]> optState = view.getOptionalIntArray(NBT_STATES_ARRAY);
+        if (optState.isPresent()) {
+            int[] intArray = optState.get();
             for (int i = 0; i < intArray.length; i++) {
                 states[i] = LampState.fromCode(intArray[i]);
             }
         }
-        if (nbt.contains(NBT_COLORS_ARRAY)) {
-            int[] intArray = nbt.getIntArray(NBT_COLORS_ARRAY);
+        Optional<int[]> optColor = view.getOptionalIntArray(NBT_COLORS_ARRAY);
+        if (optColor.isPresent()) {
+            int[] intArray = optColor.get();
             for (int i = 0; i < intArray.length; i++) {
                 colors[i] = LampColor.fromCode(intArray[i]);
             }
         }
-        if (nbt.contains(NBT_HEAD_ID)) {
-            headId = nbt.getInt(NBT_HEAD_ID);
+        Optional<Integer> optId = view.getOptionalInt(NBT_HEAD_ID);
+        if (optId.isPresent()) {
+            headId = optId.get();
         }
     }
 

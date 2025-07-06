@@ -28,7 +28,7 @@ public class VariantPartialBlock extends VariantBlock {
     }
 
     @Override
-    protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    protected VoxelShape getCullingShape(BlockState state) {
         return getShape(state);
     }
 

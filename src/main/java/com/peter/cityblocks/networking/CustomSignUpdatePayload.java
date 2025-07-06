@@ -22,7 +22,7 @@ public record CustomSignUpdatePayload(RegistryKey<World> world, BlockPos pos, in
             RegistryKey.createPacketCodec(RegistryKeys.WORLD), CustomSignUpdatePayload::world,
             BlockPos.PACKET_CODEC, CustomSignUpdatePayload::pos,
             PacketCodecs.INTEGER, CustomSignUpdatePayload::variant,
-            PacketCodecs.BOOL, CustomSignUpdatePayload::updateText,
+            PacketCodecs.BOOLEAN, CustomSignUpdatePayload::updateText,
             PacketCodecs.STRING, CustomSignUpdatePayload::text,
             CustomSignUpdatePayload::new
     );

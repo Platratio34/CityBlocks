@@ -58,12 +58,12 @@ public class CycleState {
     public static CycleState fromNbt(NbtCompound nbt) {
         CycleState state = new CycleState();
         if (nbt.contains(NBT_TIME)) {
-            state.time = nbt.getInt(NBT_TIME);
+            state.time = nbt.getInt(NBT_TIME).get();
         }
         if (nbt.contains(NBT_STATES)) {
             NbtList stateList = (NbtList)nbt.get(NBT_STATES);
             for (int i = 0; i < state.states.length; i++) {
-                state.states[i] = LampState.fromIntArray(stateList.getIntArray(i));
+                state.states[i] = LampState.fromIntArray(stateList.getIntArray(i).get());
             }
         }
         return state;

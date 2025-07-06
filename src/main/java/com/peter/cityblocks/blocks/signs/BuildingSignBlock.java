@@ -7,10 +7,12 @@ import org.joml.Vector3d;
 
 import com.mojang.serialization.MapCodec;
 import com.peter.cityblocks.CityBlocks;
+import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.IVariantBlock;
 import com.peter.cityblocks.blocks.VariantPartialBlock;
 import com.peter.cityblocks.items.Items;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -25,14 +27,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemActionResult;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -45,17 +47,17 @@ public class BuildingSignBlock extends CustomSignBlock {
     public static final Identifier ID = CityBlocks.identifier(NAME);
 
     public static final IntProperty MODEL = IntProperty.of("model", 0, 2);
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
 
     public static final MapCodec<BuildingSignBlock> CODEC = createCodec(BuildingSignBlock::new);
 
     public static final CustomSignBlock BLOCK = Registry.register(Registries.BLOCK, ID,
             new BuildingSignBlock(Settings.create().nonOpaque()));
     public static final CustomSignBlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new CustomSignBlockItem(BLOCK, new Item.Settings()));
+            new CustomSignBlockItem(BLOCK, new Item.Settings().registryKey(Blocks.irk(ID))));
     public static final BlockEntityType<CustomSignBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
             Registries.BLOCK_ENTITY_TYPE, ID,
-            BlockEntityType.Builder.create(BuildingSignBlock::createSignBlockEntity, BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(BuildingSignBlock::createSignBlockEntity, BLOCK).build());
 
     protected BuildingSignBlock(Settings settings) {
         super(settings);
@@ -199,7 +201,7 @@ public class BuildingSignBlock extends CustomSignBlock {
     @Override
     public void getTooltip(List<Text> tooltip, NbtCompound nbt, int texture) {
         if (nbt.contains("model")) {
-            int model = nbt.getInt("model");
+            int model = nbt.getInt("model").get();
             switch (model) {
                 case 0:
                     tooltip.add(Text.of("Address Sign"));
@@ -241,13 +243,13 @@ public class BuildingSignBlock extends CustomSignBlock {
     public BlockState getBlockStateFromNbt(BlockState state, NbtCompound nbt) {
         int model = 0;
         if (nbt.contains("model")) {
-            model = nbt.getInt("model");
+            model = nbt.getInt("model").get();
         }
         return state.with(MODEL, model);
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
+    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (stack.isOf(Items.VARIANT_SWITCHER_ITEM)) {
             int model = state.get(MODEL) + 1;
@@ -256,7 +258,7 @@ public class BuildingSignBlock extends CustomSignBlock {
             }
             ((CustomSignBlockEntity) world.getBlockEntity(pos)).setVariant(0);
             world.setBlockState(pos, state.with(MODEL, model));
-            return ItemActionResult.CONSUME;
+            return ActionResult.CONSUME;
         }
         return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }

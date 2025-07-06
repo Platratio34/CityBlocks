@@ -15,20 +15,22 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.tick.ScheduledTickView;
 
 public class LargePostBlock extends Block {
 
-    public static final DirectionProperty FACING = Properties.FACING;
+    public static final EnumProperty<Direction> FACING = Properties.FACING;
     public static final IntProperty SIZE = IntProperty.of("size", 1, 9);
     public static final BooleanProperty NORTH = BooleanProperty.of("north");
     public static final BooleanProperty EAST = BooleanProperty.of("east");
@@ -66,8 +68,7 @@ public class LargePostBlock extends Block {
     public static final Identifier ID = CityBlocks.identifier(NAME);
     public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
             new LargePostBlock(Settings.create().nonOpaque()));
-    public static final BlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new BlockItem(BLOCK, new Item.Settings()));
+    public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
 
     public LargePostBlock(Settings settings) {
         super(settings);
@@ -94,14 +95,14 @@ public class LargePostBlock extends Block {
                         && (otherState.get(FACING) == direction || otherState.get(FACING).getOpposite() == direction))
                 || (otherState.isOf(StreetSignBlock.BLOCK) && otherState.get(SignalHeadBlock.FACING).getOpposite() == direction);
     }
-
+    
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
-            WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView,
+            BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
         return getState(state, pos, world);
     }
 
-    private BlockState getState(BlockState state, BlockPos pos, WorldAccess world) {
+    private BlockState getState(BlockState state, BlockPos pos, WorldView world) {
         if (state.get(FACING) == Direction.UP || state.get(FACING) == Direction.DOWN) {
             BlockState above = world.getBlockState(pos.up(1));
             int cSize = state.get(SIZE);
@@ -145,7 +146,7 @@ public class LargePostBlock extends Block {
     }
 
     @Override
-    protected VoxelShape getCullingShape(BlockState state, BlockView world, BlockPos pos) {
+    protected VoxelShape getCullingShape(BlockState state) {
         return getShape(state);
     }
 

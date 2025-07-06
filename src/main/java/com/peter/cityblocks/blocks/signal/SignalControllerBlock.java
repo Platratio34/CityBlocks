@@ -2,6 +2,7 @@ package com.peter.cityblocks.blocks.signal;
 
 import com.mojang.serialization.MapCodec;
 import com.peter.cityblocks.CityBlocks;
+import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.items.SignalLinker;
 
 import net.minecraft.block.Block;
@@ -20,14 +21,14 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class SignalControllerBlock extends BlockWithEntity {
@@ -37,12 +38,11 @@ public class SignalControllerBlock extends BlockWithEntity {
 
     public static final MapCodec<SignalControllerBlock> CODEC = createCodec(SignalControllerBlock::new);
 
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
     
     public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
             new SignalControllerBlock(Settings.create().nonOpaque()));
-    public static final BlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new BlockItem(BLOCK, new Item.Settings()));
+    public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
 
     public static final Identifier BLOCK_ENTITY_ID = SignalControllerBlockEntity.ID;
 
@@ -77,17 +77,17 @@ public class SignalControllerBlock extends BlockWithEntity {
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
+    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient && stack.isOf(SignalLinker.ITEM)) {
             if (SignalLinker.isLinked(stack, pos)) {
                 SignalLinker.unLinkController(stack);
-                player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.un_linked"));
+                player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.un_linked"), false);
             } else {
                 SignalLinker.linkController(stack, pos);
-                player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.linked"));
+                player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.linked"), false);
             }
-            return ItemActionResult.SUCCESS;
+            return ActionResult.SUCCESS;
         }
         return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }

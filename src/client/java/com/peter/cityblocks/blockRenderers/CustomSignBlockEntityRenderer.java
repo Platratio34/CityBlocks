@@ -20,6 +20,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class CustomSignBlockEntityRenderer implements BlockEntityRenderer<CustomSignBlockEntity> {
 
@@ -31,7 +32,7 @@ public class CustomSignBlockEntityRenderer implements BlockEntityRenderer<Custom
 
     @Override
     public void render(CustomSignBlockEntity entity, float tickDelta, MatrixStack matrices,
-            VertexConsumerProvider vertexConsumers, int light, int overlay) {
+            VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
         matrices.push();
                 
         Direction facing = entity.getFacing();

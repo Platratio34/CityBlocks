@@ -3,8 +3,6 @@ package com.peter.cityblocks.blocks.signal;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import com.peter.cityblocks.CityBlocks;
 
 import dan200.computercraft.api.lua.ILuaContext;
@@ -33,7 +31,7 @@ public class SignalControllerPeripheral implements IPeripheral {
     }
 
     @Override
-    public boolean equals(@Nullable IPeripheral other) {
+    public boolean equals(IPeripheral other) {
         if (other == null)
             return false;
         if (!other.getType().equals(getType()))

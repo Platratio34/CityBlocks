@@ -11,8 +11,9 @@ import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.gui.CityBlocksScreens;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -21,9 +22,9 @@ import net.minecraft.client.util.SpriteIdentifier;
 public class CityBlocksClient implements ClientModInitializer {
 	@Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.SIGN_POST_BLOCK, RenderLayer.getCutout());
+        BlockRenderLayerMap.putBlock(Blocks.SIGN_POST_BLOCK, BlockRenderLayer.CUTOUT);
 
-        BlockRenderLayerMap.INSTANCE.putBlock(Blocks.STREET_SIGN_BLOCK, RenderLayer.getCutout());
+        BlockRenderLayerMap.putBlock(Blocks.STREET_SIGN_BLOCK, BlockRenderLayer.CUTOUT);
 
         ModelLoadingPlugin.register(new CityBlocksModelLoader());
 

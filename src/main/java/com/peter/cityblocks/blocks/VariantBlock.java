@@ -18,13 +18,15 @@ import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -47,7 +49,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     }
 
     public VariantBlock(VariantSettings settings, String name) {
-        super(settings);
+        super(settings.registryKey(Blocks.brk(CityBlocks.identifier(name))));
         this.variants = settings.variants;
         variant = settings.variantProperty;
         codec = createCodec(this::constructor);
@@ -58,7 +60,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
 
         Registry.register(Registries.BLOCK, id, this);
 
-        item = Registry.register(Registries.ITEM, id, new BlockItem(this, new Item.Settings()));
+        item = Blocks.registerBlockItem(this, id, new Item.Settings());
     }
 
     private VariantBlock constructor(Settings settings) {
@@ -68,7 +70,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
+    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
             PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (stack.isOf(Items.VARIANT_SWITCHER_ITEM)) {
             int var = state.get(variant) + 1;
@@ -76,7 +78,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
                 var = 0;
             }
             world.setBlockState(pos, state.with(variant, var));
-            return ItemActionResult.SUCCESS;
+            return ActionResult.SUCCESS;
         }
         return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }
@@ -98,11 +100,12 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
                 ctx.getHorizontalPlayerFacing());
     }
 
-    @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-        tooltip.add(CityBlocks.tooltip("block", name));
-        super.appendTooltip(stack, context, tooltip, options);
-    }
+    // TODO fix tooltip
+    // @Override
+    // public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
+    //     tooltip.add(CityBlocks.tooltip("block", name));
+    //     super.appendTooltip(stack, context, tooltip, options);
+    // }
     
     public int getVariant(BlockState state) {
         return state.get(variant);

@@ -4,7 +4,6 @@ import com.peter.cityblocks.blockRenderers.RoadLineBlockRenderer;
 import com.peter.cityblocks.blocks.Blocks;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 
 public class CityBlocksModelLoader implements ModelLoadingPlugin {
@@ -40,62 +39,63 @@ public class CityBlocksModelLoader implements ModelLoadingPlugin {
     };
 
     @Override
-    public void onInitializeModelLoader(Context pluginContext) {
+    public void initialize(Context pluginContext) {
         pluginContext.modifyModelOnLoad().register((original, context) -> {
-            ModelIdentifier modelId = context.topLevelId();
+            Identifier modelId = context.id();
             if (modelId == null)
                 return original;
-            if (!modelId.id().getNamespace().equals(CityBlocks.MOD_ID))
+            if (!modelId.getNamespace().equals(CityBlocks.MOD_ID))
                 return original;
-            
-            if (modelId.id().equals(Blocks.ROAD_LINE_WHITE_SIDE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_BLOCK, LINE_WHITE_SIDE_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK, LINE_WHITE_SIDE_TEXTURES,
-                        modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_LINE_WHITE_CENTER_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_CENTER_BLOCK, LINE_WHITE_CENTER_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK,
-                        LINE_WHITE_CENTER_TEXTURES, modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK, LINE_WHITE_SIDE_MERGE_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK, LINE_WHITE_SIDE_MERGE_TEXTURES, modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK, LINE_YELLOW_SIDE_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK, LINE_YELLOW_SIDE_TEXTURES,
-                        modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK, LINE_YELLOW_CENTER_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK,
-                        LINE_YELLOW_CENTER_TEXTURES, modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK, LINE_YELLOW_SIDE_MERGE_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK,
-                        LINE_YELLOW_SIDE_MERGE_TEXTURES, modelId.getVariant())
-                        .setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_ARROW_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_ARROW_BLOCK, ARROW_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_ARROW_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_ARROW_ANDESITE_BLOCK, ARROW_TEXTURES, modelId.getVariant())
-                        .setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
-            else if (modelId.id().equals(Blocks.ROAD_STOP_BAR_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_STOP_BAR_BLOCK, STOP_BAR_TEXTURES, modelId.getVariant());
-            } else if (modelId.id().equals(Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK.id)) {
-                return new RoadLineBlockRenderer(Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK, STOP_BAR_TEXTURES, modelId.getVariant())
-                        .setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
-            }
+            System.out.println(modelId);
+            // TODO Fix this
+            // if (modelId.equals(Blocks.ROAD_LINE_WHITE_SIDE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_BLOCK, LINE_WHITE_SIDE_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK, LINE_WHITE_SIDE_TEXTURES,
+            //             modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_LINE_WHITE_CENTER_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_CENTER_BLOCK, LINE_WHITE_CENTER_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK,
+            //             LINE_WHITE_CENTER_TEXTURES, modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK, LINE_WHITE_SIDE_MERGE_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK, LINE_WHITE_SIDE_MERGE_TEXTURES, modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK, LINE_YELLOW_SIDE_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK, LINE_YELLOW_SIDE_TEXTURES,
+            //             modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK, LINE_YELLOW_CENTER_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK,
+            //             LINE_YELLOW_CENTER_TEXTURES, modelId.getVariant()).setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK, LINE_YELLOW_SIDE_MERGE_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK,
+            //             LINE_YELLOW_SIDE_MERGE_TEXTURES, modelId.getVariant())
+            //             .setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_ARROW_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_ARROW_BLOCK, ARROW_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_ARROW_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_ARROW_ANDESITE_BLOCK, ARROW_TEXTURES, modelId.getVariant())
+            //             .setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
+            // else if (modelId.equals(Blocks.ROAD_STOP_BAR_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_STOP_BAR_BLOCK, STOP_BAR_TEXTURES, modelId.getVariant());
+            // } else if (modelId.equals(Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK.id)) {
+            //     return new RoadLineBlockRenderer(Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK, STOP_BAR_TEXTURES, modelId.getVariant())
+            //             .setBase(POLISHED_ANDESITE, POLISHED_ANDESITE);
+            // }
             return original;
         });
     }

@@ -1,11 +1,14 @@
 package com.peter.cityblocks.blocks.signs;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.joml.Vector2f;
 import org.joml.Vector3d;
 
 import com.peter.cityblocks.networking.BlockPosScreenPacket;
+import com.mojang.serialization.Codec;
 import com.peter.cityblocks.gui.CustomSignScreenHandler;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -13,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,6 +32,9 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
+import net.minecraft.storage.ReadView.ListReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -199,77 +206,76 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     public static final String NBT_TEXT = "text";
     public static final String NBT_STICKERS = "stickers";
     public static final String NBT_BLOCK_STATE = "block_state";
-
+    
     @Override
-    protected void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putInt(NBT_VARIANT, variant);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putInt(NBT_VARIANT, variant);
         if (text.length > 0) {
-            NbtList textList = new NbtList();
+            ArrayList<String> list = new ArrayList<>();
             for (int i = 0; i < text.length; i++) {
-                textList.add(NbtString.of(text[i]));
+                list.add(text[i]);
             }
-            nbt.put(NBT_TEXT, textList);
+            view.put(NBT_TEXT, Codec.list(Codec.STRING), list);
         }
-        if (stickers.size() > 0) {
-            NbtList stickersList = new NbtList();
-            for (int i = 0; i < stickers.size(); i++) {
-                stickersList.add(stickers.get(i).toNbt());
-            }
-            nbt.put(NBT_STICKERS, stickersList);
-        }
+        // if (stickers.size() > 0) {
+        //     view.put(NBT_STICKERS, Codec.list(SignSticker.CODEC), stickers);
+        // }
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        if (nbt.contains(NBT_VARIANT)) {
-            variant = nbt.getInt(NBT_VARIANT);
-            int maxV = getMaxVariant();
-            if (variant > maxV) {
-                variant = maxV;
-            }
+    protected void readData(ReadView view) {
+        super.readData(view);
+        
+        variant = view.getInt(NBT_VARIANT, 0);
+        int maxV = getMaxVariant();
+        if (variant > maxV) {
+            variant = maxV;
         }
-        if (nbt.contains(NBT_TEXT)) {
-            NbtList textList = (NbtList) nbt.get(NBT_TEXT);
+        
+        Optional<List<String>> opt = view.read(NBT_TEXT, Codec.list(Codec.STRING));
+        if (!opt.isEmpty()) {
+            // List<String> lines = opt.get();
+            List<String> lines = opt.get();
             int nLines = getMaxTextLines();
             text = new String[nLines];
-            if (textList.size() > nLines) {
+            if (lines.size() > nLines) {
                 for (int i = 0; i < nLines; i++) {
-                    text[i] = textList.getString(i);
+                    text[i] = lines.get(i);
                 }
             } else {
-                for (int i = 0; i < textList.size(); i++) {
-                    text[i] = textList.getString(i);
+                for (int i = 0; i < lines.size(); i++) {
+                    text[i] = lines.get(i);
                 }
-                for (int i = textList.size(); i < nLines; i++) {
+                for (int i = lines.size(); i < nLines; i++) {
                     text[i] = "";
                 }
                 TextLineInfo[] textInfo = getTextInfo();
                 for (int i = 0; i < textInfo.length; i++) {
-                    if (textInfo[i].defaultText != null && textInfo[i].lineN >= textList.size()) {
+                    if (textInfo[i].defaultText != null && textInfo[i].lineN >= lines.size()) {
                         text[textInfo[i].lineN] = textInfo[i].defaultText;
                     }
                 }
             }
         }
-        if (nbt.contains(NBT_STICKERS)) {
-            NbtList stickerList = (NbtList) nbt.get(NBT_STICKERS);
-            stickers = new ArrayList<SignSticker>();
-            for (int i = 0; i < stickerList.size(); i++) {
-                stickers.add(SignSticker.fromNbt(stickerList.getCompound(i)));
-            }
-        }
+        // if (nbt.contains(NBT_STICKERS)) {
+        //     NbtList stickerList = (NbtList) nbt.get(NBT_STICKERS);
+        //     stickers = new ArrayList<SignSticker>();
+        //     for (int i = 0; i < stickerList.size(); i++) {
+        //         stickers.add(SignSticker.fromNbt(stickerList.getCompound(i)));
+        //     }
+        // }
     }
     
-    @Override
-    public void setStackNbt(ItemStack stack, WrapperLookup registries) {
-        NbtCompound nbt = new NbtCompound();
-        writeNbt(nbt, registries);
-        nbt.put(NBT_BLOCK_STATE, getBlock().getNbt(getCachedState(), variant));
-        BlockItem.setBlockEntityData(stack, this.getType(), nbt);
-        stack.applyComponentsFrom(this.createComponentMap());
-    }
+    // TODO re-implement this?
+    // @Override
+    // public void setStackNbt(ItemStack stack, WrapperLookup registries) {
+    //     NbtCompound nbt = new NbtCompound();
+    //     writeNbt(nbt, registries);
+    //     nbt.put(NBT_BLOCK_STATE, getBlock().getNbt(getCachedState(), variant));
+    //     BlockItem.setBlockEntityData(stack, this.getType(), nbt);
+    //     stack.applyComponentsFrom(this.createComponentMap());
+    // }
 
     @Override
     public void markDirty() {
@@ -317,7 +323,7 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
         NbtComponent nbtComp = stack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT);
         if (!nbtComp.isEmpty()) {
             NbtCompound nbt = nbtComp.copyNbt();
-            return nbt.getCompound(NBT_BLOCK_STATE);
+            return nbt.getCompound(NBT_BLOCK_STATE).get();
         }
         return null;
     }

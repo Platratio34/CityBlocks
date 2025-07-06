@@ -1,5 +1,8 @@
 package com.peter.cityblocks.blocks.signal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum LampState {
 
     OFF(0, "lamp_off", false, "off"),
@@ -47,10 +50,26 @@ public enum LampState {
         return arr;
     }
 
+    public static List<Integer> toIntList(LampState[] states) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < states.length; i++) {
+            list.add(states[i].code);
+        }
+        return list;
+    }
+
     public static LampState[] fromIntArray(int[] states) {
         LampState[] arr = new LampState[states.length];
         for (int i = 0; i < states.length; i++) {
             arr[i] = fromCode(states[i]);
+        }
+        return arr;
+    }
+
+    public static LampState[] fromIntList(List<Integer> states) {
+        LampState[] arr = new LampState[states.size()];
+        for (int i = 0; i < states.size(); i++) {
+            arr[i] = fromCode(states.get(i));
         }
         return arr;
     }

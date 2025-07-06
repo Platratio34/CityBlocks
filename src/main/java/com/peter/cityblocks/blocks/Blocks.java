@@ -11,6 +11,13 @@ import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 
 public class Blocks {
 
@@ -90,4 +97,17 @@ public class Blocks {
         SignalHeadBlockEntity.register();
         SignalControllerBlockEntity.register();
     };
+
+    public static BlockItem registerBlockItem(Block block, Identifier id, Item.Settings settings) {
+        settings.registryKey(RegistryKey.of(RegistryKeys.ITEM, id));
+        return Registry.register(Registries.ITEM, id, new BlockItem(block, settings));
+    }
+
+    public static RegistryKey<Item> irk(Identifier id) {
+        return RegistryKey.of(RegistryKeys.ITEM, id);
+    }
+
+    public static RegistryKey<Block> brk(Identifier id) {
+        return RegistryKey.of(RegistryKeys.BLOCK, id);
+    }
 }

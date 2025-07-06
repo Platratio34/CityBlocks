@@ -1,8 +1,10 @@
 package com.peter.cityblocks.blocks.signs;
 
+import com.mojang.serialization.Codec;
 import com.peter.cityblocks.CityBlocks;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.util.Identifier;
 
 public class SignSticker {
@@ -29,6 +31,7 @@ public class SignSticker {
     private static final String NBT_X = "x";
     private static final String NBT_Y = "y";
     private static final String NBT_Z = "z";
+    public static final Codec<SignSticker> CODEC = Codec.withAlternative(NbtCompound.CODEC, StringNbtReader.STRINGIFIED_CODEC).xmap(SignSticker::fromNbt, a -> a.toNbt());
 
     public NbtCompound toNbt() {
         NbtCompound nbt = new NbtCompound();
@@ -43,11 +46,11 @@ public class SignSticker {
     
     public static SignSticker fromNbt(NbtCompound nbt) {
         SignSticker sticker = new SignSticker();
-        String id = nbt.getString(NBT_ID);
+        String id = nbt.getString(NBT_ID).get();
         sticker.stickerId = Identifier.splitOn(id, ':');
-        sticker.x = nbt.getInt(NBT_X);
-        sticker.y = nbt.getInt(NBT_Y);
-        sticker.z = nbt.getFloat(NBT_Z);
+        sticker.x = nbt.getInt(NBT_X).get();
+        sticker.y = nbt.getInt(NBT_Y).get();
+        sticker.z = nbt.getFloat(NBT_Z).get();
         return sticker;
     }
 

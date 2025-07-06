@@ -1,9 +1,12 @@
 package com.peter.cityblocks.blocks.signal;
 
+import java.util.Optional;
+
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.networking.BlockPosScreenPacket;
 import com.peter.cityblocks.gui.SignalHeadScreenHandler;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,6 +23,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryWrapper.WrapperLookup;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +35,7 @@ public class PedestrianSignalBlockEntity extends BlockEntity implements Extended
     public static final Identifier ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<PedestrianSignalBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
             Registries.BLOCK_ENTITY_TYPE, ID,
-            BlockEntityType.Builder.create(PedestrianSignalBlockEntity::new, PedestrianSignalBlock.BLOCK).build());
+            FabricBlockEntityTypeBuilder.create(PedestrianSignalBlockEntity::new, PedestrianSignalBlock.BLOCK).build());
 
     public static final int OFF_STATE = 0;
     public static final int WALK_STATE = 1;
@@ -52,23 +57,24 @@ public class PedestrianSignalBlockEntity extends BlockEntity implements Extended
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, WrapperLookup registryLookup) {
+    protected void writeData(WriteView view) {
+        super.writeData(view);
         
-        nbt.putInt(NBT_STATE, state);
-        nbt.putInt(NBT_HEAD_ID, headId);
-
-        super.writeNbt(nbt, registryLookup);
+        view.putInt(NBT_STATE, state);
+        view.putInt(NBT_HEAD_ID, headId);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
 
-        if (nbt.contains(NBT_STATE)) {
-            state = nbt.getInt(NBT_STATE);
+        Optional<Integer> optState = view.getOptionalInt(NBT_STATE);
+        if (optState.isPresent()) {
+            state = optState.get();
         }
-        if (nbt.contains(NBT_HEAD_ID)) {
-            headId = nbt.getInt(NBT_HEAD_ID);
+        Optional<Integer> optId = view.getOptionalInt(NBT_HEAD_ID);
+        if (optId.isPresent()) {
+            headId = optId.get();
         }
     }
 

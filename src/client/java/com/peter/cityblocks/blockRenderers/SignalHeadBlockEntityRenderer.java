@@ -18,6 +18,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<SignalHeadBlockEntity> {
 
@@ -56,8 +57,8 @@ public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<Signal
     }
 
     @Override
-    public void render(SignalHeadBlockEntity entity, float tickDelta, MatrixStack matrices,
-            VertexConsumerProvider vertexProvider, int light, int overlay) {
+    public void render(SignalHeadBlockEntity entity, float tickProgress, MatrixStack matrices,
+            VertexConsumerProvider vertexProvider, int light, int overlay, Vec3d cameraPos) {
         matrices.push();
         
         BlockState blockState = entity.getCachedState();

@@ -1,5 +1,6 @@
 package com.peter.cityblocks.gui;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.signal.LampColor;
@@ -8,6 +9,7 @@ import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
 import com.peter.cityblocks.networking.CityBlocksClientNetworking;
 
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
@@ -35,11 +37,12 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        // TODO put this back?
+        // RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        // RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        // RenderSystem.setShaderTexture(0, TEXTURE);
 
-        context.drawTexture(TEXTURE, x, y, 0, 0, 150, 150, 150, 150);
+        context.drawTexture(RenderPipelines.BLOCK_SCREEN_EFFECT, TEXTURE, x, y, 0, 0, 150, 150, 150, 150);
 
         int headId = -1;
         if (handler.headEntity != null)

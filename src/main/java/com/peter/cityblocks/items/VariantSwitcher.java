@@ -32,7 +32,7 @@ public class VariantSwitcher extends Item {
             }
         }
 
-        return ActionResult.success(world.isClient);
+        return world.isClient ? ActionResult.SUCCESS : ActionResult.FAIL;
     }
     
     private boolean use(PlayerEntity player, BlockState state, World world, BlockPos pos, ItemStack stack) {
