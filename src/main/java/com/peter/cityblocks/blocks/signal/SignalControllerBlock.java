@@ -41,7 +41,7 @@ public class SignalControllerBlock extends BlockWithEntity {
     public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
     
     public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
-            new SignalControllerBlock(Settings.create().nonOpaque()));
+            new SignalControllerBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
     public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
 
     public static final Identifier BLOCK_ENTITY_ID = SignalControllerBlockEntity.ID;

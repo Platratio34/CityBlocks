@@ -52,7 +52,7 @@ public class BuildingSignBlock extends CustomSignBlock {
     public static final MapCodec<BuildingSignBlock> CODEC = createCodec(BuildingSignBlock::new);
 
     public static final CustomSignBlock BLOCK = Registry.register(Registries.BLOCK, ID,
-            new BuildingSignBlock(Settings.create().nonOpaque()));
+            new BuildingSignBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
     public static final CustomSignBlockItem ITEM = Registry.register(Registries.ITEM, ID,
             new CustomSignBlockItem(BLOCK, new Item.Settings().registryKey(Blocks.irk(ID))));
     public static final BlockEntityType<CustomSignBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(

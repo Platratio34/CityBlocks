@@ -67,7 +67,7 @@ public class LargePostBlock extends Block {
     public static final String NAME = "large_post";
     public static final Identifier ID = CityBlocks.identifier(NAME);
     public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
-            new LargePostBlock(Settings.create().nonOpaque()));
+            new LargePostBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
     public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
 
     public LargePostBlock(Settings settings) {

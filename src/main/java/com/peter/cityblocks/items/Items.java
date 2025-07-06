@@ -1,6 +1,5 @@
 package com.peter.cityblocks.items;
 
-import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.CellingLightBlock;
 import com.peter.cityblocks.blocks.ExitSignBlock;
@@ -13,13 +12,13 @@ import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
 
 public class Items {
 
-    public static final Item VARIANT_SWITCHER_ITEM = Registry.register(Registries.ITEM,
-            CityBlocks.identifier("variant_switcher"), new VariantSwitcher(new Item.Settings()));
+    public static final Item VARIANT_SWITCHER_ITEM = VariantSwitcher.ITEM;
 
     public static final BlockItem ROAD_LINE_WHITE_CENTER_BLOCK_ITEM = Blocks.ROAD_LINE_WHITE_CENTER_BLOCK.item;
     public static final BlockItem ROAD_LINE_WHITE_SIDE_BLOCK_ITEM = Blocks.ROAD_LINE_WHITE_SIDE_BLOCK.item;
@@ -64,4 +63,8 @@ public class Items {
     public static void init() {
         ItemGroups.init();
     };
+
+    public static RegistryKey<Item> irk(Identifier id) {
+        return RegistryKey.of(RegistryKeys.ITEM, id);
+    }
 }

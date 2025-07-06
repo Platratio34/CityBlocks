@@ -2,6 +2,7 @@ package com.peter.cityblocks.blocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class TextureVariantPartialBlock extends VariantPartialBlock {
 
@@ -14,6 +15,9 @@ public class TextureVariantPartialBlock extends VariantPartialBlock {
 
     @Override
     public VoxelShape getShape(BlockState state) {
+        if (shapes == null) {
+            return VoxelShapes.cuboid(0, 0, 0, 1, 1, 1);
+        }
         return shapes[getDir(state)];
     }
 

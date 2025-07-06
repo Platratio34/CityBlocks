@@ -6,6 +6,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class VariantPartialBlock extends VariantBlock {
@@ -33,6 +34,9 @@ public class VariantPartialBlock extends VariantBlock {
     }
 
     public VoxelShape getShape(BlockState state) {
+        if (shapes == null) {
+            return VoxelShapes.cuboid(0, 0, 0, 1, 1, 1);
+        }
         return shapes[getDir(state)][getVariant(state)];
     }
 

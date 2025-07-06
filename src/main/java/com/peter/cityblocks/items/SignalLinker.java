@@ -23,7 +23,7 @@ public class SignalLinker extends Item {
     public static final String NAME = "signal_linker";
     public static final Identifier ID = CityBlocks.identifier(NAME);
 
-    public static final Item ITEM = Registry.register(Registries.ITEM, ID, new SignalLinker(new Settings()));
+    public static final Item ITEM = Registry.register(Registries.ITEM, ID, new SignalLinker(new Settings().registryKey(Items.irk(ID))));
 
     public static final ComponentType<BlockPos> LINKED_CONTROLLER_COMPONENT = Registry.register(
             Registries.DATA_COMPONENT_TYPE, CityBlocks.identifier("linked_controller"),

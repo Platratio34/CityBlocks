@@ -94,7 +94,7 @@ public class StreetSignBlock extends CustomSignBlock {
     public static final MapCodec<StreetSignBlock> CODEC = createCodec(StreetSignBlock::new);
 
     public static final CustomSignBlock BLOCK = Registry.register(Registries.BLOCK, ID,
-            new StreetSignBlock(Settings.create().nonOpaque()));
+            new StreetSignBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
     public static final CustomSignBlockItem ITEM = Registry.register(Registries.ITEM, ID,
             new CustomSignBlockItem(BLOCK, new Item.Settings().registryKey(Blocks.irk(ID))));
     public static final BlockEntityType<CustomSignBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(

@@ -58,7 +58,7 @@ public class SignalHeadBlock extends BlockWithEntity {
     public static final IntProperty LAMP_COUNT = IntProperty.of("lamps", 1, MAX_LAMPS);
 
     public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
-            new SignalHeadBlock(Settings.create().nonOpaque()));
+            new SignalHeadBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
     public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
 
     public static final Identifier BLOCK_ENTITY_ID = SignalHeadBlockEntity.ID;
