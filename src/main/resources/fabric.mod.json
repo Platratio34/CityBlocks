@@ -1,15 +1,15 @@
 {
 	"schemaVersion": 1,
 	"id": "city-blocks",
-	"version": "${version}",
+	"version": "${mod_version}",
 	"name": "City Blocks",
 	"description": "Various Blocks for city construction",
 	"authors": [
 		"Platratio34"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/Platratio34/CityBlocks",
+		"sources": "https://github.com/Platratio34/CityBlocks"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/city-blocks/icon.png",
@@ -31,12 +31,12 @@
 	],
     "accessWidener": "city-blocks.accesswidener",
 	"depends": {
-		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.21.1",
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "~${minecraft_version}",
 		"java": ">=21",
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"computercraft": ">=1.113.0"
+		"computercraft": ">=${cct_version}"
 	}
 }
