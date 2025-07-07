@@ -16,16 +16,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -34,7 +30,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
-import net.minecraft.storage.ReadView.ListReadView;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -210,6 +205,7 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     @Override
     protected void writeData(WriteView view) {
         super.writeData(view);
+        view.put(NBT_BLOCK_STATE, NbtCompound.CODEC, getBlock().getNbt(getCachedState(), variant));
         view.putInt(NBT_VARIANT, variant);
         if (text.length > 0) {
             ArrayList<String> list = new ArrayList<>();
@@ -235,7 +231,6 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
         
         Optional<List<String>> opt = view.read(NBT_TEXT, Codec.list(Codec.STRING));
         if (!opt.isEmpty()) {
-            // List<String> lines = opt.get();
             List<String> lines = opt.get();
             int nLines = getMaxTextLines();
             text = new String[nLines];
@@ -266,16 +261,6 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
         //     }
         // }
     }
-    
-    // TODO re-implement this?
-    // @Override
-    // public void setStackNbt(ItemStack stack, WrapperLookup registries) {
-    //     NbtCompound nbt = new NbtCompound();
-    //     writeNbt(nbt, registries);
-    //     nbt.put(NBT_BLOCK_STATE, getBlock().getNbt(getCachedState(), variant));
-    //     BlockItem.setBlockEntityData(stack, this.getType(), nbt);
-    //     stack.applyComponentsFrom(this.createComponentMap());
-    // }
 
     @Override
     public void markDirty() {
@@ -323,7 +308,7 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
         NbtComponent nbtComp = stack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT);
         if (!nbtComp.isEmpty()) {
             NbtCompound nbt = nbtComp.copyNbt();
-            return nbt.getCompound(NBT_BLOCK_STATE).get();
+            return nbt.getCompound(NBT_BLOCK_STATE).orElse(null);
         }
         return null;
     }

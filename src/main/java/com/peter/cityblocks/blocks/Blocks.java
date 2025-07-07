@@ -1,5 +1,6 @@
 package com.peter.cityblocks.blocks;
 
+import com.peter.cityblocks.blocks.RoadLineBlock.RoadLineModel;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlock;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlock;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
@@ -21,57 +22,143 @@ import net.minecraft.util.Identifier;
 
 public class Blocks {
 
-    public static final VariantBlock ROAD_LINE_WHITE_CENTER_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(2).solid().mapColor(MapColor.WHITE),
-            "road_line_white_center");
-    public static final VariantBlock ROAD_LINE_WHITE_SIDE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(5).solid().mapColor(MapColor.WHITE),
-            "road_line_white_side");
-    public static final VariantBlock ROAD_LINE_WHITE_SIDE_MERGE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(7).solid().mapColor(MapColor.WHITE),
-            "road_line_white_side_merge");
+    public static final RoadLineBlock ROAD_LINE_WHITE_CENTER_BLOCK = new RoadLineBlock("road_line_white_center",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_line_white_center", "road_line_white_center"),
+        new RoadLineModel("road_line_white_center_reflector", "road_line_white_center_reflector")
+    });
+    public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_BLOCK = new RoadLineBlock("road_line_white_side",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_line_white_side", "road_line_white_side"),
+        new RoadLineModel("road_line_white_side_angle", "road_line_white_side_angle"),
+        new RoadLineModel("road_line_white_side_angle_end", "road_line_white_side_angle_end"),
+        new RoadLineModel("road_line_white_chevron", "road_line_white_chevron"),
+        new RoadLineModel("road_line_white_side_thick", "road_line_white_side_thick"),
+    });
+    public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_MERGE_BLOCK = new RoadLineBlock("road_line_white_side_merge",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_line_white_side_merge1", "road_line_white_side_merge1"),
+        new RoadLineModel("road_line_white_side_merge2", "road_line_white_side_merge2"),
+        new RoadLineModel("road_line_white_side_merge1f", "road_line_white_side_merge1f"),
+        new RoadLineModel("road_line_white_side_merge2f", "road_line_white_side_merge2f"),
+        new RoadLineModel("road_line_white_side_merge_corner", "road_line_white_side_merge_corner"),
+        new RoadLineModel("road_line_white_side_merge_cornerf", "road_line_white_side_merge_cornerf"),
+        new RoadLineModel("road_line_white_side_merge_double", "road_line_white_side_merge_double"),
+    });
 
-    public static final VariantBlock ROAD_LINE_YELLOW_CENTER_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(5).solid().mapColor(MapColor.YELLOW),
-            "road_line_yellow_center");
-    public static final VariantBlock ROAD_LINE_YELLOW_SIDE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(4).solid().mapColor(MapColor.YELLOW),
-            "road_line_yellow_side");
-    public static final VariantBlock ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(7).solid().mapColor(MapColor.YELLOW),
-            "road_line_yellow_side_merge");
+    public static final RoadLineBlock ROAD_LINE_YELLOW_CENTER_BLOCK = new RoadLineBlock("road_line_yellow_center",
+            MapColor.YELLOW, new RoadLineModel[] {
+        new RoadLineModel("road_line_yellow_center", "road_line_yellow_center"),
+        new RoadLineModel("road_line_yellow_double", "road_line_yellow_double"),
+        new RoadLineModel("road_line_yellow_double_single", "road_line_yellow_double_single"),
+        new RoadLineModel("road_line_yellow_double_single_reflector", "road_line_yellow_double_single_reflector"),
+        new RoadLineModel("road_line_yellow_center_reflector", "road_line_yellow_center_reflector")
+    });
+    public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_BLOCK = new RoadLineBlock("road_line_yellow_side",
+            MapColor.YELLOW, new RoadLineModel[] {
+        new RoadLineModel("road_line_yellow_side", "road_line_yellow_side"),
+        new RoadLineModel("road_line_yellow_side_angle", "road_line_yellow_side_angle"),
+        new RoadLineModel("road_line_yellow_side_angle_end", "road_line_yellow_side_angle_end"),
+        new RoadLineModel("road_line_yellow_chevron", "road_line_yellow_chevron"),
+    });
+    public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK = new RoadLineBlock("road_line_yellow_side_merge",
+            MapColor.YELLOW, new RoadLineModel[] {
+        new RoadLineModel("road_line_yellow_side_merge1", "road_line_yellow_side_merge1"),
+        new RoadLineModel("road_line_yellow_side_merge2", "road_line_yellow_side_merge2"),
+        new RoadLineModel("road_line_yellow_side_merge1f", "road_line_yellow_side_merge1f"),
+        new RoadLineModel("road_line_yellow_side_merge2f", "road_line_yellow_side_merge2f"),
+        new RoadLineModel("road_line_yellow_side_merge_corner", "road_line_yellow_side_merge_corner"),
+        new RoadLineModel("road_line_yellow_side_merge_cornerf", "road_line_yellow_side_merge_cornerf"),
+        new RoadLineModel("road_line_yellow_side_merge_double", "road_line_yellow_side_merge_double"),
+            });
 
-    public static final VariantBlock ROAD_ARROW_BLOCK = new VariantBlock(new VariantSettings().setVariants(7).solid().mapColor(MapColor.LIGHT_GRAY),
-            "road_arrow");
+    public static final RoadLineBlock ROAD_ARROW_BLOCK = new RoadLineBlock("road_arrow",
+            MapColor.LIGHT_GRAY, new RoadLineModel[] {
+        new RoadLineModel("road_arrow_straight", "road_arrow_straight"),
+        new RoadLineModel("road_arrow_left", "road_arrow_left"),
+        new RoadLineModel("road_arrow_right", "road_arrow_right"),
+        new RoadLineModel("road_arrow_straight_left", "road_arrow_straight_left"),
+        new RoadLineModel("road_arrow_straight_right", "road_arrow_straight_right"),
+        new RoadLineModel("road_arrow_left_right", "road_arrow_left_right"),
+        new RoadLineModel("road_arrow_straight_left_right", "road_arrow_straight_left_right"),
+    });
+    public static final RoadLineBlock ROAD_STOP_BAR_BLOCK = new RoadLineBlock("road_stop_bar",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_stop_bar_center", "road_stop_bar_center"),
+        new RoadLineModel("road_stop_bar_left", "road_stop_bar_left"),
+        new RoadLineModel("road_stop_bar_right", "road_stop_bar_right"),
+        new RoadLineModel("road_stop_bar_left_yellow", "road_stop_bar_left_yellow"),
+    });
 
-    public static final VariantBlock ROAD_STOP_BAR_BLOCK = new VariantBlock(new VariantSettings().setVariants(4).solid().mapColor(MapColor.WHITE),
-            "road_stop_bar");
+    public static final RoadLineBlock ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_center_andesite",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_line_white_center_andesite", "road_line_white_center"),
+        new RoadLineModel("road_line_white_center_andesite_reflector", "road_line_white_center_reflector")
+    }).andesite();
+    public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_side_andesite",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_line_white_side_andesite", "road_line_white_side"),
+        new RoadLineModel("road_line_white_side_andesite_angle", "road_line_white_side_angle"),
+        new RoadLineModel("road_line_white_side_andesite_angle_end", "road_line_white_side_angle_end"),
+        new RoadLineModel("road_line_white_chevron_andesite", "road_line_white_chevron"),
+        new RoadLineModel("road_line_white_side_andesite_thick", "road_line_white_side_thick"),
+    }).andesite();
+    public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_side_merge_andesite",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_line_white_side_andesite_merge1", "road_line_white_side_merge1"),
+        new RoadLineModel("road_line_white_side_andesite_merge2", "road_line_white_side_merge2"),
+        new RoadLineModel("road_line_white_side_andesite_merge1f", "road_line_white_side_merge1f"),
+        new RoadLineModel("road_line_white_side_andesite_merge2f", "road_line_white_side_merge2f"),
+        new RoadLineModel("road_line_white_side_andesite_merge_corner", "road_line_white_side_merge_corner"),
+        new RoadLineModel("road_line_white_side_andesite_merge_cornerf", "road_line_white_side_merge_cornerf"),
+        new RoadLineModel("road_line_white_side_andesite_merge_double", "road_line_white_side_merge_double"),
+    }).andesite();
 
-    public static final VariantBlock ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(2).solid().mapColor(MapColor.WHITE),
-            "road_line_white_center_andesite");
-    public static final VariantBlock ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(5).solid().mapColor(MapColor.WHITE),
-            "road_line_white_side_andesite");
-    public static final VariantBlock ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(7).solid().mapColor(MapColor.WHITE),
-            "road_line_white_side_merge_andesite");
 
-    public static final VariantBlock ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(5).solid().mapColor(MapColor.YELLOW),
-            "road_line_yellow_center_andesite");
-    public static final VariantBlock ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(4).solid().mapColor(MapColor.YELLOW),
-            "road_line_yellow_side_andesite");
-    public static final VariantBlock ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK = new VariantBlock(
-            new VariantSettings().setVariants(7).solid().mapColor(MapColor.YELLOW),
-            "road_line_yellow_side_merge_andesite");
+    public static final RoadLineBlock ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_center_andesite",
+            MapColor.YELLOW, new RoadLineModel[] {
+        new RoadLineModel("road_line_yellow_center_andesite", "road_line_yellow_center"),
+        new RoadLineModel("road_line_yellow_double_andesite", "road_line_yellow_double"),
+        new RoadLineModel("road_line_yellow_double_andesite_single", "road_line_yellow_double_single"),
+        new RoadLineModel("road_line_yellow_double_andesite_single_reflector", "road_line_yellow_double_single_reflector"),
+        new RoadLineModel("road_line_yellow_center_andesite_reflector", "road_line_yellow_center_reflector")
+    }).andesite();
+    public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_side_andesite",
+            MapColor.YELLOW, new RoadLineModel[] {
+        new RoadLineModel("road_line_yellow_side_andesite", "road_line_yellow_side"),
+        new RoadLineModel("road_line_yellow_side_andesite_angle", "road_line_yellow_side_angle"),
+        new RoadLineModel("road_line_yellow_side_andesite_angle_end", "road_line_yellow_side_angle_end"),
+        new RoadLineModel("road_line_yellow_chevron_andesite", "road_line_yellow_chevron"),
+    }).andesite();
+    public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_side_merge_andesite",
+            MapColor.YELLOW, new RoadLineModel[] {
+        new RoadLineModel("road_line_yellow_side_andesite_merge1", "road_line_yellow_side_merge1"),
+        new RoadLineModel("road_line_yellow_side_andesite_merge2", "road_line_yellow_side_merge2"),
+        new RoadLineModel("road_line_yellow_side_andesite_merge1f", "road_line_yellow_side_merge1f"),
+        new RoadLineModel("road_line_yellow_side_andesite_merge2f", "road_line_yellow_side_merge2f"),
+        new RoadLineModel("road_line_yellow_side_andesite_merge_corner", "road_line_yellow_side_merge_corner"),
+        new RoadLineModel("road_line_yellow_side_andesite_merge_cornerf", "road_line_yellow_side_merge_cornerf"),
+        new RoadLineModel("road_line_yellow_side_andesite_merge_double", "road_line_yellow_side_merge_double"),
+    }).andesite();
 
-    public static final VariantBlock ROAD_ARROW_ANDESITE_BLOCK = new VariantBlock(new VariantSettings().setVariants(7).solid().mapColor(MapColor.LIGHT_GRAY),
-            "road_arrow_andesite");
-
-    public static final VariantBlock ROAD_STOP_BAR_ANDESITE_BLOCK = new VariantBlock(new VariantSettings().setVariants(4).solid().mapColor(MapColor.WHITE),
-            "road_stop_bar_andesite");
+    public static final RoadLineBlock ROAD_ARROW_ANDESITE_BLOCK = new RoadLineBlock("road_arrow_andesite",
+            MapColor.LIGHT_GRAY, new RoadLineModel[] {
+        new RoadLineModel("road_arrow_andesite_straight", "road_arrow_straight"),
+        new RoadLineModel("road_arrow_andesite_left", "road_arrow_left"),
+        new RoadLineModel("road_arrow_andesite_right", "road_arrow_right"),
+        new RoadLineModel("road_arrow_andesite_straight_left", "road_arrow_straight_left"),
+        new RoadLineModel("road_arrow_andesite_straight_right", "road_arrow_straight_right"),
+        new RoadLineModel("road_arrow_andesite_left_right", "road_arrow_left_right"),
+        new RoadLineModel("road_arrow_andesite_straight_left_right", "road_arrow_straight_left_right"),
+    }).andesite();
+    
+    public static final RoadLineBlock ROAD_STOP_BAR_ANDESITE_BLOCK = new RoadLineBlock("road_stop_bar_andesite",
+            MapColor.WHITE, new RoadLineModel[] {
+        new RoadLineModel("road_stop_bar_andesite_center", "road_stop_bar_center"),
+        new RoadLineModel("road_stop_bar_andesite_left", "road_stop_bar_left"),
+        new RoadLineModel("road_stop_bar_andesite_right", "road_stop_bar_right"),
+        new RoadLineModel("road_stop_bar_andesite_left_yellow", "road_stop_bar_left_yellow"),
+    }).andesite();
 
     public static final VariantPartialBlock CABLE_BARRIER_BLOCK = new CableBarrierBlock("cable_barrier");
     public static final VariantPartialBlock CONCRETE_BARRIER_BLOCK = new ConcreteBarrierBlock("concrete_barrier");

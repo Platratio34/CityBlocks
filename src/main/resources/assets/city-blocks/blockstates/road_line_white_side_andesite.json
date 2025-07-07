@@ -2,68 +2,68 @@
     "variants": {
 
         "variant=0,facing=north": {
-            "model": "city-blocks:block/road_line_white_side"
+            "model": "city-blocks:block/road_line_white_side_andesite"
         },
         "variant=0,facing=east": {
-            "model": "city-blocks:block/road_line_white_side", "y": 90
+            "model": "city-blocks:block/road_line_white_side_andesite", "y": 90
         },
         "variant=0,facing=south": {
-            "model": "city-blocks:block/road_line_white_side", "y": 180
+            "model": "city-blocks:block/road_line_white_side_andesite", "y": 180
         },
         "variant=0,facing=west": {
-            "model": "city-blocks:block/road_line_white_side", "y": 270
+            "model": "city-blocks:block/road_line_white_side_andesite", "y": 270
         },
 
         "variant=1,facing=north": {
-            "model": "city-blocks:block/road_line_white_side_angle"
+            "model": "city-blocks:block/road_line_white_side_andesite_angle"
         },
         "variant=1,facing=east": {
-            "model": "city-blocks:block/road_line_white_side_angle", "y": 90
+            "model": "city-blocks:block/road_line_white_side_andesite_angle", "y": 90
         },
         "variant=1,facing=south": {
-            "model": "city-blocks:block/road_line_white_side_angle", "y": 180
+            "model": "city-blocks:block/road_line_white_side_andesite_angle", "y": 180
         },
         "variant=1,facing=west": {
-            "model": "city-blocks:block/road_line_white_side_angle", "y": 270
+            "model": "city-blocks:block/road_line_white_side_andesite_angle", "y": 270
         },
 
         "variant=2,facing=north": {
-            "model": "city-blocks:block/road_line_white_side_angle_end"
+            "model": "city-blocks:block/road_line_white_side_andesite_angle_end"
         },
         "variant=2,facing=east": {
-            "model": "city-blocks:block/road_line_white_side_angle_end", "y": 90
+            "model": "city-blocks:block/road_line_white_side_andesite_angle_end", "y": 90
         },
         "variant=2,facing=south": {
-            "model": "city-blocks:block/road_line_white_side_angle_end", "y": 180
+            "model": "city-blocks:block/road_line_white_side_andesite_angle_end", "y": 180
         },
         "variant=2,facing=west": {
-            "model": "city-blocks:block/road_line_white_side_angle_end", "y": 270
+            "model": "city-blocks:block/road_line_white_side_andesite_angle_end", "y": 270
         },
 
         "variant=3,facing=north": {
-            "model": "city-blocks:block/road_line_white_chevron"
+            "model": "city-blocks:block/road_line_white_chevron_andesite"
         },
         "variant=3,facing=east": {
-            "model": "city-blocks:block/road_line_white_chevron", "y": 90
+            "model": "city-blocks:block/road_line_white_chevron_andesite", "y": 90
         },
         "variant=3,facing=south": {
-            "model": "city-blocks:block/road_line_white_chevron", "y": 180
+            "model": "city-blocks:block/road_line_white_chevron_andesite", "y": 180
         },
         "variant=3,facing=west": {
-            "model": "city-blocks:block/road_line_white_chevron", "y": 270
+            "model": "city-blocks:block/road_line_white_chevron_andesite", "y": 270
         },
 
         "variant=4,facing=north": {
-            "model": "city-blocks:block/road_line_white_side_thick"
+            "model": "city-blocks:block/road_line_white_side_andesite_thick"
         },
         "variant=4,facing=east": {
-            "model": "city-blocks:block/road_line_white_side_thick", "y": 90
+            "model": "city-blocks:block/road_line_white_side_andesite_thick", "y": 90
         },
         "variant=4,facing=south": {
-            "model": "city-blocks:block/road_line_white_side_thick", "y": 180
+            "model": "city-blocks:block/road_line_white_side_andesite_thick", "y": 180
         },
         "variant=4,facing=west": {
-            "model": "city-blocks:block/road_line_white_side_thick", "y": 270
+            "model": "city-blocks:block/road_line_white_side_andesite_thick", "y": 270
         }
     }
 }
