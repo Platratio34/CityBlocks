@@ -18,8 +18,6 @@ import net.minecraft.item.Item.TooltipContext;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -32,7 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock {
+public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock, TooltipedItem {
 
     public static final String VARIANT_PROPERTY_NAME = "variant";
 
@@ -100,12 +98,11 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
                 ctx.getHorizontalPlayerFacing());
     }
 
-    // TODO fix tooltip
-    // @Override
-    // public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
-    //     tooltip.add(CityBlocks.tooltip("block", name));
-    //     super.appendTooltip(stack, context, tooltip, options);
-    // }
+    @Override
+    public void addTooltip(ItemStack itemStack, TooltipContext tooltipContext, TooltipType tooltipType,
+            List<Text> list) {
+        list.add(CityBlocks.tooltip("block", name));
+    }
     
     public int getVariant(BlockState state) {
         return state.get(variant);
@@ -129,7 +126,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
 
     @Override
     public BlockState cycle(World world, BlockPos pos, BlockState state, boolean inverse) {
-        return state.with(variant, IVariantBlock.cycleInt(state.get(variant), variants-1, inverse));
+        return state.with(variant, IVariantBlock.cycleInt(state.get(variant), variants - 1, inverse));
     }
 
 }

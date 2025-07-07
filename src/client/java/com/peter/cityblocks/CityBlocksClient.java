@@ -4,10 +4,10 @@ import com.peter.cityblocks.blockRenderers.CustomSignBlockEntityRenderer;
 import com.peter.cityblocks.blockRenderers.PedestrianSignalBlockEntityRenderer;
 import com.peter.cityblocks.blockRenderers.SignalHeadBlockEntityRenderer;
 import com.peter.cityblocks.blocks.Blocks;
+import com.peter.cityblocks.blocks.TooltipedItem;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlockEntity;
 import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
-import com.peter.cityblocks.blocks.signs.CustomSignBlockItem;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.gui.CityBlocksScreens;
 
@@ -20,8 +20,8 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtCompound;
 
 public class CityBlocksClient implements ClientModInitializer {
 	@Override
@@ -67,12 +67,17 @@ public class CityBlocksClient implements ClientModInitializer {
 
         ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
             Item i = itemStack.getItem();
-            if (i instanceof CustomSignBlockItem item) {
-                NbtComponent comp = itemStack.getComponents().get(DataComponentTypes.BLOCK_ENTITY_DATA);
-                if (comp == null)
-                    return;
-                NbtCompound nbt = comp.getNbt();
-                item.tooltip(itemStack, tooltipContext, tooltipType, list, nbt);
+            NbtComponent comp = itemStack.getComponents().get(DataComponentTypes.BLOCK_ENTITY_DATA);
+            if (i instanceof TooltipedItem item) {
+                item.addTooltip(itemStack, tooltipContext, tooltipType, list);
+                if(comp != null)
+                    item.addTooltipEntity(itemStack, tooltipContext, tooltipType, list, comp.getNbt());
+            } else if(i instanceof BlockItem bItem) {
+                if (bItem.getBlock() instanceof TooltipedItem block) {
+                    block.addTooltip(itemStack, tooltipContext, tooltipType, list);
+                    if(comp != null)
+                        block.addTooltipEntity(itemStack, tooltipContext, tooltipType, list, comp.getNbt());
+                }
             }
         });
 
