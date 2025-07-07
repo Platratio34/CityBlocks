@@ -323,8 +323,8 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
         cPhase = 0;
         if (cycleMode <= -1) {
             cycleMode = -1;
-        } else if (cycleMode > cycles.length) {
-            cycleMode = cycles.length;
+        } else if (cycleMode >= cycles.length) {
+            cycleMode = cycles.length - 1;
         }
 
         if (cycleMode == -1) {
@@ -383,6 +383,11 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
         Optional<Integer> optMode = view.getOptionalInt(NBT_CYCLE_MODE);
         if (optMode.isPresent()) {
             cycleMode = optMode.get();
+            if (cycleMode >= cycles.length) {
+                cycleMode = cycles.length - 1;
+            } else if (cycleMode < -1) {
+                cycleMode = -1;
+            }
         }
         Optional<Integer> optPhase = view.getOptionalInt(NBT_C_PHASE);
         if (optPhase.isPresent()) {
