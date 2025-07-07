@@ -1,7 +1,5 @@
 package com.peter.cityblocks.gui;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.signal.LampColor;
 import com.peter.cityblocks.blocks.signal.LampState;
@@ -12,7 +10,6 @@ import com.peter.cityblocks.networking.CityBlocksClientNetworking;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;

@@ -22,6 +22,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NbtCompound;
 
 public class CityBlocksClient implements ClientModInitializer {
 	@Override
@@ -68,15 +69,16 @@ public class CityBlocksClient implements ClientModInitializer {
         ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
             Item i = itemStack.getItem();
             NbtComponent comp = itemStack.getComponents().get(DataComponentTypes.BLOCK_ENTITY_DATA);
+            NbtCompound entityData = (comp != null) ? comp.copyNbt() : null;
             if (i instanceof TooltipedItem item) {
                 item.addTooltip(itemStack, tooltipContext, tooltipType, list);
-                if(comp != null)
-                    item.addTooltipEntity(itemStack, tooltipContext, tooltipType, list, comp.getNbt());
+                if(entityData != null)
+                    item.addTooltipEntity(itemStack, tooltipContext, tooltipType, list, entityData);
             } else if(i instanceof BlockItem bItem) {
                 if (bItem.getBlock() instanceof TooltipedItem block) {
                     block.addTooltip(itemStack, tooltipContext, tooltipType, list);
-                    if(comp != null)
-                        block.addTooltipEntity(itemStack, tooltipContext, tooltipType, list, comp.getNbt());
+                    if(entityData != null)
+                        block.addTooltipEntity(itemStack, tooltipContext, tooltipType, list, entityData);
                 }
             }
         });

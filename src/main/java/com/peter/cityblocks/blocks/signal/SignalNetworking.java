@@ -14,7 +14,7 @@ public class SignalNetworking {
         PayloadTypeRegistry.playC2S().register(SignalHeadUpdatePayload.ID, SignalHeadUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(SignalHeadUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
-                CityBlocks.LOGGER.info("Received Signal Head Update");
+                CityBlocks.LOGGER.debug("Received Signal Head Update");
                 SignalHeadBlockEntity entity = (SignalHeadBlockEntity) context.server().getWorld(payload.world())
                         .getBlockEntity(payload.pos());
                 payload.update(entity);
@@ -23,7 +23,7 @@ public class SignalNetworking {
         PayloadTypeRegistry.playC2S().register(SignalControllerUpdatePayload.ID, SignalControllerUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(SignalControllerUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
-                CityBlocks.LOGGER.info("Received Signal Controller Update");
+                CityBlocks.LOGGER.debug("Received Signal Controller Update");
                 SignalControllerBlockEntity entity = (SignalControllerBlockEntity) context.server().getWorld(payload.world())
                         .getBlockEntity(payload.pos());
                 entity.setCycleMode(payload.cycleMode());
