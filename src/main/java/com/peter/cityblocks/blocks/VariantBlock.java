@@ -101,7 +101,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     @Override
     public void addTooltip(ItemStack itemStack, TooltipContext tooltipContext, TooltipType tooltipType,
             List<Text> list) {
-        list.add(CityBlocks.tooltip("block", name));
+        list.add(CityBlocks.tooltip("item", name));
     }
     
     public int getVariant(BlockState state) {
