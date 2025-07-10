@@ -53,6 +53,8 @@ public class CityBlocksClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(Blocks.ROAD_ARROW_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
 
+        BlockRenderLayerMap.putBlock(Blocks.SLIDING_DOOR_BLOCK, BlockRenderLayer.CUTOUT);
+
         BlockEntityRendererFactories.register(SignalHeadBlockEntity.BLOCK_ENTITY_TYPE,
                 SignalHeadBlockEntityRenderer::new);
 

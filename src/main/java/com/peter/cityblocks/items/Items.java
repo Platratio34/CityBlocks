@@ -4,6 +4,7 @@ import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.CellingLightBlock;
 import com.peter.cityblocks.blocks.ExitSignBlock;
 import com.peter.cityblocks.blocks.LargePostBlock;
+import com.peter.cityblocks.blocks.SlidingDoorBlock;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlock;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlock;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
@@ -59,6 +60,8 @@ public class Items {
     public static final BlockItem CELLING_LIGHT_BLOCK_ITEM = CellingLightBlock.ITEM;
     public static final BlockItem EXIT_SIGN_BLOCK_ITEM = ExitSignBlock.ITEM;
     public static final BlockItem BUILDING_SIGN_BLOCK_ITEM = BuildingSignBlock.ITEM;
+
+    public static final BlockItem SLIDING_DOOR_BLOCK_ITEM = SlidingDoorBlock.ITEM;
 
     public static void init() {
         ItemGroups.init();

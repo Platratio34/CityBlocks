@@ -19,6 +19,7 @@ public class ItemGroups {
                         entries.add(Items.CELLING_LIGHT_BLOCK_ITEM);
                         entries.add(Items.EXIT_SIGN_BLOCK_ITEM);
                         entries.add(Items.BUILDING_SIGN_BLOCK_ITEM);
+                        entries.add(Items.SLIDING_DOOR_BLOCK_ITEM);
                     })
                     .build());
     public static final ItemGroup ROAD = Registry.register(Registries.ITEM_GROUP, CityBlocks.identifier("road"),

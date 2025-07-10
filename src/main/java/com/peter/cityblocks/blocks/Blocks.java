@@ -180,6 +180,8 @@ public class Blocks {
     public static final VariantPartialBlock EXIT_SIGN_BLOCK = ExitSignBlock.BLOCK;
     public static final CustomSignBlock BUILDING_SIGN_BLOCK = BuildingSignBlock.BLOCK;
 
+    public static final SlidingDoorBlock SLIDING_DOOR_BLOCK = SlidingDoorBlock.BLOCK;
+
     public static void init() {
         SignalHeadBlockEntity.register();
         SignalControllerBlockEntity.register();

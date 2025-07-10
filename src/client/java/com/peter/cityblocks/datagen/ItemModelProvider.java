@@ -6,6 +6,7 @@ import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.LargePostBlock;
 import com.peter.cityblocks.blocks.RoadLineBlock;
+import com.peter.cityblocks.blocks.SlidingDoorBlock;
 import com.peter.cityblocks.blocks.RoadLineBlock.RoadLineModel;
 import com.peter.cityblocks.blocks.VariantBlock;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlock;
@@ -137,6 +138,8 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModelV(generator, Blocks.CELLING_LIGHT_BLOCK, "0");
         registerBlockItemModel(generator, Blocks.EXIT_SIGN_BLOCK);
         registerBlockItemModel(generator, Blocks.BUILDING_SIGN_BLOCK, BuildingSignBlock.NAME + "_address");
+
+        registerBlockItemModel(generator, Blocks.SLIDING_DOOR_BLOCK, SlidingDoorBlock.NAME);
 
 
         
