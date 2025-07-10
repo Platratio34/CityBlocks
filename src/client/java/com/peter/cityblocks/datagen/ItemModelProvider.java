@@ -139,8 +139,6 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModel(generator, Blocks.EXIT_SIGN_BLOCK);
         registerBlockItemModel(generator, Blocks.BUILDING_SIGN_BLOCK, BuildingSignBlock.NAME + "_address");
 
-        registerBlockItemModel(generator, Blocks.SLIDING_DOOR_BLOCK, SlidingDoorBlock.NAME);
-
 
         
         registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_CENTER_BLOCK);
@@ -170,6 +168,7 @@ public class ItemModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(Items.VARIANT_SWITCHER_ITEM, Models.GENERATED);
         itemModelGenerator.register(Items.SIGNAL_LINKER_ITEM, Models.GENERATED);
+        itemModelGenerator.register(Items.SLIDING_DOOR_BLOCK_ITEM, Models.GENERATED);
     }
 
 }

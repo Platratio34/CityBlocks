@@ -68,6 +68,7 @@
     "item.city-blocks.exit_sign.tooltip": "",
     "item.city-blocks.building_sign": "Building Signs",
     "item.city-blocks.building_sign.tooltip": "",
+    "item.city-blocks.sliding_door": "Sliding Glass Door",
 
     "chat.city-blocks.signal_controller.linked": "Linked to signal controller",
     "chat.city-blocks.signal_controller.un_linked": "Un-linked from signal controller",
