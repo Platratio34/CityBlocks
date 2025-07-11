@@ -85,9 +85,9 @@ public class SlidingDoorBlock extends DoorBlock {
         if (world.isClient) {
             return result;
         }
-        CityBlocks.LOGGER.info("Test?");
+        // CityBlocks.LOGGER.info("Test?");
         if (result == ActionResult.SUCCESS) { // state changed
-            CityBlocks.LOGGER.info("Sliding door state change");
+            // CityBlocks.LOGGER.info("Sliding door state change");
             Direction dir = state.get(FACING);
             boolean right = state.get(HINGE) == DoorHinge.RIGHT;
             BlockPos checkPos = switch (dir) {
@@ -97,7 +97,7 @@ public class SlidingDoorBlock extends DoorBlock {
                 case WEST -> pos.add(0, 0, right ? 1 : -1);
                 default -> pos;
             };
-            CityBlocks.LOGGER.info("Checking {}", checkPos);
+            // CityBlocks.LOGGER.info("Checking {}", checkPos);
             BlockState s2 = world.getBlockState(checkPos);
             if (!(s2.getBlock() instanceof SlidingDoorBlock)) {
                 return result;
