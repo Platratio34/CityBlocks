@@ -5,6 +5,7 @@ import com.peter.cityblocks.blocks.signal.LampColor;
 import com.peter.cityblocks.blocks.signal.LampState;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
+import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
 import com.peter.cityblocks.networking.CityBlocksClientNetworking;
 
 import net.minecraft.client.gl.RenderPipelines;
@@ -47,11 +48,18 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
         if (handler.pedestrianEntity != null)
             headId = handler.pedestrianEntity.getHeadId();
         context.drawText(textRenderer, "ID: " + headId, x + 130, y + 20, Colors.RED, true);
+        
 
         if (handler.headEntity != null) {
+            int numLamps = handler.headEntity.getLampCount();
+
             drawLampData(context, 0, 61, 25);
-            drawLampData(context, 1, 61, 70);
-            drawLampData(context, 2, 61, 115);
+            if(numLamps >= 2)
+                drawLampData(context, 1, 61, 70);
+            if(numLamps >= 3)
+                drawLampData(context, 2, 61, 115);
+            
+            context.drawText(textRenderer, numLamps+"", x + 20, y + 20, Colors.WHITE, true);
         }
         if (handler.pedestrianEntity != null) {
             int state = handler.pedestrianEntity.getState();
@@ -98,6 +106,7 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
                 break;
         }
         context.drawText(textRenderer, lampState.name, x + lX, y + lY, color, true);
+        context.drawText(textRenderer, lampColor.name(), x + lX, y + lY + 12, color, true);
     }
 
     @Override
@@ -114,45 +123,91 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
         // System.out.println(String.format("Click: %f,%f", mouseX, mouseY));
 
         if (mouseX > 60 && mouseX < 90 && handler.headEntity != null) {
-            if (mouseY > 15 && mouseY < 45) {
-                int state = handler.headEntity.getState(0).code;
-                if (button == 0) {
-                    state++;
+            int numLamps = handler.headEntity.getLampCount();
+            if (mouseY > 15 && mouseY < 45 && numLamps >= 1) {
+                if (mouseY < 35) {
+                    int state = handler.headEntity.getState(0).code;
+                    if (button == 0) {
+                        state++;
+                    } else {
+                        state--;
+                    }
+                    if (state > LampState.MAX_CODE) {
+                        state = 0;
+                    } else if (state < 0) {
+                        state = LampState.MAX_CODE;
+                    }
+                    CityBlocksClientNetworking.sendHeadStateUpdate(handler.headEntity, 0, LampState.fromCode(state));
                 } else {
-                    state--;
+                    int state = handler.headEntity.getColor(0).code;
+                    if (button == 0) {
+                        state++;
+                    } else {
+                        state--;
+                    }
+                    if (state > LampColor.MAX_CODE) {
+                        state = 0;
+                    } else if (state < 0) {
+                        state = LampColor.MAX_CODE;
+                    }
+                    CityBlocksClientNetworking.sendHeadColorUpdate(handler.headEntity, 0, LampColor.fromCode(state));
                 }
-                if (state > LampState.MAX_CODE) {
-                    state = 0;
-                } else if (state < 0) {
-                    state = LampState.MAX_CODE;
-                }
-                CityBlocksClientNetworking.sendHeadStateUpdate(handler.headEntity, 0, LampState.fromCode(state));
-            } else if (mouseY > 60 && mouseY < 90) {
-                int state = handler.headEntity.getState(1).code;
-                if (button == 0) {
-                    state++;
+            } else if (mouseY > 60 && mouseY < 90 && numLamps >= 2) {
+                if (mouseY < 80) {
+                    int state = handler.headEntity.getState(1).code;
+                    if (button == 0) {
+                        state++;
+                    } else {
+                        state--;
+                    }
+                    if (state > LampState.MAX_CODE) {
+                        state = 0;
+                    } else if (state < 0) {
+                        state = LampState.MAX_CODE;
+                    }
+                    CityBlocksClientNetworking.sendHeadStateUpdate(handler.headEntity, 1, LampState.fromCode(state));
                 } else {
-                    state--;
+                    int state = handler.headEntity.getColor(1).code;
+                    if (button == 0) {
+                        state++;
+                    } else {
+                        state--;
+                    }
+                    if (state > LampColor.MAX_CODE) {
+                        state = 0;
+                    } else if (state < 0) {
+                        state = LampColor.MAX_CODE;
+                    }
+                    CityBlocksClientNetworking.sendHeadColorUpdate(handler.headEntity, 1, LampColor.fromCode(state));
                 }
-                if (state > LampState.MAX_CODE) {
-                    state = 0;
-                } else if (state < 0) {
-                    state = LampState.MAX_CODE;
-                }
-                CityBlocksClientNetworking.sendHeadStateUpdate(handler.headEntity, 1, LampState.fromCode(state));
-            } else if (mouseY > 105 && mouseY < 135) {
-                int state = handler.headEntity.getState(2).code;
-                if (button == 0) {
-                    state++;
+            } else if (mouseY > 105 && mouseY < 135 && numLamps >= 3) {
+                if (mouseY < 125) {
+                    int state = handler.headEntity.getState(2).code;
+                    if (button == 0) {
+                        state++;
+                    } else {
+                        state--;
+                    }
+                    if (state > LampState.MAX_CODE) {
+                        state = 0;
+                    } else if (state < 0) {
+                        state = LampState.MAX_CODE;
+                    }
+                    CityBlocksClientNetworking.sendHeadStateUpdate(handler.headEntity, 2, LampState.fromCode(state));
                 } else {
-                    state--;
+                    int state = handler.headEntity.getColor(2).code;
+                    if (button == 0) {
+                        state++;
+                    } else {
+                        state--;
+                    }
+                    if (state > LampColor.MAX_CODE) {
+                        state = 0;
+                    } else if (state < 0) {
+                        state = LampColor.MAX_CODE;
+                    }
+                    CityBlocksClientNetworking.sendHeadColorUpdate(handler.headEntity, 2, LampColor.fromCode(state));
                 }
-                if (state > LampState.MAX_CODE) {
-                    state = 0;
-                } else if (state < 0) {
-                    state = LampState.MAX_CODE;
-                }
-                CityBlocksClientNetworking.sendHeadStateUpdate(handler.headEntity, 2, LampState.fromCode(state));
             }
         } else if (mouseX > 60 && mouseX < 90 && handler.pedestrianEntity != null) {
             if (mouseY > 15 && mouseY < 45) {
@@ -189,8 +244,26 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
             if (handler.headEntity != null)
                 CityBlocksClientNetworking.sendHeadIDUpdate(handler.headEntity, headId);
             if (handler.pedestrianEntity != null)
-            CityBlocksClientNetworking.sendPedestrianHeadIdUpdate(handler.pedestrianEntity, headId);
-        }
+                CityBlocksClientNetworking.sendPedestrianHeadIdUpdate(handler.pedestrianEntity, headId);
+        } else if (mouseX > 10 && mouseX < 50 && mouseY > 15 && mouseY < 45 && handler.headEntity != null) { // change numLamps
+            int numLamps = handler.headEntity.getLampCount();
+            if (numLamps == 1) { // TODO change this if 2 lamp head is added
+                numLamps = 3;
+            } else {
+                numLamps = 1;
+            }
+            // if (button == 0) {
+            //     numLamps++;
+            // } else {
+            //     numLamps--;
+            // }
+            // if (numLamps < 1) {
+            //     numLamps = 1;
+            // } else if (numLamps > SignalHeadBlock.MAX_LAMPS) {
+            //     numLamps = 3;
+            // }
+            CityBlocksClientNetworking.sendHeadLampCountUpdate(handler.headEntity, numLamps);
+        } 
         return true;
     }
 

@@ -14,20 +14,24 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 public class CityBlocksClientNetworking {
 
     public static void sendHeadUpdate(SignalHeadBlockEntity entity, int lamp, LampState newState, LampColor newColor,
-            int newHeadId) {
+            int newHeadId, int newLampCount) {
             ClientPlayNetworking.send(new SignalHeadUpdatePayload(entity.getWorld().getRegistryKey(), entity.getPos(), lamp,
-                newState.code, newColor.code, newHeadId));
+                newState.code, newColor.code, newHeadId, newLampCount));
     }
     public static void sendHeadStateUpdate(SignalHeadBlockEntity entity, int lamp, LampState newState) {
-        sendHeadUpdate(entity, lamp, newState, LampColor.NULL, -1);
+        sendHeadUpdate(entity, lamp, newState, LampColor.NULL, -1, -1);
     }
 
     public static void sendHeadColorUpdate(SignalHeadBlockEntity entity, int lamp, LampColor newColor) {
-        sendHeadUpdate(entity, lamp, LampState.NULL, newColor, -1);
+        sendHeadUpdate(entity, lamp, LampState.NULL, newColor, -1, -1);
     }
 
     public static void sendHeadIDUpdate(SignalHeadBlockEntity entity, int newHeadId) {
-        sendHeadUpdate(entity, -1, LampState.NULL, LampColor.NULL, newHeadId);
+        sendHeadUpdate(entity, -1, LampState.NULL, LampColor.NULL, newHeadId, -1);
+    }
+
+    public static void sendHeadLampCountUpdate(SignalHeadBlockEntity entity, int newLampCount) {
+        sendHeadUpdate(entity, -1, LampState.NULL, LampColor.NULL, -1, newLampCount);
     }
 
     public static void sendControllerCycleModeUpdate(SignalControllerBlockEntity entity, int newCycleMode) {

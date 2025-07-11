@@ -53,6 +53,7 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
     private static final String NBT_STATES_ARRAY = "states";
     private static final String NBT_COLORS_ARRAY = "colors";
     private static final String NBT_HEAD_ID = "head_id";
+    private static final String NBT_NUM_LAMPS = "num_lamps";
 
     public static void register() {
 
@@ -75,6 +76,8 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
         view.putIntArray(NBT_COLORS_ARRAY, colorIntArray);
 
         view.putInt(NBT_HEAD_ID, headId);
+
+        view.putInt(NBT_NUM_LAMPS, world.getBlockState(pos).get(SignalHeadBlock.LAMP_COUNT));
 
         super.writeData(view);
     }
@@ -100,6 +103,13 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
         Optional<Integer> optId = view.getOptionalInt(NBT_HEAD_ID);
         if (optId.isPresent()) {
             headId = optId.get();
+        }
+        if (world != null && !world.isClient && world.isPosLoaded(pos)) {
+            Optional<Integer> optLamps = view.getOptionalInt(NBT_NUM_LAMPS);
+            if (optLamps.isPresent()) {
+                BlockState state = world.getBlockState(pos);
+                world.setBlockState(pos, state.with(SignalHeadBlock.LAMP_COUNT, optLamps.get()));
+            }
         }
     }
 
@@ -167,6 +177,19 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
 
     public int getHeadId() {
         return headId;
+    }
+
+    public void setLampCount(int lampCount) {
+        if (world != null && !world.isClient && world.isPosLoaded(pos)) {
+            world.setBlockState(pos, getCachedState().with(SignalHeadBlock.LAMP_COUNT, lampCount));
+            markDirty();
+        }
+    }
+
+    public int getLampCount() {
+        if (world == null)
+            return -1;
+        return getCachedState().get(SignalHeadBlock.LAMP_COUNT);
     }
 
     public static void clientTick(World world, BlockPos pos, BlockState state, SignalHeadBlockEntity blockEntity) {

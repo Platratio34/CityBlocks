@@ -14,6 +14,8 @@ public enum LampColor {
     public int code;
     public String color;
 
+    public static final int MAX_CODE = 2;
+
     private LampColor(int code, String color) {
         this.code = code;
         this.color = color;

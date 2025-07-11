@@ -82,7 +82,7 @@ public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<Signal
         }
         matrices.translate(-0.5, -0.5, -0.5);
 
-        int nLamps = blockState.get(SignalHeadBlock.LAMP_COUNT);
+        int nLamps = entity.getLampCount();
 
         SpriteIdentifier[] sprites = new SpriteIdentifier[nLamps];
         for (int i = 0; i < nLamps; i++) {
@@ -112,6 +112,9 @@ public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<Signal
                     3, 3, 0, facing);
 
             drawLamp(vertexProvider, matrices, sprites[2], 6.5f, 1.0f, 3.0f,
+                    3, 3, 0, facing);
+        } else if (nLamps == 1) {
+            drawLamp(vertexProvider, matrices, sprites[0], 6.5f, 6.5f, 3.0F,
                     3, 3, 0, facing);
         }
 

@@ -45,11 +45,25 @@ public class SignalHeadBlock extends BlockWithEntity {
     public static final String NAME = "signal_head";
     public static final Identifier ID = CityBlocks.identifier(NAME);
 
-    private static final VoxelShape[] SHAPES = new VoxelShape[] {
-            VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.NORTH),
-            VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.EAST),
-            VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.SOUTH),
-            VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.WEST)
+    private static final VoxelShape[][] SHAPES = new VoxelShape[][] {
+            new VoxelShape[] {
+                    VariantPartialBlock.cube(3, 3, 0, 10, 10, 5, Direction.NORTH),
+                    VariantPartialBlock.cube(3, 3, 0, 10, 10, 5, Direction.EAST),
+                    VariantPartialBlock.cube(3, 3, 0, 10, 10, 5, Direction.SOUTH),
+                    VariantPartialBlock.cube(3, 3, 0, 10, 10, 5, Direction.WEST)
+            },
+            new VoxelShape[] {
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.NORTH),
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.EAST),
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.SOUTH),
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.WEST)
+            },
+            new VoxelShape[] {
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.NORTH),
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.EAST),
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.SOUTH),
+                    VariantPartialBlock.cube(3, -2, 0, 10, 20, 5, Direction.WEST)
+            }
     };
     public static final MapCodec<SignalHeadBlock> CODEC = createCodec(SignalHeadBlock::new);
 
@@ -85,7 +99,7 @@ public class SignalHeadBlock extends BlockWithEntity {
     }
 
     public VoxelShape getShape(BlockState state) {
-        return SHAPES[VariantBlock.getDir(state)];
+        return SHAPES[state.get(LAMP_COUNT)-1][VariantBlock.getDir(state)];
     }
 
     @Override

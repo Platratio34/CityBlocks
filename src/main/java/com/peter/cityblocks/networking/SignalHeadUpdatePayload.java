@@ -14,7 +14,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, int lamp, int state, int color, int headId)
+public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, int lamp, int state, int color, int headId, int lampCount)
         implements CustomPayload {
 
     public static final CustomPayload.Id<SignalHeadUpdatePayload> ID = new CustomPayload.Id<>(
@@ -26,6 +26,7 @@ public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, in
             PacketCodecs.INTEGER, SignalHeadUpdatePayload::state,
             PacketCodecs.INTEGER, SignalHeadUpdatePayload::color,
             PacketCodecs.INTEGER, SignalHeadUpdatePayload::headId,
+            PacketCodecs.INTEGER, SignalHeadUpdatePayload::lampCount,
             SignalHeadUpdatePayload::new
 
     );
@@ -44,6 +45,9 @@ public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, in
         }
         if (headId > -1) {
             entity.setHeadId(headId);
+        }
+        if (lampCount > -1) {
+            entity.setLampCount(lampCount);
         }
     }
 

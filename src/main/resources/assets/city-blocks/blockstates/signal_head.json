@@ -1,15 +1,39 @@
 {
     "variants": {
-        "facing=north": {
+        "facing=north,lamps=1": {
+            "model": "city-blocks:block/signal_head_1"
+        },
+        "facing=east,lamps=1": {
+            "model": "city-blocks:block/signal_head_1", "y":90
+        },
+        "facing=south,lamps=1": {
+            "model": "city-blocks:block/signal_head_1", "y":180
+        },
+        "facing=west,lamps=1": {
+            "model": "city-blocks:block/signal_head_1", "y":270
+        },
+        "facing=north,lamps=2": {
             "model": "city-blocks:block/signal_head_3"
         },
-        "facing=east": {
+        "facing=east,lamps=2": {
             "model": "city-blocks:block/signal_head_3", "y":90
         },
-        "facing=south": {
+        "facing=south,lamps=2": {
             "model": "city-blocks:block/signal_head_3", "y":180
         },
-        "facing=west": {
+        "facing=west,lamps=2": {
+            "model": "city-blocks:block/signal_head_3", "y":270
+        },
+        "facing=north,lamps=3": {
+            "model": "city-blocks:block/signal_head_3"
+        },
+        "facing=east,lamps=3": {
+            "model": "city-blocks:block/signal_head_3", "y":90
+        },
+        "facing=south,lamps=3": {
+            "model": "city-blocks:block/signal_head_3", "y":180
+        },
+        "facing=west,lamps=3": {
             "model": "city-blocks:block/signal_head_3", "y":270
         }
     }
