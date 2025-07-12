@@ -6,6 +6,7 @@ import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.LargePostBlock;
 import com.peter.cityblocks.blocks.RoadLineBlock;
+import com.peter.cityblocks.blocks.RoadType;
 import com.peter.cityblocks.blocks.RoadLineBlock.RoadLineModel;
 import com.peter.cityblocks.blocks.VariantBlock;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlock;
@@ -19,12 +20,15 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.block.Block;
 import net.minecraft.client.data.BlockStateModelGenerator;
+import net.minecraft.client.data.BlockStateVariantMap;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Model;
 import net.minecraft.client.data.Models;
 import net.minecraft.client.data.TextureKey;
 import net.minecraft.client.data.TextureMap;
+import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 
 public class ItemModelProvider extends FabricModelProvider {
 
@@ -43,9 +47,6 @@ public class ItemModelProvider extends FabricModelProvider {
     private static final TextureKey OVERLAY_TEXTURE_KEY = TextureKey.of("overlay");
     private static final TextureKey TOP_TEXTURE_KEY = TextureKey.of("top");
     private static final TextureKey BASE_TEXTURE_KEY = TextureKey.of("base");
-    private static final Identifier ANDESITE_TEXTURE_ID = Identifier.ofVanilla("block/polished_andesite");
-    private static final Identifier BLACKSTONE_TOP_TEXTURE_ID = Identifier.ofVanilla("block/blackstone_top");
-    private static final Identifier BLACKSTONE_TEXTURE_ID = Identifier.ofVanilla("block/blackstone");
 
     private Identifier blockModelId(VariantBlock block) {
         return CityBlocks.identifier("block/" + block.name);
@@ -75,31 +76,37 @@ public class ItemModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerParentedItemModel(block, blockModelId(name));
     }
 
+    private Identifier roadBlockModelId(String name, RoadType roadType) {
+        return CityBlocks.identifier("block/" + name.replace("{}", roadType.extension));
+    }
+
     private static final Model ROAD_LINE_MODEL = new Model(Optional.of(ROAD_LINE_BASE_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private static final Model ROAD_LINE_EAST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_EAST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private static final Model ROAD_LINE_SOUTH_MODEL = new Model(Optional.of(ROAD_LINE_BASE_SOUTH_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private static final Model ROAD_LINE_WEST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_WEST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private void registerRoadLineBlockSubModel(BlockStateModelGenerator generator, String id, String overlay,
-            boolean andesite) {
+            RoadType roadType) {
         TextureMap map = new TextureMap().put(OVERLAY_TEXTURE_KEY, blockTextureId(overlay));
-        if (andesite) {
-            map.put(TOP_TEXTURE_KEY, ANDESITE_TEXTURE_ID);
-            map.put(BASE_TEXTURE_KEY, ANDESITE_TEXTURE_ID);
-        } else {
-            map.put(TOP_TEXTURE_KEY, BLACKSTONE_TOP_TEXTURE_ID);
-            map.put(BASE_TEXTURE_KEY, BLACKSTONE_TEXTURE_ID);
-        }
+        map.put(TOP_TEXTURE_KEY, roadType.topTexture);
+        map.put(BASE_TEXTURE_KEY, roadType.baseTexture);
 
-        ROAD_LINE_MODEL.upload(blockModelId(id), map, generator.modelCollector);
-        ROAD_LINE_EAST_MODEL.upload(blockModelId(id+"_east"), map, generator.modelCollector);
-        ROAD_LINE_SOUTH_MODEL.upload(blockModelId(id+"_south"), map, generator.modelCollector);
-        ROAD_LINE_WEST_MODEL.upload(blockModelId(id+"_west"), map, generator.modelCollector);
+        ROAD_LINE_MODEL.upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
+        ROAD_LINE_EAST_MODEL.upload(roadBlockModelId(id+"_east", roadType), map, generator.modelCollector);
+        ROAD_LINE_SOUTH_MODEL.upload(roadBlockModelId(id+"_south", roadType), map, generator.modelCollector);
+        ROAD_LINE_WEST_MODEL.upload(roadBlockModelId(id+"_west", roadType), map, generator.modelCollector);
     }
     
     private void registerRoadLineBlock(BlockStateModelGenerator generator, RoadLineBlock block) {
-        for (RoadLineModel model : block.models) {
-            registerRoadLineBlockSubModel(generator, model.model(), model.overlay(), block.andesite);
+        var map = BlockStateVariantMap.models(RoadLineBlock.FACING, block.variant);
+        for (int i = 0; i < block.models.length; i++) {
+            RoadLineModel model = block.models[i];
+            map.register(Direction.NORTH, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model(), block.roadType)));
+            map.register(Direction.EAST, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model()+"_east", block.roadType)));
+            map.register(Direction.SOUTH, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model()+"_south", block.roadType)));
+            map.register(Direction.WEST, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model()+"_west", block.roadType)));
+            registerRoadLineBlockSubModel(generator, model.model(), model.overlay(), block.roadType);
         }
+        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
     }
 
     @Override
