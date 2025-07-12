@@ -39,11 +39,11 @@ public class CityBlocks implements ModInitializer {
 
         ModContainer mod = FabricLoader.getInstance().getModContainer(MOD_ID).get();
         String modVersion = mod.getMetadata().getVersion().getFriendlyString();
-        if (modVersion.endsWith("-dev")) {
+        if (modVersion.contains("-dev")) {
             debug = true;
             LOGGER.warn("You are running a development version of CityBlocks: {}", modVersion);
             LOGGER.warn("\tConsider replacing it with a stable release");
-        } else if (modVersion.endsWith("-debug")) {
+        } else if (modVersion.contains("-debug")) {
             debug = true;
             LOGGER.warn("You are running a debug version of CityBlocks: {}", modVersion);
             LOGGER.warn("\tConsider replacing it with a stable release");
