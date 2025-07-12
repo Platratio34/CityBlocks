@@ -51,4 +51,11 @@ public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, in
         }
     }
 
+    @Override
+    public final String toString() {
+        return String.format(
+                "SignalHeadUpdatePayload{world=%s; pos=%s; lamp=%d; state=%s; color=%s; headId=%d; lampCount=%d}", world.getValue().toString(), pos.toString(),
+                lamp, LampState.fromCode(state), LampColor.fromCode(color), headId, lampCount);
+    }
+
 }

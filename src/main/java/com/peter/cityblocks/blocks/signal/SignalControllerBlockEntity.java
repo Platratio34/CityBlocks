@@ -65,7 +65,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
 
     public SignalControllerBlockEntity(BlockPos pos, BlockState state) {
         super(BLOCK_ENTITY_TYPE, pos, state);
-        CityBlocks.LOGGER.debug("Creating new SignalControllerBlockEntity");
+        CityBlocks.debug("Creating new SignalControllerBlockEntity");
         heads = new ArrayList<BlockPos>();
         pedestrians = new ArrayList<BlockPos>();
         cycles[0] = Cycle.basicSwitchCycle(10*20, 3*20, 2*20);

@@ -37,7 +37,7 @@ public enum LampState {
     }
 
     public static LampState fromCode(int code) {
-        if (code < 0 || code > STATES.length)
+        if (code < 0 || code > MAX_CODE)
             return NULL;
         return STATES[code];
     }

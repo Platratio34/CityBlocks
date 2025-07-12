@@ -22,6 +22,8 @@ public enum LampColor {
     }
 
     public static LampColor fromCode(int code) {
+        if (code < 0 || code > MAX_CODE)
+            return NULL;
         return COLORS[code];
     }
 }

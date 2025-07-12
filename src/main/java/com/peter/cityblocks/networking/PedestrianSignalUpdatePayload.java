@@ -1,6 +1,7 @@
 package com.peter.cityblocks.networking;
 
 import com.peter.cityblocks.CityBlocks;
+import com.peter.cityblocks.blocks.signal.LampState;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -36,13 +37,23 @@ public record PedestrianSignalUpdatePayload(RegistryKey<World> world, BlockPos p
         PayloadTypeRegistry.playC2S().register(PedestrianSignalUpdatePayload.ID, PedestrianSignalUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(PedestrianSignalUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
-                CityBlocks.LOGGER.debug("Received Pedestrian Signal Update");
+                CityBlocks.debug("Received Pedestrian Signal Update: {}", payload.toString());
                 PedestrianSignalBlockEntity entity = (PedestrianSignalBlockEntity) context.server()
                         .getWorld(payload.world())
                         .getBlockEntity(payload.pos());
-                if(payload.headId() > -1) entity.setHeadId(payload.headId());
-                if(payload.state() > -1) entity.setState(payload.state());
+                if (payload.headId() > -1)
+                    entity.setHeadId(payload.headId());
+                if (payload.state() > -1)
+                    entity.setState(payload.state());
             });
         });
+    }
+    
+
+    @Override
+    public final String toString() {
+        return String.format(
+                "PedestrianSignalUpdatePayload{world=%s; pos=%s; headId=%d; state=%s}", world.getValue().toString(), pos.toString(),
+                headId, LampState.fromCode(state));
     }
 }

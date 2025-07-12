@@ -17,7 +17,7 @@ public class SignalControllerPeripheral implements IPeripheral {
 
     public SignalControllerPeripheral(SignalControllerBlockEntity controller) {
         this.controller = controller;
-        CityBlocks.LOGGER.debug("Creating new SignalControllerPeripheral");
+        CityBlocks.debug("Creating new SignalControllerPeripheral");
     }
 
     @Override

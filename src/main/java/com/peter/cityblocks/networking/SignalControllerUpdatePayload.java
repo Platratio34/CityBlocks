@@ -27,5 +27,11 @@ public record SignalControllerUpdatePayload(RegistryKey<World> world, BlockPos p
         return ID;
     }
 
+    @Override
+    public final String toString() {
+        return String.format("SignalControllerUpdatePayload{world=%s; pos=%s; cycleMode=%d}",
+                world.getValue().toString(), pos.toString(), cycleMode);
+    }
+
 
 }
