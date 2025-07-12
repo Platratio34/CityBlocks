@@ -4,6 +4,7 @@ import com.peter.cityblocks.blockRenderers.CustomSignBlockEntityRenderer;
 import com.peter.cityblocks.blockRenderers.PedestrianSignalBlockEntityRenderer;
 import com.peter.cityblocks.blockRenderers.SignalHeadBlockEntityRenderer;
 import com.peter.cityblocks.blocks.Blocks;
+import com.peter.cityblocks.blocks.RoadLineBlock;
 import com.peter.cityblocks.blocks.TooltipedItem;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlockEntity;
@@ -31,27 +32,9 @@ public class CityBlocksClient implements ClientModInitializer {
 
         BlockRenderLayerMap.putBlock(Blocks.STREET_SIGN_BLOCK, BlockRenderLayer.CUTOUT);
 
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_WHITE_CENTER_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_WHITE_SIDE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK, BlockRenderLayer.CUTOUT);
-        
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_ARROW_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_STOP_BAR_BLOCK, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-        
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_ARROW_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
-        BlockRenderLayerMap.putBlock(Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK, BlockRenderLayer.CUTOUT);
+        for (RoadLineBlock block : RoadLineBlock.ROAD_LINE_BLOCKS.values()) {
+            BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT);
+        }
 
         BlockRenderLayerMap.putBlock(Blocks.SLIDING_DOOR_BLOCK, BlockRenderLayer.CUTOUT);
 

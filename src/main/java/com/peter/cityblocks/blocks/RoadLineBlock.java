@@ -1,17 +1,32 @@
 package com.peter.cityblocks.blocks;
 
+import java.util.HashMap;
+
 import net.minecraft.block.MapColor;
 
 public class RoadLineBlock extends VariantBlock {
 
+    public static final HashMap<String, RoadLineBlock> ROAD_LINE_BLOCKS = new HashMap<>();
+
     public final RoadLineModel[] models;
 
     public final RoadType roadType;
+    public final String itemModelId;
 
     public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType) {
         super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name);
         this.models = models;
         this.roadType = roadType;
+        ROAD_LINE_BLOCKS.put(name, this);
+        itemModelId = name;
+    }
+
+    public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType, String itemModelID) {
+        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name);
+        this.models = models;
+        this.roadType = roadType;
+        ROAD_LINE_BLOCKS.put(name, this);
+        this.itemModelId = itemModelID;
     }
 
     public static record RoadLineModel(String model, String overlay) {

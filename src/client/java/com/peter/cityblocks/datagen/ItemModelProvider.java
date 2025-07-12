@@ -2,6 +2,9 @@ package com.peter.cityblocks.datagen;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.LargePostBlock;
@@ -31,6 +34,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 public class ItemModelProvider extends FabricModelProvider {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger("city-blocks-model-generator");
 
     public ItemModelProvider(FabricDataOutput output) {
         super(output);
@@ -65,7 +70,7 @@ public class ItemModelProvider extends FabricModelProvider {
     }
 
     private void registerBlockItemModelV(BlockStateModelGenerator blockStateModelGenerator, VariantBlock block, String variant) {
-        blockStateModelGenerator.registerParentedItemModel(block, blockModelId(block, variant, true));
+        registerBlockItemModelV(blockStateModelGenerator, block, variant, true);
     }
 
     private void registerBlockItemModelV(BlockStateModelGenerator blockStateModelGenerator, VariantBlock block, String variant, boolean dash) {
@@ -112,28 +117,14 @@ public class ItemModelProvider extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator generator) {
 
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_WHITE_CENTER_BLOCK);
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_WHITE_SIDE_BLOCK);
-        registerBlockItemModelV(generator, Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK, "1", false);
+        LOGGER.info("Generating road line block/block-item models:");
+        for (RoadLineBlock block : RoadLineBlock.ROAD_LINE_BLOCKS.values()) {
+            LOGGER.info("- {}", block.name);
+            registerRoadLineBlock(generator, block);
+            registerBlockItemModel(generator, block, block.itemModelId);
+        }
         
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK);
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK);
-        registerBlockItemModelV(generator, Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK, "1", false);
-        
-        registerBlockItemModelV(generator, Blocks.ROAD_ARROW_BLOCK, "straight");
-        registerBlockItemModelV(generator, Blocks.ROAD_STOP_BAR_BLOCK, "center");
-        
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK);
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK);
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK, "road_line_white_side_andesite_merge1");
-        
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK);
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK);
-        registerBlockItemModel(generator, Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK, "road_line_yellow_side_andesite_merge1");
-        
-        registerBlockItemModelV(generator, Blocks.ROAD_ARROW_ANDESITE_BLOCK, "straight");
-        registerBlockItemModelV(generator, Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK, "center");
-        
+        LOGGER.info("Generating block-item models");
         registerBlockItemModelV(generator, Blocks.CABLE_BARRIER_BLOCK, "post_middle");
         registerBlockItemModel(generator, Blocks.CONCRETE_BARRIER_BLOCK);
         registerBlockItemModelV(generator, Blocks.CRASH_BARRIER_BLOCK, "straight");
@@ -153,34 +144,11 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModelV(generator, Blocks.CELLING_LIGHT_BLOCK, "0");
         registerBlockItemModel(generator, Blocks.EXIT_SIGN_BLOCK);
         registerBlockItemModel(generator, Blocks.BUILDING_SIGN_BLOCK, BuildingSignBlock.NAME + "_address");
-
-
-        
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_CENTER_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_SIDE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_SIDE_MERGE_BLOCK);
-
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_YELLOW_CENTER_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_YELLOW_SIDE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK);
-        
-        registerRoadLineBlock(generator, Blocks.ROAD_ARROW_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_STOP_BAR_BLOCK);
-        
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK);
-        
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK);
-        
-        registerRoadLineBlock(generator, Blocks.ROAD_ARROW_ANDESITE_BLOCK);
-        registerRoadLineBlock(generator, Blocks.ROAD_STOP_BAR_ANDESITE_BLOCK);
     }
 
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+        LOGGER.info("Generating item models");
         itemModelGenerator.register(Items.VARIANT_SWITCHER_ITEM, Models.GENERATED);
         itemModelGenerator.register(Items.SIGNAL_LINKER_ITEM, Models.GENERATED);
         itemModelGenerator.register(Items.SLIDING_DOOR_BLOCK_ITEM, Models.GENERATED);

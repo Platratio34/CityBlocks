@@ -26,26 +26,26 @@ public class Blocks {
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_BLOCK = new RoadLineBlock("road_line_white_side",
             MapColor.WHITE, RoadLineBlock.WHITE_SIDE, RoadType.BLACKSTONE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_MERGE_BLOCK = new RoadLineBlock("road_line_white_side_merge",
-            MapColor.WHITE, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.BLACKSTONE);
+            MapColor.WHITE, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.BLACKSTONE, "road_line_white_side_merge1");
 
     public static final RoadLineBlock ROAD_LINE_YELLOW_CENTER_BLOCK = new RoadLineBlock("road_line_yellow_center",
             MapColor.YELLOW, RoadLineBlock.YELLOW_CENTER, RoadType.BLACKSTONE);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_BLOCK = new RoadLineBlock("road_line_yellow_side",
             MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE, RoadType.BLACKSTONE);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK = new RoadLineBlock("road_line_yellow_side_merge",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.BLACKSTONE);
+            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.BLACKSTONE, "road_line_yellow_side_merge1");
 
     public static final RoadLineBlock ROAD_ARROW_BLOCK = new RoadLineBlock("road_arrow",
-            MapColor.LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.BLACKSTONE);
+            MapColor.LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.BLACKSTONE, "road_arrow_straight");
     public static final RoadLineBlock ROAD_STOP_BAR_BLOCK = new RoadLineBlock("road_stop_bar",
-            MapColor.WHITE, RoadLineBlock.STOP_BAR, RoadType.BLACKSTONE);
+            MapColor.WHITE, RoadLineBlock.STOP_BAR, RoadType.BLACKSTONE, "road_stop_bar_center");
 
     public static final RoadLineBlock ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_center_andesite",
             MapColor.WHITE, RoadLineBlock.WHITE_CENTER, RoadType.ANDESITE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_side_andesite",
             MapColor.WHITE, RoadLineBlock.WHITE_SIDE, RoadType.ANDESITE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_side_merge_andesite",
-            MapColor.WHITE, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.ANDESITE);
+            MapColor.WHITE, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.ANDESITE, "road_line_white_side_andesite_merge1");
 
 
     public static final RoadLineBlock ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_center_andesite",
@@ -53,13 +53,13 @@ public class Blocks {
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_side_andesite",
             MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE, RoadType.ANDESITE);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_side_merge_andesite",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.ANDESITE);
+            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.ANDESITE, "road_line_yellow_side_andesite_merge1");
 
     public static final RoadLineBlock ROAD_ARROW_ANDESITE_BLOCK = new RoadLineBlock("road_arrow_andesite",
-            MapColor.LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.ANDESITE);
+            MapColor.LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.ANDESITE ,"road_arrow_andesite_straight");
     
     public static final RoadLineBlock ROAD_STOP_BAR_ANDESITE_BLOCK = new RoadLineBlock("road_stop_bar_andesite",
-            MapColor.WHITE, RoadLineBlock.STOP_BAR, RoadType.ANDESITE);
+            MapColor.WHITE, RoadLineBlock.STOP_BAR, RoadType.ANDESITE, "road_stop_bar_andesite_center");
 
     public static final VariantPartialBlock CABLE_BARRIER_BLOCK = new CableBarrierBlock("cable_barrier");
     public static final VariantPartialBlock CONCRETE_BARRIER_BLOCK = new ConcreteBarrierBlock("concrete_barrier");
