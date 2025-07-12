@@ -5,26 +5,26 @@
             "model": "city-blocks:block/road_line_white_center_andesite"
         },
         "variant=0,facing=east": {
-            "model": "city-blocks:block/road_line_white_center_andesite", "y": 90
+            "model": "city-blocks:block/road_line_white_center_andesite_east"
         },
         "variant=0,facing=south": {
-            "model": "city-blocks:block/road_line_white_center_andesite", "y": 180
+            "model": "city-blocks:block/road_line_white_center_andesite_south"
         },
         "variant=0,facing=west": {
-            "model": "city-blocks:block/road_line_white_center_andesite", "y": 270
+            "model": "city-blocks:block/road_line_white_center_andesite_west"
         },
 
         "variant=1,facing=north": {
             "model": "city-blocks:block/road_line_white_center_andesite_reflector"
         },
         "variant=1,facing=east": {
-            "model": "city-blocks:block/road_line_white_center_andesite_reflector", "y": 90
+            "model": "city-blocks:block/road_line_white_center_andesite_reflector_east"
         },
         "variant=1,facing=south": {
-            "model": "city-blocks:block/road_line_white_center_andesite_reflector", "y": 180
+            "model": "city-blocks:block/road_line_white_center_andesite_reflector_south"
         },
         "variant=1,facing=west": {
-            "model": "city-blocks:block/road_line_white_center_andesite_reflector", "y": 270
+            "model": "city-blocks:block/road_line_white_center_andesite_reflector_west"
         }
     }
 }

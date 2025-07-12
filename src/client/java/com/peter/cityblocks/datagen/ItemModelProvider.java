@@ -6,7 +6,6 @@ import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.LargePostBlock;
 import com.peter.cityblocks.blocks.RoadLineBlock;
-import com.peter.cityblocks.blocks.SlidingDoorBlock;
 import com.peter.cityblocks.blocks.RoadLineBlock.RoadLineModel;
 import com.peter.cityblocks.blocks.VariantBlock;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlock;
@@ -38,6 +37,9 @@ public class ItemModelProvider extends FabricModelProvider {
     }
 
     private static final Identifier ROAD_LINE_BASE_MODEL = CityBlocks.identifier("block/road_line");
+    private static final Identifier ROAD_LINE_BASE_EAST_MODEL = CityBlocks.identifier("block/road_line_east");
+    private static final Identifier ROAD_LINE_BASE_SOUTH_MODEL = CityBlocks.identifier("block/road_line_south");
+    private static final Identifier ROAD_LINE_BASE_WEST_MODEL = CityBlocks.identifier("block/road_line_west");
     private static final TextureKey OVERLAY_TEXTURE_KEY = TextureKey.of("overlay");
     private static final TextureKey TOP_TEXTURE_KEY = TextureKey.of("top");
     private static final TextureKey BASE_TEXTURE_KEY = TextureKey.of("base");
@@ -74,6 +76,9 @@ public class ItemModelProvider extends FabricModelProvider {
     }
 
     private static final Model ROAD_LINE_MODEL = new Model(Optional.of(ROAD_LINE_BASE_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final Model ROAD_LINE_EAST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_EAST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final Model ROAD_LINE_SOUTH_MODEL = new Model(Optional.of(ROAD_LINE_BASE_SOUTH_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final Model ROAD_LINE_WEST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_WEST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private void registerRoadLineBlockSubModel(BlockStateModelGenerator generator, String id, String overlay,
             boolean andesite) {
         TextureMap map = new TextureMap().put(OVERLAY_TEXTURE_KEY, blockTextureId(overlay));
@@ -86,6 +91,9 @@ public class ItemModelProvider extends FabricModelProvider {
         }
 
         ROAD_LINE_MODEL.upload(blockModelId(id), map, generator.modelCollector);
+        ROAD_LINE_EAST_MODEL.upload(blockModelId(id+"_east"), map, generator.modelCollector);
+        ROAD_LINE_SOUTH_MODEL.upload(blockModelId(id+"_south"), map, generator.modelCollector);
+        ROAD_LINE_WEST_MODEL.upload(blockModelId(id+"_west"), map, generator.modelCollector);
     }
     
     private void registerRoadLineBlock(BlockStateModelGenerator generator, RoadLineBlock block) {
