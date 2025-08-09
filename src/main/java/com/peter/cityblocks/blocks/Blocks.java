@@ -64,6 +64,7 @@ public class Blocks {
     public static final VariantPartialBlock CABLE_BARRIER_BLOCK = new CableBarrierBlock("cable_barrier");
     public static final VariantPartialBlock CONCRETE_BARRIER_BLOCK = new ConcreteBarrierBlock("concrete_barrier");
     public static final VariantPartialBlock CRASH_BARRIER_BLOCK = new CrashBarrierBlock("crash_barrier");
+    public static final VariantPartialBlock TRAFFIC_CONE_BLOCK = new TrafficConeBlock("traffic_cone");
 
     public static final VariantPartialBlock SIGN_POST_BLOCK = new SignPostBlock("sign_post");
     public static final VariantPartialBlock SIGN_POST_SIGN_1_BLOCK = new SignPostSign1Block("sign_post_sign_1", 2);

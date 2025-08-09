@@ -138,6 +138,7 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModel(generator, Blocks.PEDESTRIAN_SIGNAL_BLOCK, PedestrianSignalBlock.NAME);
         registerBlockItemModel(generator, Blocks.SIGNAL_CONTROLLER_BLOCK, SignalControllerBlock.NAME);
         registerBlockItemModel(generator, Blocks.LARGE_POST, LargePostBlock.NAME + "_v_2");
+        registerBlockItemModel(generator, Blocks.TRAFFIC_CONE_BLOCK);
 
         registerBlockItemModel(generator, Blocks.STREET_SIGN_BLOCK, StreetSignBlock.NAME+"_1_b");
 

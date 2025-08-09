@@ -47,6 +47,7 @@ public class ItemGroups {
                         entries.add(Items.CABLE_BARRIER_BLOCK_ITEM);
                         entries.add(Items.CONCRETE_BARRIER_BLOCK_ITEM);
                         entries.add(Items.CRASH_BARRIER_BLOCK_ITEM);
+                        entries.add(Items.TRAFFIC_CONE_BLOCK_ITEM);
                         entries.add(Items.SIGN_POST_BLOCK_ITEM);
                         // entries.add(Items.SIGN_POST_SIGN_1_BLOCK_ITEM);
                         // entries.add(Items.SIGN_POST_SIGN_1_SPD_BLOCK_ITEM);

@@ -42,6 +42,7 @@ public class Items {
     public static final BlockItem CABLE_BARRIER_BLOCK_ITEM =Blocks.CABLE_BARRIER_BLOCK.item;
     public static final BlockItem CONCRETE_BARRIER_BLOCK_ITEM = Blocks.CONCRETE_BARRIER_BLOCK.item;
     public static final BlockItem CRASH_BARRIER_BLOCK_ITEM = Blocks.CRASH_BARRIER_BLOCK.item;
+    public static final BlockItem TRAFFIC_CONE_BLOCK_ITEM = Blocks.TRAFFIC_CONE_BLOCK.item;
 
     public static final BlockItem SIGN_POST_BLOCK_ITEM = Blocks.SIGN_POST_BLOCK.item;
     public static final BlockItem SIGN_POST_SIGN_1_BLOCK_ITEM = Blocks.SIGN_POST_SIGN_1_BLOCK.item;
