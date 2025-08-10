@@ -1,20 +1,26 @@
 package com.peter.cityblocks.blocks;
 
 import net.minecraft.block.MapColor;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class TrafficConeBlock extends VariantPartialBlock {
 
+    private static final VoxelShape CONE_SHAPE = VoxelShapes.combine(cube(2, 0, 2, 12, 10, 12), cube(5, 0, 5, 6, 16, 6),
+            (a, b) -> a || b);
     private static final VoxelShape[][] SHAPES = new VoxelShape[][] {
         new VoxelShape[] {
-            cube(2, 0, 2, 12, 16 ,12),
+            CONE_SHAPE,
+            CONE_SHAPE,
         }, new VoxelShape[] {
-            cube(2, 0, 2, 12, 16 ,12, Direction.EAST),
+            CONE_SHAPE,
+            CONE_SHAPE,
         }, new VoxelShape[] {
-            cube(2, 0, 2, 12, 16 ,12, Direction.SOUTH),
+            CONE_SHAPE,
+            CONE_SHAPE,
         }, new VoxelShape[] {
-            cube(2, 0, 2, 12, 16 ,12, Direction.WEST),
+            CONE_SHAPE,
+            CONE_SHAPE,
         }
     };
 

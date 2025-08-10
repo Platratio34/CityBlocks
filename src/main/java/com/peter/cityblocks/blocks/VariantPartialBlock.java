@@ -66,11 +66,32 @@ public class VariantPartialBlock extends VariantBlock {
                 return cube(-(x - 8) + 8, y, -(z - 8) + 8, -sizeX, sizeY, -sizeZ);
             case Direction.WEST:
                 return cube(z, y, -(x - 8) + 8, sizeZ, sizeY, -sizeX);
-        
+
             default:
                 break;
         }
         return cube(x, y, z, sizeX, sizeY, sizeZ);
     }
 
+    @Override
+    protected boolean isTransparent(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getOpacity(BlockState state) {
+        return 0;
+    }
+
+    @Override
+    protected boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    protected float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+        return 1f;
+    }
+
+    
 }
