@@ -3,6 +3,7 @@ package com.peter.cityblocks.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -13,8 +14,8 @@ public class VariantPartialBlock extends VariantBlock {
 
     private final VoxelShape[][] shapes;
 
-    public VariantPartialBlock(Settings settings, String name, VoxelShape[][] shapes) {
-        super(settings, name);
+    public VariantPartialBlock(Settings settings, String name, VoxelShape[][] shapes, Identifier[] modelVariants) {
+        super(settings, name, modelVariants);
         this.shapes = shapes;
     }
 

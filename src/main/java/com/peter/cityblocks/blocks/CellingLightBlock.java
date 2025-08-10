@@ -39,8 +39,13 @@ public class CellingLightBlock extends VariantPartialBlock {
 
     public static final MapCodec<CellingLightBlock> CODEC = createCodec(CellingLightBlock::new);
 
+    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+            Blocks.blockId("celling_light_0"),
+            Blocks.blockId("celling_light_1"),
+    };
+
     protected CellingLightBlock(Settings settings) {
-        super(settings, NAME, SHAPES);
+        super(settings, NAME, SHAPES, MODEL_VARIANTS);
     }
 
 }

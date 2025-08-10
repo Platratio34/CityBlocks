@@ -9,7 +9,7 @@ public class TextureVariantPartialBlock extends VariantPartialBlock {
     private final VoxelShape[] shapes;
 
     public TextureVariantPartialBlock(Settings settings, String name, VoxelShape[] shapes) {
-        super(settings, name, null);
+        super(settings, name, null, null);
         this.shapes = shapes;
     }
 

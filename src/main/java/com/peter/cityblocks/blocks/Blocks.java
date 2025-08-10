@@ -1,5 +1,6 @@
 package com.peter.cityblocks.blocks;
 
+import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlock;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlock;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
@@ -100,5 +101,9 @@ public class Blocks {
 
     public static RegistryKey<Block> brk(Identifier id) {
         return RegistryKey.of(RegistryKeys.BLOCK, id);
+    }
+
+    public static Identifier blockId(String name) {
+        return CityBlocks.identifier("block/" + name);
     }
 }

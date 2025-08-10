@@ -75,8 +75,23 @@ public class ExitSignBlock extends VariantPartialBlock {
             new VariantSettings().setVariants(12).nonOpaque().luminance((state) -> 1));
     public static final BlockItem ITEM = BLOCK.item;
 
+    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+            Blocks.blockId("exit_sign"),
+            Blocks.blockId("exit_sign_left"),
+            Blocks.blockId("exit_sign_right"),
+            Blocks.blockId("exit_sign_offset"),
+            Blocks.blockId("exit_sign_offset_left"),
+            Blocks.blockId("exit_sign_offset_right"),
+            Blocks.blockId("exit_sign_top"),
+            Blocks.blockId("exit_sign_top_left"),
+            Blocks.blockId("exit_sign_top_right"),
+            Blocks.blockId("exit_sign_top_offset"),
+            Blocks.blockId("exit_sign_top_offset_left"),
+            Blocks.blockId("exit_sign_top_offset_right"),
+    };
+
     public ExitSignBlock(Settings settings) {
-        super(settings, NAME, SHAPES);
+        super(settings, NAME, SHAPES, MODEL_VARIANTS);
     }
 
 }

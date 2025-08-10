@@ -2,7 +2,10 @@ package com.peter.cityblocks.blocks;
 
 import java.util.HashMap;
 
+import com.peter.cityblocks.CityBlocks;
+
 import net.minecraft.block.MapColor;
+import net.minecraft.util.Identifier;
 
 public class RoadLineBlock extends VariantBlock {
 
@@ -14,7 +17,7 @@ public class RoadLineBlock extends VariantBlock {
     public final String itemModelId;
 
     public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType) {
-        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name);
+        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name, getModelVariants(models, roadType));
         this.models = models;
         this.roadType = roadType;
         ROAD_LINE_BLOCKS.put(name, this);
@@ -22,11 +25,19 @@ public class RoadLineBlock extends VariantBlock {
     }
 
     public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType, String itemModelID) {
-        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name);
+        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name, getModelVariants(models, roadType));
         this.models = models;
         this.roadType = roadType;
         ROAD_LINE_BLOCKS.put(name, this);
         this.itemModelId = itemModelID;
+    }
+
+    private static Identifier[] getModelVariants(RoadLineModel[] models, RoadType roadType) {
+        Identifier[] arr = new Identifier[models.length];
+        for (int i = 0; i < models.length; i++) {
+            arr[i] = CityBlocks.identifier(models[i].model().replace("{}", roadType.extension));
+        }
+        return arr;
     }
 
     public static record RoadLineModel(String model, String overlay) {

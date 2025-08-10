@@ -41,14 +41,16 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     public final MapCodec<? extends VariantBlock> codec;
 
     public final BlockItem item;
+    public final Identifier[] modelVariants;
 
-    public VariantBlock(Settings settings, String name) {
-        this((VariantSettings) settings, name);
+    public VariantBlock(Settings settings, String name, Identifier[] modelVariants) {
+        this((VariantSettings) settings, name, modelVariants);
     }
 
-    public VariantBlock(VariantSettings settings, String name) {
+    public VariantBlock(VariantSettings settings, String name, Identifier[] modelVariants) {
         super(settings.registryKey(Blocks.brk(CityBlocks.identifier(name))));
         this.variants = settings.variants;
+        this.modelVariants = modelVariants;
         variant = settings.variantProperty;
         codec = createCodec(this::constructor);
         this.name = name;
@@ -64,7 +66,7 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     private VariantBlock constructor(Settings settings) {
         VariantSettings vSettings = (VariantSettings) settings;
         vSettings.setVariants(variants);
-        return new VariantBlock(vSettings, name);
+        return new VariantBlock(vSettings, name, modelVariants);
     }
 
     @Override
@@ -127,6 +129,10 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     @Override
     public BlockState cycle(World world, BlockPos pos, BlockState state, boolean inverse) {
         return state.with(variant, IVariantBlock.cycleInt(state.get(variant), variants - 1, inverse));
+    }
+
+    public Identifier modelVariant(int variant, Direction direction) {
+        return modelVariants[variant];
     }
 
 }

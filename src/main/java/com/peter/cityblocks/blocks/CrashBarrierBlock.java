@@ -1,6 +1,7 @@
 package com.peter.cityblocks.blocks;
 
 import net.minecraft.block.MapColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -39,8 +40,17 @@ public class CrashBarrierBlock extends VariantPartialBlock {
         }
     };
 
+    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+            Blocks.blockId("crash_barrier_straight"),
+            Blocks.blockId("crash_barrier_outside"),
+            Blocks.blockId("crash_barrier_inside"),
+            Blocks.blockId("crash_barrier_end1"),
+            Blocks.blockId("crash_barrier_end2"),
+            Blocks.blockId("crash_barrier_straight_no_post")
+    };
+
     public CrashBarrierBlock(String name) {
-        super(new VariantSettings().setVariants(6).nonOpaque().mapColor(MapColor.WHITE), name, SHAPES);
+        super(new VariantSettings().setVariants(6).nonOpaque().mapColor(MapColor.WHITE), name, SHAPES, MODEL_VARIANTS);
     }
 
 }

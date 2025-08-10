@@ -1,6 +1,7 @@
 package com.peter.cityblocks.blocks;
 
 import net.minecraft.block.MapColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -24,8 +25,13 @@ public class TrafficConeBlock extends VariantPartialBlock {
         }
     };
 
+    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+            Blocks.blockId("traffic_cone"),
+            Blocks.blockId("traffic_cone"),
+    };
+
     public TrafficConeBlock(String name) {
-        super(new VariantSettings().setVariants(2).nonOpaque().mapColor(MapColor.ORANGE), name, SHAPES);
+        super(new VariantSettings().setVariants(2).nonOpaque().mapColor(MapColor.ORANGE), name, SHAPES, MODEL_VARIANTS);
     }
 
 }

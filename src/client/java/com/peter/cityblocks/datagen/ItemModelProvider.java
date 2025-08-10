@@ -30,7 +30,9 @@ import net.minecraft.client.data.Models;
 import net.minecraft.client.data.TextureKey;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
+import net.minecraft.client.render.model.json.ModelVariantOperator;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
 public class ItemModelProvider extends FabricModelProvider {
@@ -105,11 +107,26 @@ public class ItemModelProvider extends FabricModelProvider {
         var map = BlockStateVariantMap.models(RoadLineBlock.FACING, block.variant);
         for (int i = 0; i < block.models.length; i++) {
             RoadLineModel model = block.models[i];
-            map.register(Direction.NORTH, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model(), block.roadType)));
-            map.register(Direction.EAST, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model()+"_east", block.roadType)));
-            map.register(Direction.SOUTH, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model()+"_south", block.roadType)));
-            map.register(Direction.WEST, i, BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model()+"_west", block.roadType)));
+            map.register(Direction.NORTH, i,
+                    BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model(), block.roadType)));
+            map.register(Direction.EAST, i, BlockStateModelGenerator
+                    .createWeightedVariant(roadBlockModelId(model.model() + "_east", block.roadType)));
+            map.register(Direction.SOUTH, i, BlockStateModelGenerator
+                    .createWeightedVariant(roadBlockModelId(model.model() + "_south", block.roadType)));
+            map.register(Direction.WEST, i, BlockStateModelGenerator
+                    .createWeightedVariant(roadBlockModelId(model.model() + "_west", block.roadType)));
             registerRoadLineBlockSubModel(generator, model.model(), model.overlay(), block.roadType);
+        }
+        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
+    }
+
+    private void registerVariantBlockStates(BlockStateModelGenerator generator, VariantBlock block) {
+        var map = BlockStateVariantMap.models(VariantBlock.FACING, block.variant);
+        for (int v = 0; v < block.variants; v++) {
+            map.register(Direction.NORTH, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.NORTH)));
+            map.register(Direction.EAST, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.EAST)).apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)));
+            map.register(Direction.SOUTH, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.SOUTH)).apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R180)));
+            map.register(Direction.WEST, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.WEST)).apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R270)));
         }
         generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
     }
@@ -126,8 +143,13 @@ public class ItemModelProvider extends FabricModelProvider {
         
         LOGGER.info("Generating block-item models");
         registerBlockItemModelV(generator, Blocks.CABLE_BARRIER_BLOCK, "post_middle");
+        registerVariantBlockStates(generator, Blocks.CABLE_BARRIER_BLOCK);
         registerBlockItemModel(generator, Blocks.CONCRETE_BARRIER_BLOCK);
+        registerVariantBlockStates(generator, Blocks.CONCRETE_BARRIER_BLOCK);
         registerBlockItemModelV(generator, Blocks.CRASH_BARRIER_BLOCK, "straight");
+        registerVariantBlockStates(generator, Blocks.CRASH_BARRIER_BLOCK);
+        registerBlockItemModel(generator, Blocks.TRAFFIC_CONE_BLOCK);
+        registerVariantBlockStates(generator, Blocks.TRAFFIC_CONE_BLOCK);
         
         registerBlockItemModel(generator, Blocks.SIGN_POST_BLOCK, "sign_post_post");
         registerBlockItemModel(generator, Blocks.SIGN_POST_SIGN_1_BLOCK);
@@ -138,11 +160,11 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModel(generator, Blocks.PEDESTRIAN_SIGNAL_BLOCK, PedestrianSignalBlock.NAME);
         registerBlockItemModel(generator, Blocks.SIGNAL_CONTROLLER_BLOCK, SignalControllerBlock.NAME);
         registerBlockItemModel(generator, Blocks.LARGE_POST, LargePostBlock.NAME + "_v_2");
-        registerBlockItemModel(generator, Blocks.TRAFFIC_CONE_BLOCK);
 
         registerBlockItemModel(generator, Blocks.STREET_SIGN_BLOCK, StreetSignBlock.NAME+"_1_b");
 
         registerBlockItemModelV(generator, Blocks.CELLING_LIGHT_BLOCK, "0");
+        registerVariantBlockStates(generator, Blocks.CELLING_LIGHT_BLOCK);
         registerBlockItemModel(generator, Blocks.EXIT_SIGN_BLOCK);
         registerBlockItemModel(generator, Blocks.BUILDING_SIGN_BLOCK, BuildingSignBlock.NAME + "_address");
     }

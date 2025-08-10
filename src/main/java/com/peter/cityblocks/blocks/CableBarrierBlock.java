@@ -1,6 +1,7 @@
 package com.peter.cityblocks.blocks;
 
 import net.minecraft.block.MapColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -55,8 +56,15 @@ public class CableBarrierBlock extends VariantPartialBlock {
             }
     };
 
+    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+            Blocks.blockId("cable_barrier_post_middle"),
+            Blocks.blockId("cable_barrier_cable_middle"),
+            Blocks.blockId("cable_barrier_post_end"),
+            Blocks.blockId("cable_barrier_cable_end"),
+    };
+
     public CableBarrierBlock(String name) {
-        super(new VariantSettings().setVariants(4).nonOpaque().mapColor(MapColor.GRAY), name, SHAPES);
+        super(new VariantSettings().setVariants(4).nonOpaque().mapColor(MapColor.GRAY), name, SHAPES, MODEL_VARIANTS);
     }
 
 }
