@@ -46,6 +46,9 @@
     "item.city-blocks.crash_barrier": "Crash Barrier",
     "item.city-blocks.crash_barrier.tooltip": "",
 
+    "item.city-blocks.traffic_cone": "Traffic Cone",
+    "item.city-blocks.traffic_cone.tooltip": "",
+
     "item.city-blocks.sign_post": "Sign Post",
     "item.city-blocks.sign_post.tooltip": "",
     "item.city-blocks.sign_post_sign_1": "Sign Post Rectangle",
