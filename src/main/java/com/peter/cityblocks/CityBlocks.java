@@ -18,29 +18,25 @@ import com.peter.cityblocks.networking.CityBlocksNetworking;
 public class CityBlocks implements ModInitializer {
 
     public static final String MOD_ID = "city-blocks";
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static boolean debug = false;
+    private static boolean debug = false;
+    private static boolean dev = false;
 
 	@Override
     public void onInitialize() {
-        // This code runs as soon as Minecraft is in a mod-load-ready state.
-        // However, some things (like resources) may still be uninitialized.
-        // Proceed with mild caution.
-        LOGGER.info("--------------------------------------------------------");
-        LOGGER.info("  ##  ###  ###  # #        ##   #     #    ##  # #   ## ");
-        LOGGER.info(" #     #    #   # #        # #  #    # #  #    # #  #   ");
-        LOGGER.info(" #     #    #   # #   ###  ##   #    # #  #    ##    #  ");
-        LOGGER.info(" #     #    #    #         # #  #    # #  #    # #    # ");
-        LOGGER.info("  ##  ###   #    #         ##   ###   #    ##  # #  ##  ");
-        LOGGER.info("--------------------------------------------------------");
+        LOGGER.info("-------------------------------------------------------------------");
+        LOGGER.info("  ###  ###  #####  #   #        ###   #     ##    ###  #  #   #### ");
+        LOGGER.info(" #      #     #    #   #        #  #  #    #  #  #     # #   #     ");
+        LOGGER.info(" #      #     #     # #    ###  ###   #    #  #  #     ##     ###  ");
+        LOGGER.info(" #      #     #      #          #  #  #    #  #  #     # #       # ");
+        LOGGER.info("  ###  ###    #      #          ###   ####  ##    ###  #  #  ####  ");
+        LOGGER.info("-------------------------------------------------------------------");
 
         ModContainer mod = FabricLoader.getInstance().getModContainer(MOD_ID).get();
         String modVersion = mod.getMetadata().getVersion().getFriendlyString();
         if (modVersion.contains("-dev")) {
             debug = true;
+            dev = true;
             LOGGER.warn("You are running a development version of CityBlocks: {}", modVersion);
             LOGGER.warn("\tConsider replacing it with a stable release");
         } else if (modVersion.contains("-debug")) {
@@ -50,9 +46,8 @@ public class CityBlocks implements ModInitializer {
         } else {
             LOGGER.info("Version {}", modVersion);
         }
+
         if (debug) {
-        //     LOGGER.info(LOGGER.isDebugEnabled() + "");
-        //     LOGGER.debug("Debug test");
             debug("Debug logging enabled");
         }
 
@@ -85,9 +80,18 @@ public class CityBlocks implements ModInitializer {
             LOGGER.info("DEBUG: " + msg);
         }
     }
+
     public static void debug(String msg, Object... args) {
         if (debug) {
-            LOGGER.info("DEBUG: "+msg, args);
+            LOGGER.info("DEBUG: " + msg, args);
         }
+    }
+    
+    public static boolean isDev() {
+        return dev;
+    }
+
+    public static boolean isDebug() {
+        return debug;
     }
 }
