@@ -29,6 +29,13 @@ public class CellingLightBlock extends VariantPartialBlock {
             }
     };
 
+    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+            Blocks.blockId("celling_light_0"),
+            Blocks.blockId("celling_light_1"),
+    };
+
+    public static final MapCodec<CellingLightBlock> CODEC = createCodec(CellingLightBlock::new);
+
     public static final String NAME = "celling_light";
     public static final Identifier ID = CityBlocks.identifier(NAME);
 
@@ -36,13 +43,6 @@ public class CellingLightBlock extends VariantPartialBlock {
                 return 15;
             }));
     public static final BlockItem ITEM = BLOCK.item;
-
-    public static final MapCodec<CellingLightBlock> CODEC = createCodec(CellingLightBlock::new);
-
-    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
-            Blocks.blockId("celling_light_0"),
-            Blocks.blockId("celling_light_1"),
-    };
 
     protected CellingLightBlock(Settings settings) {
         super(settings, NAME, SHAPES, MODEL_VARIANTS);

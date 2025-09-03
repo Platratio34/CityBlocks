@@ -48,6 +48,7 @@ public class Items {
     public static final BlockItem SIGN_POST_SIGN_1_BLOCK_ITEM = Blocks.SIGN_POST_SIGN_1_BLOCK.item;
     public static final BlockItem SIGN_POST_SIGN_1_SPD_BLOCK_ITEM = Blocks.SIGN_POST_SIGN_1_SPD_BLOCK.item;
     public static final BlockItem SIGN_POST_SIGN_2_BLOCK_ITEM = Blocks.SIGN_POST_SIGN_2_BLOCK.item;
+    public static final BlockItem SIGN_POST_OFFSET_BLOCK_ITEM = Blocks.SIGN_POST_OFFSET_BLOCK.item;
     
     public static final BlockItem SIGNAL_HEAD_BLOCK_ITEM = SignalHeadBlock.ITEM;
     public static final BlockItem PEDESTRIAN_SIGNAL_BLOCK_ITEM = PedestrianSignalBlock.ITEM;

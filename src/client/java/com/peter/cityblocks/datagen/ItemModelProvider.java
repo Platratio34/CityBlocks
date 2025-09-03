@@ -155,6 +155,7 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModel(generator, Blocks.SIGN_POST_SIGN_1_BLOCK);
         registerBlockItemModel(generator, Blocks.SIGN_POST_SIGN_1_SPD_BLOCK);
         registerBlockItemModel(generator, Blocks.SIGN_POST_SIGN_2_BLOCK);
+        registerBlockItemModel(generator, Blocks.SIGN_POST_OFFSET_BLOCK);
         
         registerBlockItemModel(generator, Blocks.SIGNAL_HEAD_BLOCK, SignalHeadBlock.NAME +"_3");
         registerBlockItemModel(generator, Blocks.PEDESTRIAN_SIGNAL_BLOCK, PedestrianSignalBlock.NAME);

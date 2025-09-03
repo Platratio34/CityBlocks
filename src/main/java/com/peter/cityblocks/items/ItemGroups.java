@@ -57,6 +57,7 @@ public class ItemGroups {
                         entries.add(Items.SIGNAL_CONTROLLER_BLOCK_ITEM);
                         entries.add(Items.SIGNAL_LINKER_ITEM);
                         entries.add(Items.LARGE_POST_BLOCK_ITEM);
+                        entries.add(Items.SIGN_POST_OFFSET_BLOCK_ITEM);
                         entries.add(Items.STREET_SIGN_BLOCK_ITEM);
                     })
                     .build());

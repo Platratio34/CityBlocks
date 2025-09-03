@@ -8,6 +8,7 @@ import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlockEntity;
 import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.CustomSignBlock;
+import com.peter.cityblocks.blocks.signs.SignPostOffsetBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 
 import net.minecraft.block.Block;
@@ -71,6 +72,7 @@ public class Blocks {
     public static final VariantPartialBlock SIGN_POST_SIGN_1_BLOCK = new SignPostSign1Block("sign_post_sign_1", 2);
     public static final VariantPartialBlock SIGN_POST_SIGN_1_SPD_BLOCK = new SignPostSign1Block("sign_post_sign_1_spd", 12);
     public static final VariantPartialBlock SIGN_POST_SIGN_2_BLOCK = new SignPostSign2Block("sign_post_sign_2", 4);
+    public static final SignPostOffsetBlock SIGN_POST_OFFSET_BLOCK = new SignPostOffsetBlock("sign_post_offset");
 
     public static final Block SIGNAL_HEAD_BLOCK = SignalHeadBlock.BLOCK;
     public static final Block PEDESTRIAN_SIGNAL_BLOCK = PedestrianSignalBlock.BLOCK;

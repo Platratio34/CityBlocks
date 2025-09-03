@@ -57,6 +57,8 @@
     "item.city-blocks.sign_post_sign_1_spd.tooltip": "",
     "item.city-blocks.sign_post_sign_2": "Sign Post Diamond",
     "item.city-blocks.sign_post_sign_2.tooltip": "",
+    "item.city-blocks.sign_post_offset": "Offset Sign Post",
+    "item.city-blocks.sign_post_offset.tooltip": "",
 
     "item.city-blocks.signal_head": "Signal Head",
     "item.city-blocks.pedestrian_signal": "Pedestrian Signal",
