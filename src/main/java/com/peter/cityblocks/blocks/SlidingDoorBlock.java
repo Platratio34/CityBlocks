@@ -33,8 +33,8 @@ import net.minecraft.world.World;
 public class SlidingDoorBlock extends DoorBlock {
 
     private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_CLOSED = VoxelShapes.createHorizontalFacingShapeMap(Block.createCuboidZShape(16.0, 13.0, 16.0));
-    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN_RIGHT = VoxelShapes.createHorizontalFacingShapeMap(VoxelShapes.cuboid(14f/16f, 1f/16f, 12f/16f, 30f/16f, 16f/16f, 15f/16f));
-    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN = VoxelShapes.createHorizontalFacingShapeMap(VoxelShapes.cuboid(-14f/16f, 1f/16f, 12f/16f, 2f/16f, 16f/16f, 15f/16f));
+    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN_RIGHT = VoxelShapes.createHorizontalFacingShapeMap(VoxelShapes.cuboid(14f/16f, 0f/16f, 12f/16f, 30f/16f, 16f/16f, 15f/16f));
+    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN = VoxelShapes.createHorizontalFacingShapeMap(VoxelShapes.cuboid(-14f/16f, 0f/16f, 12f/16f, 2f/16f, 16f/16f, 15f/16f));
 
     public static final String NAME = "sliding_door";
     public static final Identifier ID = CityBlocks.identifier(NAME);
