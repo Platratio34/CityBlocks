@@ -6,6 +6,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class ExitSignBlock extends VariantPartialBlock {
 
@@ -91,7 +92,27 @@ public class ExitSignBlock extends VariantPartialBlock {
     };
 
     public ExitSignBlock(Settings settings) {
-        super(settings, NAME, SHAPES, MODEL_VARIANTS);
+        super(settings, NAME, MODEL_VARIANTS);
+    }
+
+    @Override
+    public VoxelShape getShape(int variant, Direction direction) {
+        return switch (variant) {
+            case 0 -> cube(3, 1, 0, 10, 6, 2, direction);
+            case 1 -> cube(3, 1, 0, 10, 6, 2, direction);
+            case 2 -> cube(3, 1, 0, 10, 6, 2, direction);
+            case 3 -> cube(11, 1, 0, 10, 6, 2, direction);
+            case 4 -> cube(11, 1, 0, 10, 6, 2, direction);
+            case 5 -> cube(11, 1, 0, 10, 6, 2, direction);
+            case 6 -> cube(3, 10, 0, 10, 6, 2, direction);
+            case 7 -> cube(3, 10, 0, 10, 6, 2, direction);
+            case 8 -> cube(3, 10, 0, 10, 6, 2, direction);
+            case 9 -> cube(11, 10, 0, 10, 6, 2, direction);
+            case 10 -> cube(11, 10, 0, 10, 6, 2, direction);
+            case 11 -> cube(11, 10, 0, 10, 6, 2, direction);
+        
+            default -> VoxelShapes.fullCube();
+        };
     }
 
 }

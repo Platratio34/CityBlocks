@@ -1,8 +1,10 @@
 package com.peter.cityblocks.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -12,11 +14,8 @@ import net.minecraft.world.BlockView;
 
 public class VariantPartialBlock extends VariantBlock {
 
-    private final VoxelShape[][] shapes;
-
-    public VariantPartialBlock(Settings settings, String name, VoxelShape[][] shapes, Identifier[] modelVariants) {
+    public VariantPartialBlock(Settings settings, String name, Identifier[] modelVariants) {
         super(settings, name, modelVariants);
-        this.shapes = shapes;
     }
 
     @Override
@@ -34,11 +33,16 @@ public class VariantPartialBlock extends VariantBlock {
         return getShape(state);
     }
 
+    protected VoxelShape getInsideCollisionShape(BlockState state, BlockView world, BlockPos pos, Entity entity) {
+        return VoxelShapes.empty();
+    }
+
     public VoxelShape getShape(BlockState state) {
-        if (shapes == null) {
-            return VoxelShapes.cuboid(0, 0, 0, 1, 1, 1);
-        }
-        return shapes[getDir(state)][getVariant(state)];
+        return getShape(getVariant(state), state.get(FACING));
+    }
+
+    public VoxelShape getShape(int variant, Direction direction) {
+        return VoxelShapes.fullCube();
     }
 
     public static VoxelShape cube(double x, double y, double z, double sizeX, double sizeY, double sizeZ) {
@@ -84,15 +88,19 @@ public class VariantPartialBlock extends VariantBlock {
         return 0;
     }
 
-    @Override
-    protected boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
+    // @Override
+    // protected boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    //     return false;
+    // }
 
     @Override
     protected float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1f;
     }
 
-    
+    @Override
+    protected BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
 }

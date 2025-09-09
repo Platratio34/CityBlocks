@@ -4,24 +4,9 @@ import net.minecraft.block.MapColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class ConcreteBarrierBlock extends VariantPartialBlock {
-
-    private static final VoxelShape[][] SHAPES = new VoxelShape[][] {
-        new VoxelShape[] {
-            cube(4, 0, 0, 8, 18 ,16),
-            cube(4, 0, 0, 8, 18 ,16),
-        }, new VoxelShape[] {
-            cube(4, 0, 0, 8, 18 ,16, Direction.EAST),
-            cube(4, 0, 0, 8, 18 ,16, Direction.EAST),
-        }, new VoxelShape[] {
-            cube(4, 0, 0, 8, 18 ,16, Direction.SOUTH),
-            cube(4, 0, 0, 8, 18 ,16, Direction.SOUTH),
-        }, new VoxelShape[] {
-            cube(4, 0, 0, 8, 18 ,16, Direction.WEST),
-            cube(4, 0, 0, 8, 18 ,16, Direction.WEST),
-        }
-    };
 
     private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
             Blocks.blockId("concrete_barrier"),
@@ -29,7 +14,17 @@ public class ConcreteBarrierBlock extends VariantPartialBlock {
     };
 
     public ConcreteBarrierBlock(String name) {
-        super(new VariantSettings().setVariants(2).nonOpaque().mapColor(MapColor.GRAY), name, SHAPES, MODEL_VARIANTS);
+        super(new VariantSettings().setVariants(2).nonOpaque().mapColor(MapColor.GRAY), name, MODEL_VARIANTS);
+    }
+
+    @Override
+    public VoxelShape getShape(int variant, Direction direction) {
+        return switch (variant) {
+            case 0 -> cube(4, 0, 0, 8, 18 ,16, direction);
+            case 1 -> cube(4, 0, 0, 8, 18, 16, direction);
+        
+            default -> VoxelShapes.fullCube();
+        };
     }
 
 }

@@ -125,6 +125,22 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
                 return 0;
         }
     }
+    
+    public static int getDir(Direction dir) {
+        switch (dir) {
+            case Direction.NORTH:
+                return 0;
+            case Direction.EAST:
+                return 1;
+            case Direction.SOUTH:
+                return 2;
+            case Direction.WEST:
+                return 3;
+        
+            default:
+                return 0;
+        }
+    }
 
     @Override
     public BlockState cycle(World world, BlockPos pos, BlockState state, boolean inverse) {
