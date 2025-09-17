@@ -10,6 +10,7 @@ import com.peter.cityblocks.blocks.signal.SignalControllerBlock;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
 import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
+import com.peter.cityblocks.ccextended.CardReaderBlock;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -64,6 +65,8 @@ public class Items {
     public static final BlockItem BUILDING_SIGN_BLOCK_ITEM = BuildingSignBlock.ITEM;
 
     public static final BlockItem SLIDING_DOOR_BLOCK_ITEM = SlidingDoorBlock.ITEM;
+
+    public static final BlockItem CARD_READER_BLOCK_ITEM = CardReaderBlock.ITEM;
 
     public static void init() {
         ItemGroups.init();

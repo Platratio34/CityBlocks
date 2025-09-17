@@ -10,6 +10,7 @@ import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.CustomSignBlock;
 import com.peter.cityblocks.blocks.signs.SignPostOffsetBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
+import com.peter.cityblocks.ccextended.CardReaderBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
@@ -86,6 +87,8 @@ public class Blocks {
     public static final CustomSignBlock BUILDING_SIGN_BLOCK = BuildingSignBlock.BLOCK;
 
     public static final SlidingDoorBlock SLIDING_DOOR_BLOCK = SlidingDoorBlock.BLOCK;
+
+    public static final CardReaderBlock CARD_READER_BLOCK = CardReaderBlock.BLOCK;
 
     public static void init() {
         SignalHeadBlockEntity.register();

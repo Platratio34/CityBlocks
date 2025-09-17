@@ -1,6 +1,7 @@
 {
     "itemGroup.city-blocks.main": "City Blocks",
     "itemGroup.city-blocks.road": "City Blocks - Road Blocks",
+    "itemGroup.city-blocks.ccextra": "City Blocks - CC Extras",
 
     "item.city-blocks.variant_switcher": "Variant Switcher",
     "item.city-blocks.signal_linker": "Signal Linker",
@@ -74,6 +75,8 @@
     "item.city-blocks.building_sign": "Building Signs",
     "item.city-blocks.building_sign.tooltip": "",
     "item.city-blocks.sliding_door": "Sliding Glass Door",
+    
+    "item.city-blocks.card_reader": "Card Reader",
 
     "chat.city-blocks.signal_controller.linked": "Linked to signal controller",
     "chat.city-blocks.signal_controller.un_linked": "Un-linked from signal controller",

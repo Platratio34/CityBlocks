@@ -62,6 +62,14 @@ public class ItemGroups {
                     })
                     .build());
 
+    public static final ItemGroup CC_EXTRA = Registry.register(Registries.ITEM_GROUP, CityBlocks.identifier("ccextra"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(Items.VARIANT_SWITCHER_ITEM))
+                    .displayName(CityBlocks.translatableText("itemGroup", "ccextra"))
+                    .entries((ctx, entries) -> {
+                        entries.add(Items.CARD_READER_BLOCK_ITEM);
+                    })
+                    .build());
+
     public static void init() {
 
     };

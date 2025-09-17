@@ -58,7 +58,7 @@ public class SignalControllerBlock extends BlockWithEntity {
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return super.getPlacementState(ctx).with(FACING,
-                ctx.getHorizontalPlayerFacing());
+                ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
