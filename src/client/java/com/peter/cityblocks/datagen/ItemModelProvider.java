@@ -17,6 +17,7 @@ import com.peter.cityblocks.blocks.signal.SignalControllerBlock;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
 import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
+import com.peter.cityblocks.ccextended.CardReaderBlock;
 import com.peter.cityblocks.items.Items;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
@@ -168,6 +169,8 @@ public class ItemModelProvider extends FabricModelProvider {
         registerVariantBlockStates(generator, Blocks.CELLING_LIGHT_BLOCK);
         registerBlockItemModel(generator, Blocks.EXIT_SIGN_BLOCK);
         registerBlockItemModel(generator, Blocks.BUILDING_SIGN_BLOCK, BuildingSignBlock.NAME + "_address");
+
+        registerBlockItemModel(generator, Blocks.CARD_READER_BLOCK, CardReaderBlock.NAME);
     }
 
     @Override

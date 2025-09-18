@@ -11,6 +11,7 @@ import com.peter.cityblocks.blocks.signs.CustomSignBlock;
 import com.peter.cityblocks.blocks.signs.SignPostOffsetBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.ccextended.CardReaderBlock;
+import com.peter.cityblocks.ccextended.CardReaderBlockEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
@@ -93,6 +94,7 @@ public class Blocks {
     public static void init() {
         SignalHeadBlockEntity.register();
         SignalControllerBlockEntity.register();
+        CardReaderBlockEntity.register();
     };
 
     public static BlockItem registerBlockItem(Block block, Identifier id, Item.Settings settings) {

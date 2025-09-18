@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import com.peter.cityblocks.CityBlocks;
 
 import dan200.computercraft.api.lua.LuaFunction;
+import dan200.computercraft.api.peripheral.AttachedComputerSet;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.core.redstone.RedstoneState;
+import net.minecraft.component.Component;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
@@ -17,9 +21,11 @@ import net.minecraft.util.Identifier;
 public class CardReaderPeripheral implements IPeripheral {
 
     protected final CardReaderBlockEntity reader;
+    protected final RedstoneState redstoneState;
 
-    public CardReaderPeripheral(CardReaderBlockEntity reader) {
+    public CardReaderPeripheral(CardReaderBlockEntity reader, RedstoneState redstoneState) {
         this.reader = reader;
+        this.redstoneState = redstoneState;
         CityBlocks.debug("Creating new CardReaderPeripheral");
     }
 
@@ -42,7 +48,8 @@ public class CardReaderPeripheral implements IPeripheral {
         return ((CardReaderPeripheral) other).reader.getPos().equals(reader.getPos());
     }
 
-    private final ArrayList<IComputerAccess> computers = new ArrayList<>();
+    private final AttachedComputerSet computers = new AttachedComputerSet();
+
     @Override
     public void attach(IComputerAccess computer) {
         computers.add(computer);
@@ -55,20 +62,32 @@ public class CardReaderPeripheral implements IPeripheral {
 
     private ItemData lastItem = null;
     public static final String CARD_READER_INSERT_EVENT = "card_reader_insert";
+
     public void onUse(ItemStack stack) {
         lastItem = new ItemData(stack);
-        for (IComputerAccess computer : computers) {
+        CityBlocks.debug("Card reader used: {}, {}, [{}]", lastItem.getId(), lastItem.getName(), lastItem.getComponentIds());
+        computers.forEach((computer) -> {
             Object[] args = new Object[] {
                 computer.getAttachmentName(),
                 lastItem
             };
             computer.queueEvent(CARD_READER_INSERT_EVENT, args);
-        }
+        });
     }
 
     @LuaFunction
     public final ItemData getLastItem() {
         return lastItem;
+    }
+
+    @LuaFunction
+    public final void clearLastItem() {
+        lastItem = null;
+    }
+
+    @LuaFunction
+    public final void setOutput(String side, boolean output) {
+        redstoneState.setOutput(ComputerSide.valueOfInsensitive(side), output ? 15 : 0);
     }
 
     public static class ItemData {
@@ -94,10 +113,30 @@ public class CardReaderPeripheral implements IPeripheral {
         }
 
         @LuaFunction
-        public final Object getComponent(String id) {
+        public final String getComponent(String id) {
             ComponentMap map = stack.getComponents();
             ComponentType<?> type = Registries.DATA_COMPONENT_TYPE.get(Identifier.tryParse(id));
-            return map.get(type);
+            return map.get(type).toString();
+        }
+
+        @LuaFunction
+        public final ArrayList<String> getComponentIds() {
+            ComponentMap map = stack.getComponents();
+            ArrayList<String> ids = new ArrayList<>();
+            map.forEach(comp -> {
+                ids.add(Registries.DATA_COMPONENT_TYPE.getEntry(comp.type()).getIdAsString());
+            });
+            return ids;
+        }
+
+        @LuaFunction
+        public final String getComponentsHash() {
+            ComponentMap map = stack.getComponents();
+            int hash = 0;
+            for(Component<?> comp : map) {
+                hash ^= comp.toString().hashCode();
+            }
+            return Integer.toHexString(hash);
         }
 
     }
