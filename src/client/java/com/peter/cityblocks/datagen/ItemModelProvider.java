@@ -19,6 +19,7 @@ import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.ccextended.CardReaderBlock;
 import com.peter.cityblocks.items.Items;
+import com.peter.cityblocks.items.Keycard;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -171,6 +172,7 @@ public class ItemModelProvider extends FabricModelProvider {
         registerBlockItemModel(generator, Blocks.BUILDING_SIGN_BLOCK, BuildingSignBlock.NAME + "_address");
 
         registerBlockItemModel(generator, Blocks.CARD_READER_BLOCK, CardReaderBlock.NAME);
+        
     }
 
     @Override
@@ -179,6 +181,10 @@ public class ItemModelProvider extends FabricModelProvider {
         itemModelGenerator.register(Items.VARIANT_SWITCHER_ITEM, Models.GENERATED);
         itemModelGenerator.register(Items.SIGNAL_LINKER_ITEM, Models.GENERATED);
         itemModelGenerator.register(Items.SLIDING_DOOR_BLOCK_ITEM, Models.GENERATED);
+
+        for (Keycard card : Keycard.ITEMS) {
+            itemModelGenerator.register(card, Models.GENERATED);
+        }
     }
 
 }

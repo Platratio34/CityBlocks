@@ -11,6 +11,7 @@ import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
 import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.ccextended.CardReaderBlock;
+import com.peter.cityblocks.items.components.ItemComponents;
 
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -68,8 +69,26 @@ public class Items {
 
     public static final BlockItem CARD_READER_BLOCK_ITEM = CardReaderBlock.ITEM;
 
+    public static final Keycard KEYCARD_BLACK_ITEM = Keycard.ITEMS[0];
+    public static final Keycard KEYCARD_GRAY_ITEM = Keycard.ITEMS[1];
+    public static final Keycard KEYCARD_LIGHT_GRAY_ITEM = Keycard.ITEMS[2];
+    public static final Keycard KEYCARD_WHITE_ITEM = Keycard.ITEMS[3];
+    public static final Keycard KEYCARD_BROWN_ITEM = Keycard.ITEMS[4];
+    public static final Keycard KEYCARD_RED_ITEM = Keycard.ITEMS[5];
+    public static final Keycard KEYCARD_ORANGE_ITEM = Keycard.ITEMS[6];
+    public static final Keycard KEYCARD_YELLOW_ITEM = Keycard.ITEMS[7];
+    public static final Keycard KEYCARD_LIME_ITEM = Keycard.ITEMS[8];
+    public static final Keycard KEYCARD_GREEN_ITEM = Keycard.ITEMS[9];
+    public static final Keycard KEYCARD_CYAN_ITEM = Keycard.ITEMS[10];
+    public static final Keycard KEYCARD_LIGHT_BLUE_ITEM = Keycard.ITEMS[11];
+    public static final Keycard KEYCARD_BLUE_ITEM = Keycard.ITEMS[12];
+    public static final Keycard KEYCARD_MAGENTA_ITEM = Keycard.ITEMS[13];
+    public static final Keycard KEYCARD_PURPLE_ITEM = Keycard.ITEMS[14];
+    public static final Keycard KEYCARD_PINK_ITEM = Keycard.ITEMS[15];
+
     public static void init() {
         ItemGroups.init();
+        ItemComponents.register();
     };
 
     public static RegistryKey<Item> irk(Identifier id) {

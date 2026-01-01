@@ -63,10 +63,26 @@ public class ItemGroups {
                     .build());
 
     public static final ItemGroup CC_EXTRA = Registry.register(Registries.ITEM_GROUP, CityBlocks.identifier("ccextra"),
-            FabricItemGroup.builder().icon(() -> new ItemStack(Items.VARIANT_SWITCHER_ITEM))
+            FabricItemGroup.builder().icon(() -> new ItemStack(Items.CARD_READER_BLOCK_ITEM))
                     .displayName(CityBlocks.translatableText("itemGroup", "ccextra"))
                     .entries((ctx, entries) -> {
                         entries.add(Items.CARD_READER_BLOCK_ITEM);
+                        entries.add(Items.KEYCARD_BLACK_ITEM);
+                        entries.add(Items.KEYCARD_GRAY_ITEM);
+                        entries.add(Items.KEYCARD_LIGHT_GRAY_ITEM);
+                        entries.add(Items.KEYCARD_WHITE_ITEM);
+                        entries.add(Items.KEYCARD_BROWN_ITEM);
+                        entries.add(Items.KEYCARD_RED_ITEM);
+                        entries.add(Items.KEYCARD_ORANGE_ITEM);
+                        entries.add(Items.KEYCARD_YELLOW_ITEM);
+                        entries.add(Items.KEYCARD_LIME_ITEM);
+                        entries.add(Items.KEYCARD_GREEN_ITEM);
+                        entries.add(Items.KEYCARD_CYAN_ITEM);
+                        entries.add(Items.KEYCARD_LIGHT_BLUE_ITEM);
+                        entries.add(Items.KEYCARD_BLUE_ITEM);
+                        entries.add(Items.KEYCARD_MAGENTA_ITEM);
+                        entries.add(Items.KEYCARD_PURPLE_ITEM);
+                        entries.add(Items.KEYCARD_PINK_ITEM);
                     })
                     .build());
 

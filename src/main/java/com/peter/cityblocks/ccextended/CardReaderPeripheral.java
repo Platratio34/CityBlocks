@@ -3,6 +3,7 @@ package com.peter.cityblocks.ccextended;
 import java.util.ArrayList;
 
 import com.peter.cityblocks.CityBlocks;
+import com.peter.cityblocks.items.components.ItemComponents;
 
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.AttachedComputerSet;
@@ -62,17 +63,44 @@ public class CardReaderPeripheral implements IPeripheral {
 
     private ItemData lastItem = null;
     public static final String CARD_READER_INSERT_EVENT = "card_reader_insert";
+    protected long nextId = 0;
+    protected long lastId = 0;
 
     public void onUse(ItemStack stack) {
         lastItem = new ItemData(stack);
-        CityBlocks.debug("Card reader used: {}, {}, [{}]", lastItem.getId(), lastItem.getName(), lastItem.getComponentIds());
+        CityBlocks.debug("Card reader used: {}, {}, [{}]", lastItem.getId(), lastItem.getName(),
+                lastItem.getComponentIds());
+        final long cardId = stack.contains(ItemComponents.KEYCARD_ID_TYPE) ? stack.get(ItemComponents.KEYCARD_ID_TYPE)
+                : 0;
+        lastId = cardId;
+
+        if (nextId != 0) {
+            stack.set(ItemComponents.KEYCARD_ID_TYPE, nextId);
+            nextId = 0;
+        }
+        // final long crypto = stack.contains(ItemComponents.KEYCARD_CRYPTO_TYPE)
+        //         ? stack.get(ItemComponents.KEYCARD_CRYPTO_TYPE)
+        //         : 0;
         computers.forEach((computer) -> {
             Object[] args = new Object[] {
-                computer.getAttachmentName(),
-                lastItem
+                    computer.getAttachmentName(),
+                    lastItem,
+                    null,
+                    null,
             };
+            if (cardId != 0) {
+                args[2] = cardId;
+            }
+            // if (crypto != 0) {
+            //     args[3] = true;
+            // }
             computer.queueEvent(CARD_READER_INSERT_EVENT, args);
         });
+    }
+    
+    private String cardQuery(String input, long cardKey) {
+        
+        return "";
     }
 
     @LuaFunction
@@ -81,13 +109,24 @@ public class CardReaderPeripheral implements IPeripheral {
     }
 
     @LuaFunction
+    public final long getLastId() {
+        return lastId;
+    }
+
+    @LuaFunction
     public final void clearLastItem() {
         lastItem = null;
+        lastId = 0;
     }
 
     @LuaFunction
     public final void setOutput(String side, boolean output) {
         redstoneState.setOutput(ComputerSide.valueOfInsensitive(side), output ? 15 : 0);
+    }
+
+    @LuaFunction
+    public final void setNextId(long nextId) {
+        this.nextId = nextId;
     }
 
     public static class ItemData {
