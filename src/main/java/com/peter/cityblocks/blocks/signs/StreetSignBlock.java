@@ -352,4 +352,9 @@ public class StreetSignBlock extends CustomSignBlock {
         return state.get(MODEL);
     }
 
+    @Override
+    public String[] getVariants(BlockState state) {
+        return MODEL_NAMES;
+    }
+
 }

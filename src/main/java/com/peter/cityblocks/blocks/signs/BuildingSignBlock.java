@@ -275,4 +275,13 @@ public class BuildingSignBlock extends CustomSignBlock {
         return state.get(MODEL);
     }
 
+    @Override
+    public String[] getVariants(BlockState state) {
+        return new String[] {
+            "Address",
+            "Room (left)",
+            "Room (right)"
+        };
+    }
+
 }

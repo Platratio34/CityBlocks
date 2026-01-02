@@ -10,6 +10,8 @@ public interface IVariantBlock {
 
     public int getVariant(BlockState state);
 
+    public String[] getVariants(BlockState state);
+
     public static int cycleInt(int v, int max) {
         return cycleInt(v, 0, max, false);
     }

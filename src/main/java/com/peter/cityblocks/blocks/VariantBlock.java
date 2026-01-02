@@ -151,4 +151,13 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
         return modelVariants[variant];
     }
 
+    @Override
+    public String[] getVariants(BlockState state) {
+        String[] arr = new String[modelVariants.length];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = modelVariants[i].toString();
+        }
+        return arr;
+    }
+
 }

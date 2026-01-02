@@ -9,6 +9,7 @@ public class CityBlocksNetworking {
         SignalNetworking.registerServer();
         CustomSignUpdatePayload.registerServer();
         PedestrianSignalUpdatePayload.registerServer();
+        VariantSwitcherScreenPacket.registerServer();
         CityBlocks.LOGGER.info("City Block networking receivers registered");
     }
     

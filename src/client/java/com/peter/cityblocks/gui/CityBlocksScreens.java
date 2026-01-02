@@ -12,5 +12,7 @@ public class CityBlocksScreens {
 
         HandledScreens.register(CustomSignScreenHandler.TYPE, CustomSignScreen::new);
         
+        HandledScreens.register(VariantSwitcherScreenHandler.TYPE, VariantSwitcherScreen::new);
+        
     }
 }
