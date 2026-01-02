@@ -4,8 +4,6 @@ import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.signal.LampColor;
 import com.peter.cityblocks.blocks.signal.LampState;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
-import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
-import com.peter.cityblocks.blocks.signal.SignalHeadBlock;
 import com.peter.cityblocks.networking.CityBlocksClientNetworking;
 
 import net.minecraft.client.gl.RenderPipelines;
@@ -21,16 +19,28 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
 
     private final SignalHeadScreenHandler handler;
 
+    protected CustomTextInput idInput = null;
+
     public SignalHeadScreen(SignalHeadScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         this.handler = handler;
+        // addSelectableChild(idInput);
+        titleY -= 20;
     }
 
     @Override
     protected void init() {
         super.init();
-        titleY -= 20;
         playerInventoryTitleY = 2000;
+        CityBlocks.debug("Creating signal head screen");
+        if (idInput == null) {
+            idInput = addDrawableChild(new CustomTextInput(x + 146, y + 19, 3, true));
+            idInput.setMaxNum(63);
+        }
+        if(handler.headEntity != null)
+            idInput.setNumber(handler.headEntity.getHeadId());
+        else if(handler.pedestrianEntity != null)
+            idInput.setNumber(handler.pedestrianEntity.getHeadId());
     }
 
     @Override
@@ -42,12 +52,7 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
 
         context.drawTexture(RenderPipelines.BLOCK_SCREEN_EFFECT, TEXTURE, x, y, 0, 0, 150, 150, 150, 150);
 
-        int headId = -1;
-        if (handler.headEntity != null)
-            headId = handler.headEntity.getHeadId();
-        if (handler.pedestrianEntity != null)
-            headId = handler.pedestrianEntity.getHeadId();
-        context.drawText(textRenderer, "ID: " + headId, x + 130, y + 20, Colors.RED, true);
+        context.drawText(textRenderer, "ID: ", x + 130, y + 20, Colors.RED, true);
         
 
         if (handler.headEntity != null) {
@@ -117,7 +122,35 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (idInput.keyPressed(keyCode, scanCode, modifiers)) {
+            if (idInput.hasChanged()) {
+                CityBlocksClientNetworking.sendHeadIDUpdate(handler.headEntity, idInput.getNumber());
+            }
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        idInput.keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if (idInput.charTyped(chr, modifiers))
+            return true;
+        return super.charTyped(chr, modifiers);
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (idInput.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
         mouseX -= x;
         mouseY -= y;
         // System.out.println(String.format("Click: %f,%f", mouseX, mouseY));
@@ -224,27 +257,6 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
                 }
                 CityBlocksClientNetworking.sendPedestrianStateUpdate(handler.pedestrianEntity, state);
             }
-        } else if (mouseX > 130 && mouseX < 170 && mouseY > 20 && mouseY < 28) {
-            int headId = -1;
-            if (handler.headEntity != null)
-                headId = handler.headEntity.getHeadId();
-            if (handler.pedestrianEntity != null)
-                headId = handler.pedestrianEntity.getHeadId();
-            if (button == 0) {
-                headId++;
-                if (headId >= SignalControllerBlockEntity.MAX_HEADS) {
-                    headId = 0;
-                }
-            } else {
-                headId--;
-                if (headId < 0) {
-                    headId = SignalControllerBlockEntity.MAX_HEADS - 1;
-                }
-            }
-            if (handler.headEntity != null)
-                CityBlocksClientNetworking.sendHeadIDUpdate(handler.headEntity, headId);
-            if (handler.pedestrianEntity != null)
-                CityBlocksClientNetworking.sendPedestrianHeadIdUpdate(handler.pedestrianEntity, headId);
         } else if (mouseX > 10 && mouseX < 50 && mouseY > 15 && mouseY < 45 && handler.headEntity != null) { // change numLamps
             int numLamps = handler.headEntity.getLampCount();
             if (numLamps == 1) { // TODO change this if 2 lamp head is added

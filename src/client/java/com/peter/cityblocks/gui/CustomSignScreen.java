@@ -25,13 +25,13 @@ public class CustomSignScreen extends HandledScreen<CustomSignScreenHandler> {
         super(handler, inventory, title);
         this.handler = handler;
         this.signEntity = handler.signEntity;
+        titleY -= 10;
     }
 
     @Override
     protected void init() {
         super.init();
         playerInventoryTitleY = 2000;
-        titleY -= 10;
     }
 
     @Override
