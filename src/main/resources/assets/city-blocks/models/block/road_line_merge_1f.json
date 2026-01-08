@@ -1,0 +1,201 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "block/blackstone",
+		"base": "block/blackstone",
+		"top": "block/blackstone_top",
+		"line": "block/calcite"
+	},
+	"elements": [
+		{
+			"name": "Base",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#base", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#base", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#base", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#base", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#base", "cullface": "down"}
+			}
+		},
+		{
+			"name": "Side-StraightL",
+			"from": [0, 16.05, 0],
+			"to": [4, 16.05, 16],
+			"faces": {
+				"up": {"uv": [0, 0, 4, 16], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [14, 16.05, 10],
+			"to": [15, 16.05, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 0, 10]},
+			"faces": {
+				"up": {"uv": [14, 10, 15, 15], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [13, 16.05, 9],
+			"to": [14, 16.05, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 9]},
+			"faces": {
+				"up": {"uv": [13, 9, 14, 14], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [12, 16.05, 8],
+			"to": [13, 16.05, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 8]},
+			"faces": {
+				"up": {"uv": [12, 8, 13, 13], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [15, 16.05, 11],
+			"to": [16, 16.05, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 0, 11]},
+			"faces": {
+				"up": {"uv": [15, 11, 16, 16], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [11, 16.05, 7],
+			"to": [12, 16.05, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-1, 0, 7]},
+			"faces": {
+				"up": {"uv": [11, 7, 12, 12], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [10, 16.05, 6],
+			"to": [11, 16.05, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-2, 0, 6]},
+			"faces": {
+				"up": {"uv": [10, 6, 11, 11], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [9, 16.05, 5],
+			"to": [10, 16.05, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-3, 0, 5]},
+			"faces": {
+				"up": {"uv": [9, 5, 10, 10], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [8, 16.05, 4],
+			"to": [9, 16.05, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-4, 0, 4]},
+			"faces": {
+				"up": {"uv": [8, 4, 9, 9], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [7, 16.05, 3],
+			"to": [8, 16.05, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-5, 0, 3]},
+			"faces": {
+				"up": {"uv": [7, 3, 8, 8], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [6, 16.05, 2],
+			"to": [7, 16.05, 7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-6, 0, 2]},
+			"faces": {
+				"up": {"uv": [6, 2, 7, 7], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [5, 16.05, 1],
+			"to": [6, 16.05, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-7, 0, 1]},
+			"faces": {
+				"up": {"uv": [5, 1, 6, 6], "texture": "#line", "cullface": "up"}
+			}
+		},
+		{
+			"name": "Merge1",
+			"from": [4, 16.05, 0],
+			"to": [5, 16.05, 5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8, 0, 0]},
+			"faces": {
+				"up": {"uv": [4, 0, 5, 5], "texture": "#line", "cullface": "up"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0, 2.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 45, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -135, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [90, 0, -180],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"on_shelf": {
+			"rotation": [90, 0, 0]
+		}
+	},
+	"groups": [
+		0,
+		{
+			"name": "MergeF",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "Merge1F",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [2, 3, 4]
+				},
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			]
+		}
+	]
+}

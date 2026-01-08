@@ -1,5 +1,6 @@
 package com.peter.cityblocks.datagen;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -56,16 +57,17 @@ public class ItemModelProvider extends FabricModelProvider {
     private static final TextureKey OVERLAY_TEXTURE_KEY = TextureKey.of("overlay");
     private static final TextureKey TOP_TEXTURE_KEY = TextureKey.of("top");
     private static final TextureKey BASE_TEXTURE_KEY = TextureKey.of("base");
+    private static final TextureKey LINE_TEXTURE_KEY = TextureKey.of("line");
 
-    private Identifier blockModelId(VariantBlock block) {
+    private static Identifier blockModelId(VariantBlock block) {
         return CityBlocks.identifier("block/" + block.name);
     }
 
-    private Identifier blockModelId(VariantBlock block, String variant, boolean dash) {
+    private static Identifier blockModelId(VariantBlock block, String variant, boolean dash) {
         return CityBlocks.identifier("block/" + block.name + (dash ? "_"+ variant : variant) );
     }
 
-    private Identifier blockModelId(String name) {
+    private static Identifier blockModelId(String name) {
         return CityBlocks.identifier("block/" + name);
     }
 
@@ -92,32 +94,85 @@ public class ItemModelProvider extends FabricModelProvider {
     private static final Model ROAD_LINE_MODEL = new Model(Optional.of(ROAD_LINE_BASE_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private static final Model ROAD_LINE_EAST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_EAST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     private static final Model ROAD_LINE_SOUTH_MODEL = new Model(Optional.of(ROAD_LINE_BASE_SOUTH_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
-    private static final Model ROAD_LINE_WEST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_WEST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final Model ROAD_LINE_WEST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_WEST_MODEL),
+            Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final HashMap<String, Model> ROAD_LINE_MODELS = new HashMap<>();
+
+    private static final Model createRoadLineModel(Identifier id) {
+        return new Model(Optional.of(id), Optional.empty(), LINE_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    }
+    static {
+        ROAD_LINE_MODELS.put("road_line_side", createRoadLineModel(blockModelId("road_line_side")));
+        ROAD_LINE_MODELS.put("road_line_side_angle", createRoadLineModel(blockModelId("road_line_angle")));
+        ROAD_LINE_MODELS.put("road_line_side_angle_end", createRoadLineModel(blockModelId("road_line_angle_end")));
+        
+        ROAD_LINE_MODELS.put("road_line_center", createRoadLineModel(blockModelId("road_line_center")));
+        ROAD_LINE_MODELS.put("road_line_center_reflector", createRoadLineModel(blockModelId("road_line_dot")));
+        ROAD_LINE_MODELS.put("road_line_double", createRoadLineModel(blockModelId("road_line_double")));
+        ROAD_LINE_MODELS.put("road_line_double_single", createRoadLineModel(blockModelId("road_line_double_single")));
+        ROAD_LINE_MODELS.put("road_line_double_single_reflector", createRoadLineModel(blockModelId("road_line_double_single_dot")));
+        ROAD_LINE_MODELS.put("road_line_double_reflector", createRoadLineModel(blockModelId("road_line_double_dot")));
+        
+        ROAD_LINE_MODELS.put("road_line_side_merge1", createRoadLineModel(blockModelId("road_line_merge_1")));
+        ROAD_LINE_MODELS.put("road_line_side_merge1f", createRoadLineModel(blockModelId("road_line_merge_1f")));
+        ROAD_LINE_MODELS.put("road_line_side_merge2", createRoadLineModel(blockModelId("road_line_merge_2")));
+        ROAD_LINE_MODELS.put("road_line_side_merge2f", createRoadLineModel(blockModelId("road_line_merge_2f")));
+        ROAD_LINE_MODELS.put("road_line_side_merge_corner", createRoadLineModel(blockModelId("road_line_merge_corner")));
+        ROAD_LINE_MODELS.put("road_line_side_merge_cornerf", createRoadLineModel(blockModelId("road_line_merge_cornerf")));
+        ROAD_LINE_MODELS.put("road_line_side_merge_double", createRoadLineModel(blockModelId("road_line_merge_double")));
+    }
     private void registerRoadLineBlockSubModel(BlockStateModelGenerator generator, String id, String overlay,
-            RoadType roadType) {
-        TextureMap map = new TextureMap().put(OVERLAY_TEXTURE_KEY, blockTextureId(overlay));
+            RoadType roadType, Identifier color) {
+        TextureMap map = new TextureMap();
         map.put(TOP_TEXTURE_KEY, roadType.topTexture);
         map.put(BASE_TEXTURE_KEY, roadType.baseTexture);
 
-        ROAD_LINE_MODEL.upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
-        ROAD_LINE_EAST_MODEL.upload(roadBlockModelId(id+"_east", roadType), map, generator.modelCollector);
-        ROAD_LINE_SOUTH_MODEL.upload(roadBlockModelId(id+"_south", roadType), map, generator.modelCollector);
-        ROAD_LINE_WEST_MODEL.upload(roadBlockModelId(id+"_west", roadType), map, generator.modelCollector);
+        // ROAD_LINE_MODEL.upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
+        // ROAD_LINE_EAST_MODEL.upload(roadBlockModelId(id+"_east", roadType), map, generator.modelCollector);
+        // ROAD_LINE_SOUTH_MODEL.upload(roadBlockModelId(id+"_south", roadType), map, generator.modelCollector);
+        // ROAD_LINE_WEST_MODEL.upload(roadBlockModelId(id+"_west", roadType), map, generator.modelCollector);
+        if (ROAD_LINE_MODELS.containsKey(overlay)) {
+            map.put(LINE_TEXTURE_KEY, color);
+            ROAD_LINE_MODELS.get(overlay).upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
+        } else {
+            map.put(OVERLAY_TEXTURE_KEY, blockTextureId(overlay));
+            ROAD_LINE_MODEL.upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
+            ROAD_LINE_EAST_MODEL.upload(roadBlockModelId(id+"_east", roadType), map, generator.modelCollector);
+            ROAD_LINE_SOUTH_MODEL.upload(roadBlockModelId(id+"_south", roadType), map, generator.modelCollector);
+            ROAD_LINE_WEST_MODEL.upload(roadBlockModelId(id+"_west", roadType), map, generator.modelCollector);
+        }
     }
     
     private void registerRoadLineBlock(BlockStateModelGenerator generator, RoadLineBlock block) {
         var map = BlockStateVariantMap.models(RoadLineBlock.FACING, block.variant);
         for (int i = 0; i < block.models.length; i++) {
             RoadLineModel model = block.models[i];
+            boolean isTextured = !ROAD_LINE_MODELS.containsKey(model.overlay());
             map.register(Direction.NORTH, i,
-                    BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model(), block.roadType)));
-            map.register(Direction.EAST, i, BlockStateModelGenerator
-                    .createWeightedVariant(roadBlockModelId(model.model() + "_east", block.roadType)));
-            map.register(Direction.SOUTH, i, BlockStateModelGenerator
-                    .createWeightedVariant(roadBlockModelId(model.model() + "_south", block.roadType)));
-            map.register(Direction.WEST, i, BlockStateModelGenerator
-                    .createWeightedVariant(roadBlockModelId(model.model() + "_west", block.roadType)));
-            registerRoadLineBlockSubModel(generator, model.model(), model.overlay(), block.roadType);
+                    BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
+                            .apply(ModelVariantOperator.UV_LOCK.withValue(true)));
+            if (isTextured) {
+                map.register(Direction.EAST, i, BlockStateModelGenerator
+                        .createWeightedVariant(roadBlockModelId(model.model() + "_east", block.roadType)));
+                map.register(Direction.SOUTH, i, BlockStateModelGenerator
+                        .createWeightedVariant(roadBlockModelId(model.model() + "_south", block.roadType)));
+                map.register(Direction.WEST, i, BlockStateModelGenerator
+                        .createWeightedVariant(roadBlockModelId(model.model() + "_west", block.roadType)));
+            } else  {
+                map.register(Direction.EAST, i, BlockStateModelGenerator
+                        .createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
+                        .apply(ModelVariantOperator.UV_LOCK.withValue(true))
+                        .apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)));
+                map.register(Direction.SOUTH, i, BlockStateModelGenerator
+                        .createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
+                        .apply(ModelVariantOperator.UV_LOCK.withValue(true))
+                        .apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R180)));
+                map.register(Direction.WEST, i, BlockStateModelGenerator
+                        .createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
+                        .apply(ModelVariantOperator.UV_LOCK.withValue(true))
+                        .apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R270)));
+            }
+            registerRoadLineBlockSubModel(generator, model.model(), model.overlay(), block.roadType, block.color);
         }
         generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
     }
