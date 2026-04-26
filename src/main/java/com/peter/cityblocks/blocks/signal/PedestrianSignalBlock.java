@@ -6,41 +6,40 @@ import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.VariantBlock;
 import com.peter.cityblocks.blocks.VariantPartialBlock;
 import com.peter.cityblocks.items.SignalLinker;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
-public class PedestrianSignalBlock extends BlockWithEntity {
+public class PedestrianSignalBlock extends BaseEntityBlock {
 
     public static final String NAME = "pedestrian_signal";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
 
     private static final VoxelShape[] SHAPES = new VoxelShape[] {
             VariantPartialBlock.cube(3.5, 3.5, 0, 9, 9, 4, Direction.NORTH),
@@ -48,34 +47,34 @@ public class PedestrianSignalBlock extends BlockWithEntity {
             VariantPartialBlock.cube(3.5, 3.5, 0, 9, 9, 4, Direction.SOUTH),
             VariantPartialBlock.cube(3.5, 3.5, 0, 9, 9, 4, Direction.WEST)
     };
-    public static final MapCodec<PedestrianSignalBlock> CODEC = createCodec(PedestrianSignalBlock::new);
+    public static final MapCodec<PedestrianSignalBlock> CODEC = simpleCodec(PedestrianSignalBlock::new);
 
-    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public static final Block BLOCK = Registry.register(Registries.BLOCK, ID,
-            new PedestrianSignalBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
-    public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Settings());
+    public static final Block BLOCK = Registry.register(BuiltInRegistries.BLOCK, ID,
+            new PedestrianSignalBlock(Properties.of().noOcclusion().setId(Blocks.brk(ID))));
+    public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID, new Item.Properties());
 
-    public static final Identifier BLOCK_ENTITY_ID = PedestrianSignalBlockEntity.ID;
+    public static final ResourceLocation BLOCK_ENTITY_ID = PedestrianSignalBlockEntity.ID;
 
-    public PedestrianSignalBlock(Settings settings) {
+    public PedestrianSignalBlock(Properties settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(new Property[] { FACING });
     }
 
     @Override
-    protected MapCodec<PedestrianSignalBlock> getCodec() {
+    protected MapCodec<PedestrianSignalBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return super.getPlacementState(ctx).with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getHorizontalDirection());
     }
 
     public VoxelShape getShape(BlockState state) {
@@ -83,65 +82,65 @@ public class PedestrianSignalBlock extends BlockWithEntity {
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return getShape(state);
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return getShape(state);
     }
 
     @Override
-    protected VoxelShape getCullingShape(BlockState state) {
+    protected VoxelShape getOcclusionShape(BlockState state) {
         return getShape(state);
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PedestrianSignalBlockEntity(pos, state);
     }
 
-    protected BlockState rotate(BlockState state, BlockRotation rotation) {
-        return (BlockState) state.with(FACING, rotation.rotate((Direction) state.get(FACING)));
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return (BlockState) state.setValue(FACING, rotation.rotate((Direction) state.getValue(FACING)));
     }
 
-    protected BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation((Direction) state.get(FACING)));
-    }
-
-    @Override
-    protected BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation((Direction) state.getValue(FACING)));
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient) {
-            NamedScreenHandlerFactory screenHandlerFactory = (PedestrianSignalBlockEntity) world.getBlockEntity(pos);
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!world.isClientSide) {
+            MenuProvider screenHandlerFactory = (PedestrianSignalBlockEntity) world.getBlockEntity(pos);
 
             if (screenHandlerFactory != null) {
-                player.openHandledScreen(screenHandlerFactory);
+                player.openMenu(screenHandlerFactory);
             }
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
         // return super.onUse(state, world, pos, player, hit);
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient && stack.isOf(SignalLinker.ITEM)) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!world.isClientSide && stack.is(SignalLinker.ITEM)) {
             SignalControllerBlockEntity controller = SignalLinker.getLinkedController(world, stack);
             if (controller != null) {
                 if (controller.link(pos))
-                    player.sendMessage(CityBlocks.translatableText("chat", "signal_head.linked"), false);
+                    player.displayClientMessage(CityBlocks.translatableText("chat", "signal_head.linked"), false);
                 else
-                player.sendMessage(CityBlocks.translatableText("chat", "signal_head.un_linked"), false);
+                player.displayClientMessage(CityBlocks.translatableText("chat", "signal_head.un_linked"), false);
             }
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
     }
 
 }

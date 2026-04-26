@@ -12,58 +12,57 @@ import com.peter.cityblocks.blocks.signs.SignPostOffsetBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.ccextended.CardReaderBlock;
 import com.peter.cityblocks.ccextended.CardReaderBlockEntity;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.MapColor;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.MapColor;
 
 public class Blocks {
 
     public static final RoadLineBlock ROAD_LINE_WHITE_CENTER_BLOCK = new RoadLineBlock("road_line_white_center",
-            MapColor.WHITE, RoadLineBlock.WHITE_CENTER, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE);
+            MapColor.SNOW, RoadLineBlock.WHITE_CENTER, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_BLOCK = new RoadLineBlock("road_line_white_side",
-            MapColor.WHITE, RoadLineBlock.WHITE_SIDE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE);
+            MapColor.SNOW, RoadLineBlock.WHITE_SIDE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_MERGE_BLOCK = new RoadLineBlock("road_line_white_side_merge",
-            MapColor.WHITE, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE, "road_line_white_side_merge1");
+            MapColor.SNOW, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE, "road_line_white_side_merge1");
 
     public static final RoadLineBlock ROAD_LINE_YELLOW_CENTER_BLOCK = new RoadLineBlock("road_line_yellow_center",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_CENTER, RoadType.BLACKSTONE, RoadLineBlock.COLOR_YELLOW);
+            MapColor.COLOR_YELLOW, RoadLineBlock.YELLOW_CENTER, RoadType.BLACKSTONE, RoadLineBlock.COLOR_YELLOW);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_BLOCK = new RoadLineBlock("road_line_yellow_side",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_YELLOW);
+            MapColor.COLOR_YELLOW, RoadLineBlock.YELLOW_SIDE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_YELLOW);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_MERGE_BLOCK = new RoadLineBlock("road_line_yellow_side_merge",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_YELLOW, "road_line_yellow_side_merge1");
+            MapColor.COLOR_YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.BLACKSTONE, RoadLineBlock.COLOR_YELLOW, "road_line_yellow_side_merge1");
 
     public static final RoadLineBlock ROAD_ARROW_BLOCK = new RoadLineBlock("road_arrow",
-            MapColor.LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE, "road_arrow_straight");
+            MapColor.COLOR_LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE, "road_arrow_straight");
     public static final RoadLineBlock ROAD_STOP_BAR_BLOCK = new RoadLineBlock("road_stop_bar",
-            MapColor.WHITE, RoadLineBlock.STOP_BAR, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE, "road_stop_bar_center");
+            MapColor.SNOW, RoadLineBlock.STOP_BAR, RoadType.BLACKSTONE, RoadLineBlock.COLOR_WHITE, "road_stop_bar_center");
 
     public static final RoadLineBlock ROAD_LINE_WHITE_CENTER_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_center_andesite",
-            MapColor.WHITE, RoadLineBlock.WHITE_CENTER, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE);
+            MapColor.SNOW, RoadLineBlock.WHITE_CENTER, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_side_andesite",
-            MapColor.WHITE, RoadLineBlock.WHITE_SIDE, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE);
+            MapColor.SNOW, RoadLineBlock.WHITE_SIDE, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE);
     public static final RoadLineBlock ROAD_LINE_WHITE_SIDE_MERGE_ANDESITE_BLOCK = new RoadLineBlock("road_line_white_side_merge_andesite",
-            MapColor.WHITE, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE, "road_line_white_side_andesite_merge1");
+            MapColor.SNOW, RoadLineBlock.WHITE_SIDE_MERGE, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE, "road_line_white_side_andesite_merge1");
 
 
     public static final RoadLineBlock ROAD_LINE_YELLOW_CENTER_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_center_andesite",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_CENTER, RoadType.ANDESITE, RoadLineBlock.COLOR_YELLOW);
+            MapColor.COLOR_YELLOW, RoadLineBlock.YELLOW_CENTER, RoadType.ANDESITE, RoadLineBlock.COLOR_YELLOW);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_side_andesite",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE, RoadType.ANDESITE, RoadLineBlock.COLOR_YELLOW);
+            MapColor.COLOR_YELLOW, RoadLineBlock.YELLOW_SIDE, RoadType.ANDESITE, RoadLineBlock.COLOR_YELLOW);
     public static final RoadLineBlock ROAD_LINE_YELLOW_SIDE_MERGE_ANDESITE_BLOCK = new RoadLineBlock("road_line_yellow_side_merge_andesite",
-            MapColor.YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.ANDESITE, RoadLineBlock.COLOR_YELLOW, "road_line_yellow_side_andesite_merge1");
+            MapColor.COLOR_YELLOW, RoadLineBlock.YELLOW_SIDE_MERGE, RoadType.ANDESITE, RoadLineBlock.COLOR_YELLOW, "road_line_yellow_side_andesite_merge1");
 
     public static final RoadLineBlock ROAD_ARROW_ANDESITE_BLOCK = new RoadLineBlock("road_arrow_andesite",
-            MapColor.LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE ,"road_arrow_andesite_straight");
+            MapColor.COLOR_LIGHT_GRAY, RoadLineBlock.ARROW, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE ,"road_arrow_andesite_straight");
     
     public static final RoadLineBlock ROAD_STOP_BAR_ANDESITE_BLOCK = new RoadLineBlock("road_stop_bar_andesite",
-            MapColor.WHITE, RoadLineBlock.STOP_BAR, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE, "road_stop_bar_andesite_center");
+            MapColor.SNOW, RoadLineBlock.STOP_BAR, RoadType.ANDESITE, RoadLineBlock.COLOR_WHITE, "road_stop_bar_andesite_center");
 
     public static final VariantPartialBlock CABLE_BARRIER_BLOCK = new CableBarrierBlock("cable_barrier");
     public static final VariantPartialBlock CONCRETE_BARRIER_BLOCK = new ConcreteBarrierBlock("concrete_barrier");
@@ -97,20 +96,20 @@ public class Blocks {
         CardReaderBlockEntity.register();
     };
 
-    public static BlockItem registerBlockItem(Block block, Identifier id, Item.Settings settings) {
-        settings.registryKey(RegistryKey.of(RegistryKeys.ITEM, id));
-        return Registry.register(Registries.ITEM, id, new BlockItem(block, settings));
+    public static BlockItem registerBlockItem(Block block, ResourceLocation id, Item.Properties settings) {
+        settings.setId(ResourceKey.create(Registries.ITEM, id));
+        return Registry.register(BuiltInRegistries.ITEM, id, new BlockItem(block, settings));
     }
 
-    public static RegistryKey<Item> irk(Identifier id) {
-        return RegistryKey.of(RegistryKeys.ITEM, id);
+    public static ResourceKey<Item> irk(ResourceLocation id) {
+        return ResourceKey.create(Registries.ITEM, id);
     }
 
-    public static RegistryKey<Block> brk(Identifier id) {
-        return RegistryKey.of(RegistryKeys.BLOCK, id);
+    public static ResourceKey<Block> brk(ResourceLocation id) {
+        return ResourceKey.create(Registries.BLOCK, id);
     }
 
-    public static Identifier blockId(String name) {
+    public static ResourceLocation blockId(String name) {
         return CityBlocks.identifier("block/" + name);
     }
 }

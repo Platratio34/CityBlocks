@@ -5,34 +5,34 @@ import com.peter.cityblocks.blocks.signs.CustomSignBlockEntity;
 import com.peter.cityblocks.networking.BlockPosScreenPacket;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 
-public class CustomSignScreenHandler extends ScreenHandler {
+public class CustomSignScreenHandler extends AbstractContainerMenu {
 
     public final CustomSignBlockEntity signEntity;
 
-    public static final ScreenHandlerType<CustomSignScreenHandler> TYPE = Registry.register(Registries.SCREEN_HANDLER,
+    public static final MenuType<CustomSignScreenHandler> TYPE = Registry.register(BuiltInRegistries.MENU,
             CityBlocks.identifier("custom_sign"),
             new ExtendedScreenHandlerType<CustomSignScreenHandler, BlockPosScreenPacket>(CustomSignScreenHandler::new, BlockPosScreenPacket.PACKET_CODEC));
 
-    public CustomSignScreenHandler(int syncId, PlayerInventory playerInventory, BlockPosScreenPacket packet) {
+    public CustomSignScreenHandler(int syncId, Inventory playerInventory, BlockPosScreenPacket packet) {
         super(TYPE, syncId);
-        this.signEntity = (CustomSignBlockEntity)playerInventory.player.getWorld().getBlockEntity(packet.pos());
+        this.signEntity = (CustomSignBlockEntity)playerInventory.player.level().getBlockEntity(packet.pos());
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot) {
+    public ItemStack quickMoveStack(Player player, int slot) {
         return ItemStack.EMPTY;
     }
 

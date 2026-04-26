@@ -15,7 +15,7 @@ public class CityBlocksClientNetworking {
 
     public static void sendHeadUpdate(SignalHeadBlockEntity entity, int lamp, LampState newState, LampColor newColor,
             int newHeadId, int newLampCount) {
-            ClientPlayNetworking.send(new SignalHeadUpdatePayload(entity.getWorld().getRegistryKey(), entity.getPos(), lamp,
+            ClientPlayNetworking.send(new SignalHeadUpdatePayload(entity.getLevel().dimension(), entity.getBlockPos(), lamp,
                 newState.code, newColor.code, newHeadId, newLampCount));
     }
     public static void sendHeadStateUpdate(SignalHeadBlockEntity entity, int lamp, LampState newState) {
@@ -36,7 +36,7 @@ public class CityBlocksClientNetworking {
 
     public static void sendControllerCycleModeUpdate(SignalControllerBlockEntity entity, int newCycleMode) {
         ClientPlayNetworking.send(
-                new SignalControllerUpdatePayload(entity.getWorld().getRegistryKey(), entity.getPos(), newCycleMode));
+                new SignalControllerUpdatePayload(entity.getLevel().dimension(), entity.getBlockPos(), newCycleMode));
     }
     
 
@@ -56,14 +56,14 @@ public class CityBlocksClientNetworking {
 
     public static void sendCustomSignUpdate(CustomSignBlockEntity signEntity, int variant, boolean updateText,
             String[] text) {
-        ClientPlayNetworking.send(new CustomSignUpdatePayload(signEntity.getWorld().getRegistryKey(),
-                signEntity.getPos(), variant, updateText, updateText ? StringUtils.join(text, "\n") : ""));
+        ClientPlayNetworking.send(new CustomSignUpdatePayload(signEntity.getLevel().dimension(),
+                signEntity.getBlockPos(), variant, updateText, updateText ? StringUtils.join(text, "\n") : ""));
     }
     
     
     public static void sendPedestrianUpdate(PedestrianSignalBlockEntity entity, int headId, int state) {
         ClientPlayNetworking.send(
-                new PedestrianSignalUpdatePayload(entity.getWorld().getRegistryKey(), entity.getPos(), headId, state));
+                new PedestrianSignalUpdatePayload(entity.getLevel().dimension(), entity.getBlockPos(), headId, state));
     }
 
     public static void sendPedestrianHeadIdUpdate(PedestrianSignalBlockEntity entity, int headId) {

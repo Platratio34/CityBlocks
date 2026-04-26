@@ -1,7 +1,13 @@
 package com.peter.cityblocks.ccextended;
 
 import java.util.ArrayList;
-
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.items.components.ItemComponents;
 
@@ -11,13 +17,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.redstone.RedstoneState;
-import net.minecraft.component.Component;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 public class CardReaderPeripheral implements IPeripheral {
 
@@ -46,7 +45,7 @@ public class CardReaderPeripheral implements IPeripheral {
             return false;
         if (!other.getType().equals(getType()))
             return false;
-        return ((CardReaderPeripheral) other).reader.getPos().equals(reader.getPos());
+        return ((CardReaderPeripheral) other).reader.getBlockPos().equals(reader.getBlockPos());
     }
 
     private final AttachedComputerSet computers = new AttachedComputerSet();
@@ -70,7 +69,7 @@ public class CardReaderPeripheral implements IPeripheral {
         lastItem = new ItemData(stack);
         CityBlocks.debug("Card reader used: {}, {}, [{}]", lastItem.getId(), lastItem.getName(),
                 lastItem.getComponentIds());
-        final long cardId = stack.contains(ItemComponents.KEYCARD_ID_TYPE) ? stack.get(ItemComponents.KEYCARD_ID_TYPE)
+        final long cardId = stack.has(ItemComponents.KEYCARD_ID_TYPE) ? stack.get(ItemComponents.KEYCARD_ID_TYPE)
                 : 0;
         lastId = cardId;
 
@@ -139,12 +138,12 @@ public class CardReaderPeripheral implements IPeripheral {
 
         @LuaFunction
         public final String getId() {
-            return stack.getRegistryEntry().getIdAsString();
+            return stack.getItemHolder().getRegisteredName();
         }
 
         @LuaFunction
         public final String getName() {
-            Text cName = stack.getCustomName();
+            Component cName = stack.getCustomName();
             if(cName == null) {
                 return "";
             }
@@ -153,26 +152,26 @@ public class CardReaderPeripheral implements IPeripheral {
 
         @LuaFunction
         public final String getComponent(String id) {
-            ComponentMap map = stack.getComponents();
-            ComponentType<?> type = Registries.DATA_COMPONENT_TYPE.get(Identifier.tryParse(id));
+            DataComponentMap map = stack.getComponents();
+            DataComponentType<?> type = BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(ResourceLocation.tryParse(id));
             return map.get(type).toString();
         }
 
         @LuaFunction
         public final ArrayList<String> getComponentIds() {
-            ComponentMap map = stack.getComponents();
+            DataComponentMap map = stack.getComponents();
             ArrayList<String> ids = new ArrayList<>();
             map.forEach(comp -> {
-                ids.add(Registries.DATA_COMPONENT_TYPE.getEntry(comp.type()).getIdAsString());
+                ids.add(BuiltInRegistries.DATA_COMPONENT_TYPE.wrapAsHolder(comp.type()).getRegisteredName());
             });
             return ids;
         }
 
         @LuaFunction
         public final String getComponentsHash() {
-            ComponentMap map = stack.getComponents();
+            DataComponentMap map = stack.getComponents();
             int hash = 0;
-            for(Component<?> comp : map) {
+            for(TypedDataComponent<?> comp : map) {
                 hash ^= comp.toString().hashCode();
             }
             return Integer.toHexString(hash);

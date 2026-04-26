@@ -3,10 +3,9 @@ package com.peter.cityblocks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,19 +59,19 @@ public class CityBlocks implements ModInitializer {
         LOGGER.info("City Blocks loaded");
     }
     
-    public static Identifier identifier(String id) {
-        return Identifier.of(MOD_ID, id);
+    public static ResourceLocation identifier(String id) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
     }
 
-    public static MutableText translatableText(String category, String name) {
-        return Text.translatable(String.format("%s.%s.%s", category, MOD_ID, name));
+    public static MutableComponent translatableText(String category, String name) {
+        return Component.translatable(String.format("%s.%s.%s", category, MOD_ID, name));
     }
-    public static MutableText translatableText(String category, String name, Object... args) {
-        return Text.translatable(String.format("%s.%s.%s", category, MOD_ID, name), args);
+    public static MutableComponent translatableText(String category, String name, Object... args) {
+        return Component.translatable(String.format("%s.%s.%s", category, MOD_ID, name), args);
     }
 
-    public static MutableText tooltip(String category, String name) {
-        return Text.translatable(String.format("%s.%s.%s.tooltip", category, MOD_ID, name));
+    public static MutableComponent tooltip(String category, String name) {
+        return Component.translatable(String.format("%s.%s.%s.tooltip", category, MOD_ID, name));
     }
 
     public static void debug(String msg) {

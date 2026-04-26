@@ -4,39 +4,38 @@ import org.jetbrains.annotations.Nullable;
 
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
-
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.ComponentType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class SignalLinker extends Item {
 
     public static final String NAME = "signal_linker";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
 
-    public static final Item ITEM = Registry.register(Registries.ITEM, ID, new SignalLinker(new Settings().registryKey(Items.irk(ID))));
+    public static final Item ITEM = Registry.register(BuiltInRegistries.ITEM, ID, new SignalLinker(new Properties().setId(Items.irk(ID))));
 
-    public static final ComponentType<BlockPos> LINKED_CONTROLLER_COMPONENT = Registry.register(
-            Registries.DATA_COMPONENT_TYPE, CityBlocks.identifier("linked_controller"),
-            ComponentType.<BlockPos>builder().codec(BlockPos.CODEC).build());
+    public static final DataComponentType<BlockPos> LINKED_CONTROLLER_COMPONENT = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE, CityBlocks.identifier("linked_controller"),
+            DataComponentType.<BlockPos>builder().persistent(BlockPos.CODEC).build());
 
-    public SignalLinker(Settings settings) {
+    public SignalLinker(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        SignalControllerBlockEntity controller = getLinkedController(world, user.getStackInHand(hand));
-        if (!world.isClient && controller != null) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
+        SignalControllerBlockEntity controller = getLinkedController(world, user.getItemInHand(hand));
+        if (!world.isClientSide && controller != null) {
             controller.cycle(user);
         }
         return super.use(world, user, hand);
@@ -45,8 +44,8 @@ public class SignalLinker extends Item {
     
 
     @Nullable
-    public static SignalControllerBlockEntity getLinkedController(World world, ItemStack stack) {
-        if (!stack.contains(LINKED_CONTROLLER_COMPONENT))
+    public static SignalControllerBlockEntity getLinkedController(Level world, ItemStack stack) {
+        if (!stack.has(LINKED_CONTROLLER_COMPONENT))
             return null;
         BlockPos linkedPos = stack.get(LINKED_CONTROLLER_COMPONENT);
         BlockEntity be = world.getBlockEntity(linkedPos);
@@ -57,14 +56,14 @@ public class SignalLinker extends Item {
     }
 
     public static void linkController(ItemStack stack, SignalControllerBlockEntity controller) {
-        stack.set(LINKED_CONTROLLER_COMPONENT, controller.getPos());
+        stack.set(LINKED_CONTROLLER_COMPONENT, controller.getBlockPos());
     }
     public static void linkController(ItemStack stack, BlockPos pos) {
         stack.set(LINKED_CONTROLLER_COMPONENT, pos);
     }
 
     public static boolean isLinked(ItemStack stack, BlockPos pos) {
-        if (!stack.contains(LINKED_CONTROLLER_COMPONENT)) {
+        if (!stack.has(LINKED_CONTROLLER_COMPONENT)) {
             return false;
         }
         return stack.get(LINKED_CONTROLLER_COMPONENT).equals(pos);

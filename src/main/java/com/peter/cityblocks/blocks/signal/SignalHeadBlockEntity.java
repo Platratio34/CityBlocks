@@ -8,34 +8,34 @@ import com.peter.cityblocks.gui.SignalHeadScreenHandler;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPosScreenPacket> {
 
     public static final String NAME = "signal_head_entity";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<SignalHeadBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(SignalHeadBlockEntity::new, SignalHeadBlock.BLOCK).build());
 
     protected LampState[] states = new LampState[] {
@@ -65,7 +65,7 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     @Override
-    protected void writeData(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         int[] stateIntArray = new int[states.length];
         int[] colorIntArray = new int[colors.length];
         for (int i = 0; i < SignalHeadBlock.MAX_LAMPS; i++) {
@@ -77,64 +77,64 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
 
         view.putInt(NBT_HEAD_ID, headId);
 
-        view.putInt(NBT_NUM_LAMPS, world.getBlockState(pos).get(SignalHeadBlock.LAMP_COUNT));
+        view.putInt(NBT_NUM_LAMPS, level.getBlockState(worldPosition).getValue(SignalHeadBlock.LAMP_COUNT));
 
-        super.writeData(view);
+        super.saveAdditional(view);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
 
-        Optional<int[]> optState = view.getOptionalIntArray(NBT_STATES_ARRAY);
+        Optional<int[]> optState = view.getIntArray(NBT_STATES_ARRAY);
         if (optState.isPresent()) {
             int[] intArray = optState.get();
             for (int i = 0; i < intArray.length; i++) {
                 states[i] = LampState.fromCode(intArray[i]);
             }
         }
-        Optional<int[]> optColor = view.getOptionalIntArray(NBT_COLORS_ARRAY);
+        Optional<int[]> optColor = view.getIntArray(NBT_COLORS_ARRAY);
         if (optColor.isPresent()) {
             int[] intArray = optColor.get();
             for (int i = 0; i < intArray.length; i++) {
                 colors[i] = LampColor.fromCode(intArray[i]);
             }
         }
-        Optional<Integer> optId = view.getOptionalInt(NBT_HEAD_ID);
+        Optional<Integer> optId = view.getInt(NBT_HEAD_ID);
         if (optId.isPresent()) {
             headId = optId.get();
         }
-        if (world != null && !world.isClient && world.isPosLoaded(pos)) {
-            Optional<Integer> optLamps = view.getOptionalInt(NBT_NUM_LAMPS);
+        if (level != null && !level.isClientSide && level.isLoaded(worldPosition)) {
+            Optional<Integer> optLamps = view.getInt(NBT_NUM_LAMPS);
             if (optLamps.isPresent()) {
-                BlockState state = world.getBlockState(pos);
-                world.setBlockState(pos, state.with(SignalHeadBlock.LAMP_COUNT, optLamps.get()));
+                BlockState state = level.getBlockState(worldPosition);
+                level.setBlockAndUpdate(worldPosition, state.setValue(SignalHeadBlock.LAMP_COUNT, optLamps.get()));
             }
         }
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void markDirty() {
-        world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
-        super.markDirty();
+    public void setChanged() {
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        super.setChanged();
     }
 
     public void setState(int lamp, LampState state) {
-        if (world.isClient) {
+        if (level.isClientSide) {
             return;
         }
         states[lamp] = state;
-        markDirty();
+        setChanged();
     }
 
     public LampState getState(int lamp) {
@@ -145,22 +145,22 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
         for (int i = 0; i < lampStates.length; i++) {
             states[i] = lampStates[i];
         }
-        markDirty();
+        setChanged();
     }
 
     public void setStates(int[] lampStates) {
         for (int i = 0; i < lampStates.length; i++) {
             states[i] = LampState.fromCode(lampStates[i]);
         }
-        markDirty();
+        setChanged();
     }
 
     public void setColor(int lamp, LampColor color) {
-        if (world.isClient) {
+        if (level.isClientSide) {
             return;
         }
         colors[lamp] = color;
-        markDirty();
+        setChanged();
     }
 
     public LampColor getColor(int lamp) {
@@ -168,11 +168,11 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public void setHeadId(int id) {
-        if (world.isClient) {
+        if (level.isClientSide) {
             return;
         }
         headId = id;
-        markDirty();
+        setChanged();
     }
 
     public int getHeadId() {
@@ -180,38 +180,38 @@ public class SignalHeadBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public void setLampCount(int lampCount) {
-        if (world != null && !world.isClient && world.isPosLoaded(pos)) {
-            world.setBlockState(pos, getCachedState().with(SignalHeadBlock.LAMP_COUNT, lampCount));
-            markDirty();
+        if (level != null && !level.isClientSide && level.isLoaded(worldPosition)) {
+            level.setBlockAndUpdate(worldPosition, getBlockState().setValue(SignalHeadBlock.LAMP_COUNT, lampCount));
+            setChanged();
         }
     }
 
     public int getLampCount() {
-        if (world == null)
+        if (level == null)
             return -1;
-        return getCachedState().get(SignalHeadBlock.LAMP_COUNT);
+        return getBlockState().getValue(SignalHeadBlock.LAMP_COUNT);
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, SignalHeadBlockEntity blockEntity) {
+    public static void clientTick(Level world, BlockPos pos, BlockState state, SignalHeadBlockEntity blockEntity) {
         
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state, SignalHeadBlockEntity blockEntity) {
+    public static void serverTick(Level world, BlockPos pos, BlockState state, SignalHeadBlockEntity blockEntity) {
         
     }
 
     @Override
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         return CityBlocks.translatableText("block", SignalHeadBlock.NAME);
     }
 
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new SignalHeadScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayerEntity)player));
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+        return new SignalHeadScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayer)player));
     }
 
     @Override
-    public BlockPosScreenPacket getScreenOpeningData(ServerPlayerEntity player) {
-        return new BlockPosScreenPacket(pos);
+    public BlockPosScreenPacket getScreenOpeningData(ServerPlayer player) {
+        return new BlockPosScreenPacket(worldPosition);
     }
 }

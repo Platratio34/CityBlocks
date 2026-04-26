@@ -3,20 +3,19 @@ package com.peter.cityblocks.blocks.signs;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.VariantPartialBlock;
 import com.peter.cityblocks.blocks.VariantSettings;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SignPostOffsetBlock extends VariantPartialBlock {
 
-    public static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+    public static final ResourceLocation[] MODEL_VARIANTS = new ResourceLocation[] {
         Blocks.blockId("sign_post_offset"),
         Blocks.blockId("sign_post_offset")
     };
 
     public SignPostOffsetBlock(String name) {
-        super(new VariantSettings().setVariants(MODEL_VARIANTS.length).nonOpaque(), name, MODEL_VARIANTS);
+        super(new VariantSettings().setVariants(MODEL_VARIANTS.length).noOcclusion(), name, MODEL_VARIANTS);
     }
 
     @Override

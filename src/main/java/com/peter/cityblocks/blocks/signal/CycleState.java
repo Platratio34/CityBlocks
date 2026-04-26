@@ -1,8 +1,8 @@
 package com.peter.cityblocks.blocks.signal;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtIntArray;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntArrayTag;
+import net.minecraft.nbt.ListTag;
 
 public class CycleState {
 
@@ -42,26 +42,26 @@ public class CycleState {
     private static final String NBT_TIME = "time";
     private static final String NBT_STATES = "states";
 
-    public NbtCompound toNBT() {
-        NbtCompound nbt = new NbtCompound();
+    public CompoundTag toNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt(NBT_TIME, time);
 
-        NbtList statesNbt = new NbtList();
+        ListTag statesNbt = new ListTag();
         nbt.put(NBT_STATES, statesNbt);
         for (int i = 0; i < states.length; i++) {
-            statesNbt.add(new NbtIntArray(LampState.toIntArray(states[i])));
+            statesNbt.add(new IntArrayTag(LampState.toIntArray(states[i])));
         }
 
         return nbt;
     }
 
-    public static CycleState fromNbt(NbtCompound nbt) {
+    public static CycleState fromNbt(CompoundTag nbt) {
         CycleState state = new CycleState();
         if (nbt.contains(NBT_TIME)) {
             state.time = nbt.getInt(NBT_TIME).get();
         }
         if (nbt.contains(NBT_STATES)) {
-            NbtList stateList = (NbtList)nbt.get(NBT_STATES);
+            ListTag stateList = (ListTag)nbt.get(NBT_STATES);
             for (int i = 0; i < state.states.length; i++) {
                 state.states[i] = LampState.fromIntArray(stateList.getIntArray(i).get());
             }

@@ -36,7 +36,7 @@ public class SignalControllerPeripheral implements IPeripheral {
             return false;
         if (!other.getType().equals(getType()))
             return false;
-        if (!((SignalControllerPeripheral) other).controller.getPos().equals(controller.getPos()))
+        if (!((SignalControllerPeripheral) other).controller.getBlockPos().equals(controller.getBlockPos()))
             return false;
         return true;
     }

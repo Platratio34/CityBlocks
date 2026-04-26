@@ -1,117 +1,115 @@
 package com.peter.cityblocks.blocks;
 
 import java.util.List;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import com.mojang.serialization.MapCodec;
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.items.Items;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Item.TooltipContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-
-public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock, TooltipedItem {
+public class VariantBlock extends HorizontalDirectionalBlock implements IVariantBlock, TooltipedItem {
 
     public static final String VARIANT_PROPERTY_NAME = "variant";
 
     public final String name;
-    public final Identifier id;
+    public final ResourceLocation id;
     public final int variants;
-    public final IntProperty variant;
+    public final IntegerProperty variant;
     public final MapCodec<? extends VariantBlock> codec;
 
     public final BlockItem item;
-    public final Identifier[] modelVariants;
+    public final ResourceLocation[] modelVariants;
 
-    public VariantBlock(Settings settings, String name, Identifier[] modelVariants) {
+    public VariantBlock(Properties settings, String name, ResourceLocation[] modelVariants) {
         this((VariantSettings) settings, name, modelVariants);
     }
 
-    public VariantBlock(VariantSettings settings, String name, Identifier[] modelVariants) {
-        super(settings.registryKey(Blocks.brk(CityBlocks.identifier(name))));
+    public VariantBlock(VariantSettings settings, String name, ResourceLocation[] modelVariants) {
+        super(settings.setId(Blocks.brk(CityBlocks.identifier(name))));
         this.variants = settings.variants;
         this.modelVariants = modelVariants;
         variant = settings.variantProperty;
-        codec = createCodec(this::constructor);
+        codec = simpleCodec(this::constructor);
         this.name = name;
         this.id = CityBlocks.identifier(name);
 
-        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(variant, 0));
+        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(variant, 0));
 
-        Registry.register(Registries.BLOCK, id, this);
+        Registry.register(BuiltInRegistries.BLOCK, id, this);
 
-        item = Blocks.registerBlockItem(this, id, new Item.Settings());
+        item = Blocks.registerBlockItem(this, id, new Item.Properties());
     }
 
-    private VariantBlock constructor(Settings settings) {
+    private VariantBlock constructor(Properties settings) {
         VariantSettings vSettings = (VariantSettings) settings;
         vSettings.setVariants(variants);
         return new VariantBlock(vSettings, name, modelVariants);
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (stack.isOf(Items.VARIANT_SWITCHER_ITEM)) {
-            int var = state.get(variant) + 1;
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
+        if (stack.is(Items.VARIANT_SWITCHER_ITEM)) {
+            int var = state.getValue(variant) + 1;
             if (var >= variants) {
                 var = 0;
             }
-            world.setBlockState(pos, state.with(variant, var));
-            return ActionResult.SUCCESS;
+            world.setBlockAndUpdate(pos, state.setValue(variant, var));
+            return InteractionResult.SUCCESS;
         }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(((VariantSettings)settings).variantProperty);
-        builder.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(((VariantSettings)properties).variantProperty);
+        builder.add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return codec;
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return super.getPlacementState(ctx).with(Properties.HORIZONTAL_FACING,
-                ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return super.getStateForPlacement(ctx).setValue(BlockStateProperties.HORIZONTAL_FACING,
+                ctx.getHorizontalDirection());
     }
 
     @Override
-    public void addTooltip(ItemStack itemStack, TooltipContext tooltipContext, TooltipType tooltipType,
-            List<Text> list) {
+    public void addTooltip(ItemStack itemStack, TooltipContext tooltipContext, TooltipFlag tooltipType,
+            List<Component> list) {
         list.add(CityBlocks.tooltip("item", name));
     }
     
     public int getVariant(BlockState state) {
-        return state.get(variant);
+        return state.getValue(variant);
     }
     
     public static int getDir(BlockState state) {
-        switch (state.get(Properties.HORIZONTAL_FACING)) {
+        switch (state.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
             case Direction.NORTH:
                 return 0;
             case Direction.EAST:
@@ -143,11 +141,11 @@ public class VariantBlock extends HorizontalFacingBlock implements IVariantBlock
     }
 
     @Override
-    public BlockState cycle(World world, BlockPos pos, BlockState state, boolean inverse) {
-        return state.with(variant, IVariantBlock.cycleInt(state.get(variant), variants - 1, inverse));
+    public BlockState cycle(Level world, BlockPos pos, BlockState state, boolean inverse) {
+        return state.setValue(variant, IVariantBlock.cycleInt(state.getValue(variant), variants - 1, inverse));
     }
 
-    public Identifier modelVariant(int variant, Direction direction) {
+    public ResourceLocation modelVariant(int variant, Direction direction) {
         return modelVariants[variant];
     }
 

@@ -3,18 +3,17 @@ package com.peter.cityblocks.gui;
 import com.peter.cityblocks.blocks.signal.LampState;
 import com.peter.cityblocks.blocks.signal.SignalControllerBlockEntity;
 import com.peter.cityblocks.networking.CityBlocksClientNetworking;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.entity.player.Inventory;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-
-public class SignalControllerScreen extends HandledScreen<SignalControllerScreenHandler> {
+public class SignalControllerScreen extends AbstractContainerScreen<SignalControllerScreenHandler> {
 
     private final SignalControllerScreenHandler handler;
 
-    public SignalControllerScreen(SignalControllerScreenHandler handler, PlayerInventory inventory, Text title) {
+    public SignalControllerScreen(SignalControllerScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         this.handler = handler;
     }
@@ -22,42 +21,42 @@ public class SignalControllerScreen extends HandledScreen<SignalControllerScreen
     @Override
     protected void init() {
         super.init();
-        titleY -= 20;
-        playerInventoryTitleY = 2000;
+        titleLabelY -= 20;
+        inventoryLabelY = 2000;
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
 
-        context.drawText(textRenderer, String.format("Mode: %s", handler.controller.getCycleModeName()), x, y, Colors.GREEN, true);
+        context.drawString(font, String.format("Mode: %s", handler.controller.getCycleModeName()), leftPos, topPos, CommonColors.GREEN, true);
         if (handler.controller.getCycleMode() >= 0) {
-            context.drawText(textRenderer, String.format("Phase: %d / %d", handler.controller.getCyclePhase(),
-                    handler.controller.getCyclePhaseMax()), x, y + 10, Colors.GREEN, true);
-            context.drawText(textRenderer,
+            context.drawString(font, String.format("Phase: %d / %d", handler.controller.getCyclePhase(),
+                    handler.controller.getCyclePhaseMax()), leftPos, topPos + 10, CommonColors.GREEN, true);
+            context.drawString(font,
                     String.format("Time: %d / %d", handler.controller.getCycleTime(),
                             handler.controller.getCycleTimeMax()),
-                    x, y + 20, Colors.GREEN, true);
+                    leftPos, topPos + 20, CommonColors.GREEN, true);
         }
 
         for (int i = 0; i < SignalControllerBlockEntity.MAX_HEADS; i++) {
             LampState[] state = handler.controller.getStates(i);
-            context.drawText(textRenderer,
-                    String.format("%02d: %d, %d, %d", i, state[0].code, state[1].code, state[2].code), x + 200,
-                    10 + (i * 10), Colors.WHITE, true);
+            context.drawString(font,
+                    String.format("%02d: %d, %d, %d", i, state[0].code, state[1].code, state[2].code), leftPos + 200,
+                    10 + (i * 10), CommonColors.WHITE, true);
         }
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
-        drawMouseoverTooltip(context, mouseX, mouseY);
+        renderTooltip(context, mouseX, mouseY);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        mouseX -= x;
-        mouseY -= y;
+        mouseX -= leftPos;
+        mouseY -= topPos;
         // System.out.println(String.format("Click: %f,%f", mouseX, mouseY));
 
         if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 8) {

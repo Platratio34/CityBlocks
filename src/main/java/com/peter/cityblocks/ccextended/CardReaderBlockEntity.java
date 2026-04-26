@@ -10,21 +10,21 @@ import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CardReaderBlockEntity extends BlockEntity {
 
     public static final String NAME = "card_reader_entity";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<CardReaderBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(CardReaderBlockEntity::new, CardReaderBlock.BLOCK).build());
 
     public static void register() {
@@ -49,8 +49,8 @@ public class CardReaderBlockEntity extends BlockEntity {
         return getPeripheral();
     }
 
-    public void cancelRemoval() {
-        super.cancelRemoval();
+    public void clearRemoved() {
+        super.clearRemoved();
         TickScheduler.schedule(this.tickToken);
     }
 
@@ -76,20 +76,20 @@ public class CardReaderBlockEntity extends BlockEntity {
 
         for (int var3 = 0; var3 < var2; ++var3) {
             Direction dir = var1[var3];
-            this.updateRedstoneInput(dir, this.getPos().offset(dir), false);
+            this.updateRedstoneInput(dir, this.getBlockPos().relative(dir), false);
         }
 
     }
 
     private void updateRedstoneTo(Direction direction) {
-        RedstoneUtil.propagateRedstoneOutput(this.getWorld(), this.getPos(), direction);
-        this.updateRedstoneInput(direction, this.getPos().offset(direction), true);
+        RedstoneUtil.propagateRedstoneOutput(this.getLevel(), this.getBlockPos(), direction);
+        this.updateRedstoneInput(direction, this.getBlockPos().relative(direction), true);
     }
 
     private void updateRedstoneInput(Direction dir, BlockPos targetPos, boolean ticking) {
         boolean changed = this.redstoneState.setInput(this.mapSide(dir),
-                RedstoneUtil.getRedstoneInput(this.getWorld(), targetPos, dir),
-                BundledRedstone.getOutput(this.getWorld(), targetPos, dir.getOpposite()));
+                RedstoneUtil.getRedstoneInput(this.getLevel(), targetPos, dir),
+                BundledRedstone.getOutput(this.getLevel(), targetPos, dir.getOpposite()));
         if (changed && !ticking) {
             TickScheduler.schedule(this.tickToken);
         }
@@ -97,7 +97,7 @@ public class CardReaderBlockEntity extends BlockEntity {
     }
 
     private ComputerSide mapSide(Direction globalSide) {
-        return DirectionUtil.toLocal((Direction) this.getCachedState().get(CardReaderBlock.FACING), globalSide);
+        return DirectionUtil.toLocal((Direction) this.getBlockState().getValue(CardReaderBlock.FACING), globalSide);
     }
 
     int getRedstoneOutput(Direction side) {

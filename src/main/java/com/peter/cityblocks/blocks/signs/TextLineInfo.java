@@ -1,15 +1,14 @@
 package com.peter.cityblocks.blocks.signs;
 
+import net.minecraft.util.CommonColors;
 import org.joml.Vector3f;
-
-import net.minecraft.util.Colors;
 
 public class TextLineInfo {
     
     public final int lineN;
     public final Vector3f position;
     public final float scale;
-    public int color = Colors.BLACK;
+    public int color = CommonColors.BLACK;
     public float rotation = 0;
     public String defaultText = null;
     public float maxWidth = -1;

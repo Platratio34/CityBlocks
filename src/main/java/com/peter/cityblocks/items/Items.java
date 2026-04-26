@@ -12,12 +12,11 @@ import com.peter.cityblocks.blocks.signs.BuildingSignBlock;
 import com.peter.cityblocks.blocks.signs.StreetSignBlock;
 import com.peter.cityblocks.ccextended.CardReaderBlock;
 import com.peter.cityblocks.items.components.ItemComponents;
-
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 
 public class Items {
 
@@ -91,7 +90,7 @@ public class Items {
         ItemComponents.register();
     };
 
-    public static RegistryKey<Item> irk(Identifier id) {
-        return RegistryKey.of(RegistryKeys.ITEM, id);
+    public static ResourceKey<Item> irk(ResourceLocation id) {
+        return ResourceKey.create(Registries.ITEM, id);
     }
 }

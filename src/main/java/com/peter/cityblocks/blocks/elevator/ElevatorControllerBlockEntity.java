@@ -6,21 +6,21 @@ import com.peter.cityblocks.CityBlocks;
 
 import dan200.computercraft.api.peripheral.PeripheralLookup;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ElevatorControllerBlockEntity extends BlockEntity {
 
     public static final String NAME = "card_reader_entity";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<ElevatorControllerBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(ElevatorControllerBlockEntity::new, ElevatorControllerBlock.BLOCK).build());
 
     public static void register() {
@@ -65,7 +65,7 @@ public class ElevatorControllerBlockEntity extends BlockEntity {
         return arr;
     }
 
-    public void playerRequestFloor(ServerPlayerEntity player, int fromIndex, int toIndex) {
+    public void playerRequestFloor(ServerPlayer player, int fromIndex, int toIndex) {
         if (peripheral.accessControl) {
             if(!peripheral.canAccess(player, fromIndex, toIndex))
                 return;
@@ -74,12 +74,12 @@ public class ElevatorControllerBlockEntity extends BlockEntity {
         peripheral.onMove(fromIndex, toIndex);
     }
 
-    protected void sendPlayerToFloor(ServerPlayerEntity player, int index) {
+    protected void sendPlayerToFloor(ServerPlayer player, int index) {
         if(index < 0)
             throw new IndexOutOfBoundsException();
         if(index >= floors.size())
             index = floors.size() - 1;
-        player.teleport(player.getX(), floors.get(index).height, player.getZ(), false);
+        player.randomTeleport(player.getX(), floors.get(index).height, player.getZ(), false);
     }
 
     public static class ElevatorFloor implements Comparable<ElevatorFloor> {

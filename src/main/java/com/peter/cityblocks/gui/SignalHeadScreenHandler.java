@@ -6,26 +6,26 @@ import com.peter.cityblocks.blocks.signal.SignalHeadBlockEntity;
 import com.peter.cityblocks.networking.BlockPosScreenPacket;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class SignalHeadScreenHandler extends ScreenHandler {
+public class SignalHeadScreenHandler extends AbstractContainerMenu {
 
-    public static final ScreenHandlerType<SignalHeadScreenHandler> TYPE = Registry.register(Registries.SCREEN_HANDLER,
+    public static final MenuType<SignalHeadScreenHandler> TYPE = Registry.register(BuiltInRegistries.MENU,
             CityBlocks.identifier("signal_head"),
             new ExtendedScreenHandlerType<SignalHeadScreenHandler, BlockPosScreenPacket>(SignalHeadScreenHandler::new, BlockPosScreenPacket.PACKET_CODEC));
 
     public final SignalHeadBlockEntity headEntity;
     public final PedestrianSignalBlockEntity pedestrianEntity;
 
-    public SignalHeadScreenHandler(int syncId, PlayerInventory playerInventory, BlockPosScreenPacket data) {
-        this(syncId, playerInventory.player.getWorld().getBlockEntity(data.pos()));
+    public SignalHeadScreenHandler(int syncId, Inventory playerInventory, BlockPosScreenPacket data) {
+        this(syncId, playerInventory.player.level().getBlockEntity(data.pos()));
     }
 
     public SignalHeadScreenHandler(int syncId, BlockEntity blockEntity) {
@@ -41,12 +41,12 @@ public class SignalHeadScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot) {
+    public ItemStack quickMoveStack(Player player, int slot) {
         return ItemStack.EMPTY;
     }
 

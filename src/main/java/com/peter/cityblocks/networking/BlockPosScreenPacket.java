@@ -1,11 +1,11 @@
 package com.peter.cityblocks.networking;
 
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public record BlockPosScreenPacket(BlockPos pos) {
-    public static final PacketCodec<RegistryByteBuf, BlockPosScreenPacket> PACKET_CODEC = PacketCodec.tuple(
-                BlockPos.PACKET_CODEC, BlockPosScreenPacket::pos,
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockPosScreenPacket> PACKET_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, BlockPosScreenPacket::pos,
                 BlockPosScreenPacket::new);
 }

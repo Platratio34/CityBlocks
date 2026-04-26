@@ -1,48 +1,48 @@
 package com.peter.cityblocks.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class VariantPartialBlock extends VariantBlock {
 
-    public VariantPartialBlock(Settings settings, String name, Identifier[] modelVariants) {
+    public VariantPartialBlock(Properties settings, String name, ResourceLocation[] modelVariants) {
         super(settings, name, modelVariants);
     }
 
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return getShape(state);
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    protected VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return getShape(state);
     }
 
     @Override
-    protected VoxelShape getCullingShape(BlockState state) {
+    protected VoxelShape getOcclusionShape(BlockState state) {
         return getShape(state);
     }
 
-    protected VoxelShape getInsideCollisionShape(BlockState state, BlockView world, BlockPos pos, Entity entity) {
-        return VoxelShapes.empty();
+    protected VoxelShape getEntityInsideCollisionShape(BlockState state, BlockGetter world, BlockPos pos, Entity entity) {
+        return Shapes.empty();
     }
 
     public VoxelShape getShape(BlockState state) {
-        return getShape(getVariant(state), state.get(FACING));
+        return getShape(getVariant(state), state.getValue(FACING));
     }
 
     public VoxelShape getShape(int variant, Direction direction) {
-        return VoxelShapes.fullCube();
+        return Shapes.block();
     }
 
     public static VoxelShape cube(double x, double y, double z, double sizeX, double sizeY, double sizeZ) {
@@ -58,7 +58,7 @@ public class VariantPartialBlock extends VariantBlock {
             z += sizeZ;
             sizeZ *= -1;
         }
-        return Block.createCuboidShape(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
+        return Block.box(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
     }
 
     public static VoxelShape cube(double x, double y, double z, double sizeX, double sizeY, double sizeZ, Direction r) {
@@ -79,12 +79,12 @@ public class VariantPartialBlock extends VariantBlock {
     }
 
     @Override
-    protected boolean isTransparent(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state) {
         return true;
     }
 
     @Override
-    protected int getOpacity(BlockState state) {
+    protected int getLightBlock(BlockState state) {
         return 0;
     }
 
@@ -94,13 +94,13 @@ public class VariantPartialBlock extends VariantBlock {
     // }
 
     @Override
-    protected float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+    protected float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
         return 1f;
     }
 
     @Override
-    protected BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
 }

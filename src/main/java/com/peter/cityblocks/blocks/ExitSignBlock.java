@@ -1,17 +1,16 @@
 package com.peter.cityblocks.blocks;
 
 import com.peter.cityblocks.CityBlocks;
-
-import net.minecraft.item.BlockItem;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ExitSignBlock extends VariantPartialBlock {
 
     public static final String NAME = "exit_sign";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
 
     public static final VoxelShape[][] SHAPES = new VoxelShape[][] {
             new VoxelShape[] {
@@ -73,10 +72,10 @@ public class ExitSignBlock extends VariantPartialBlock {
     };
 
     public static final VariantPartialBlock BLOCK = new ExitSignBlock(
-            new VariantSettings().setVariants(12).nonOpaque().luminance((state) -> 1));
+            new VariantSettings().setVariants(12).noOcclusion().lightLevel((state) -> 1));
     public static final BlockItem ITEM = BLOCK.item;
 
-    private static final Identifier[] MODEL_VARIANTS = new Identifier[] {
+    private static final ResourceLocation[] MODEL_VARIANTS = new ResourceLocation[] {
             Blocks.blockId("exit_sign"),
             Blocks.blockId("exit_sign_left"),
             Blocks.blockId("exit_sign_right"),
@@ -91,7 +90,7 @@ public class ExitSignBlock extends VariantPartialBlock {
             Blocks.blockId("exit_sign_top_offset_right"),
     };
 
-    public ExitSignBlock(Settings settings) {
+    public ExitSignBlock(Properties settings) {
         super(settings, NAME, MODEL_VARIANTS);
     }
 
@@ -111,7 +110,7 @@ public class ExitSignBlock extends VariantPartialBlock {
             case 10 -> cube(11, 10, 0, 10, 6, 2, direction);
             case 11 -> cube(11, 10, 0, 10, 6, 2, direction);
         
-            default -> VoxelShapes.fullCube();
+            default -> Shapes.block();
         };
     }
 

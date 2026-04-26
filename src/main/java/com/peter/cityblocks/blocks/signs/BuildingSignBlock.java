@@ -13,80 +13,80 @@ import com.peter.cityblocks.blocks.VariantPartialBlock;
 import com.peter.cityblocks.items.Items;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BuildingSignBlock extends CustomSignBlock {
 
     public static final String NAME = "building_sign";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
 
-    public static final IntProperty MODEL = IntProperty.of("model", 0, 2);
-    public static final EnumProperty<Direction> FACING = Properties.HORIZONTAL_FACING;
+    public static final IntegerProperty MODEL = IntegerProperty.create("model", 0, 2);
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public static final MapCodec<BuildingSignBlock> CODEC = createCodec(BuildingSignBlock::new);
+    public static final MapCodec<BuildingSignBlock> CODEC = simpleCodec(BuildingSignBlock::new);
 
-    public static final CustomSignBlock BLOCK = Registry.register(Registries.BLOCK, ID,
-            new BuildingSignBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
-    public static final CustomSignBlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new CustomSignBlockItem(BLOCK, new Item.Settings().registryKey(Blocks.irk(ID))));
+    public static final CustomSignBlock BLOCK = Registry.register(BuiltInRegistries.BLOCK, ID,
+            new BuildingSignBlock(Properties.of().noOcclusion().setId(Blocks.brk(ID))));
+    public static final CustomSignBlockItem ITEM = Registry.register(BuiltInRegistries.ITEM, ID,
+            new CustomSignBlockItem(BLOCK, new Item.Properties().setId(Blocks.irk(ID))));
     public static final BlockEntityType<CustomSignBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(BuildingSignBlock::createSignBlockEntity, BLOCK).build());
 
-    protected BuildingSignBlock(Settings settings) {
+    protected BuildingSignBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(FACING, MODEL);
     }
 
     @Override
-    protected BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return super.getPlacementState(ctx).with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getHorizontalDirection());
     }
 
     public static CustomSignBlockEntity createSignBlockEntity(BlockPos pos, BlockState state) {
         CustomSignBlockEntity entity = new CustomSignBlockEntity(BLOCK_ENTITY_TYPE, pos, state,
-                Text.translatable(ID.toTranslationKey("block")));
+                Component.translatable(ID.toLanguageKey("block")));
         return entity;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return createSignBlockEntity(pos, state);
     }
 
@@ -97,7 +97,7 @@ public class BuildingSignBlock extends CustomSignBlock {
 
     @Override
     public int getMaxVariant(BlockState state) {
-        int model = state.get(MODEL);
+        int model = state.getValue(MODEL);
         if (model == 0) {
             return 1;
         } else if (model == 1 || model == 2) {
@@ -108,7 +108,7 @@ public class BuildingSignBlock extends CustomSignBlock {
 
     @Override
     public int getMaxTextLines(BlockState state, int texture) {
-        int model = state.get(MODEL);
+        int model = state.getValue(MODEL);
         if (model == 0) {
             return 2;
         } else if (model == 1 || model == 2) {
@@ -119,7 +119,7 @@ public class BuildingSignBlock extends CustomSignBlock {
 
     @Override
     public TextLineInfo[] getTextInfo(BlockState state, int texture) {
-        int model = state.get(MODEL);
+        int model = state.getValue(MODEL);
         if (model == 0) {
             return new TextLineInfo[] {
                     new TextLineInfo(0, 8f, 10.0f, 1.1f, 1.5f).maxWidth(10f),
@@ -127,19 +127,19 @@ public class BuildingSignBlock extends CustomSignBlock {
             };
         } else if (model == 1) {
             if (texture == 0)
-                return new TextLineInfo[] { new TextLineInfo(5f, 9.0f, 1.1f, 1f).color(Colors.WHITE).maxWidth(7f) };
+                return new TextLineInfo[] { new TextLineInfo(5f, 9.0f, 1.1f, 1f).color(CommonColors.WHITE).maxWidth(7f) };
             else if (texture == 1)
                 return new TextLineInfo[] {
-                        new TextLineInfo(0, 5f, 9.0f, 1.1f, 0.5f).color(Colors.WHITE).maxWidth(7f),
-                        new TextLineInfo(1, 5f, 8.0f, 1.1f, 0.5f).color(Colors.WHITE).maxWidth(7f)
+                        new TextLineInfo(0, 5f, 9.0f, 1.1f, 0.5f).color(CommonColors.WHITE).maxWidth(7f),
+                        new TextLineInfo(1, 5f, 8.0f, 1.1f, 0.5f).color(CommonColors.WHITE).maxWidth(7f)
                 };
         } else if (model == 2) {
             if (texture == 0)
-                return new TextLineInfo[] { new TextLineInfo(16-5f, 9.0f, 1.1f, 1f).color(Colors.WHITE).maxWidth(7f) };
+                return new TextLineInfo[] { new TextLineInfo(16-5f, 9.0f, 1.1f, 1f).color(CommonColors.WHITE).maxWidth(7f) };
             else if (texture == 1)
                 return new TextLineInfo[] {
-                        new TextLineInfo(0, 16-5f, 9.0f, 1.1f, 0.5f).color(Colors.WHITE).maxWidth(7f),
-                        new TextLineInfo(1, 16-5f, 8.0f, 1.1f, 0.5f).color(Colors.WHITE).maxWidth(7f)
+                        new TextLineInfo(0, 16-5f, 9.0f, 1.1f, 0.5f).color(CommonColors.WHITE).maxWidth(7f),
+                        new TextLineInfo(1, 16-5f, 8.0f, 1.1f, 0.5f).color(CommonColors.WHITE).maxWidth(7f)
                 };
         }
         return new TextLineInfo[0];
@@ -162,8 +162,8 @@ public class BuildingSignBlock extends CustomSignBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state) {
-        int model = state.get(MODEL);
-        Direction facing = state.get(FACING);
+        int model = state.getValue(MODEL);
+        Direction facing = state.getValue(FACING);
         switch (model) {
             case 0:
                 return VariantPartialBlock.cube(2, 4, 0, 12, 8, 1, facing);
@@ -179,7 +179,7 @@ public class BuildingSignBlock extends CustomSignBlock {
 
     @Override
     public String[] getVariantNames(BlockState state) {
-        int model = state.get(MODEL);
+        int model = state.getValue(MODEL);
         switch (model) {
             case 0:
                 return new String[] { "Address" };
@@ -199,26 +199,26 @@ public class BuildingSignBlock extends CustomSignBlock {
     }
 
     @Override
-    public void getTooltip(List<Text> tooltip, NbtCompound nbt, int texture) {
+    public void getTooltip(List<Component> tooltip, CompoundTag nbt, int texture) {
         if (nbt.contains("model")) {
             int model = nbt.getInt("model").get();
             switch (model) {
                 case 0:
-                    tooltip.add(Text.of("Address Sign"));
+                    tooltip.add(Component.nullToEmpty("Address Sign"));
                     break;
                 case 1:
-                    tooltip.add(Text.of("Room Sign (left)"));
+                    tooltip.add(Component.nullToEmpty("Room Sign (left)"));
                     if (texture == 0)
-                        tooltip.add(Text.of("- 1 Line"));
+                        tooltip.add(Component.nullToEmpty("- 1 Line"));
                     if (texture == 1)
-                        tooltip.add(Text.of("- 2 Lines"));
+                        tooltip.add(Component.nullToEmpty("- 2 Lines"));
                     break;
                 case 2:
-                    tooltip.add(Text.of("Room Sign (right)"));
+                    tooltip.add(Component.nullToEmpty("Room Sign (right)"));
                     if (texture == 0)
-                        tooltip.add(Text.of("- 1 Line"));
+                        tooltip.add(Component.nullToEmpty("- 1 Line"));
                     if (texture == 1)
-                        tooltip.add(Text.of("- 2 Lines"));
+                        tooltip.add(Component.nullToEmpty("- 2 Lines"));
                     break;
 
                 default:
@@ -228,51 +228,51 @@ public class BuildingSignBlock extends CustomSignBlock {
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public NbtCompound getNbt(BlockState state, int texture) {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putInt("model", state.get(MODEL));
+    public CompoundTag getNbt(BlockState state, int texture) {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt("model", state.getValue(MODEL));
         return nbt;
     }
 
     @Override
-    public BlockState getBlockStateFromNbt(BlockState state, NbtCompound nbt) {
+    public BlockState getBlockStateFromNbt(BlockState state, CompoundTag nbt) {
         int model = 0;
         if (nbt.contains("model")) {
             model = nbt.getInt("model").get();
         }
-        return state.with(MODEL, model);
+        return state.setValue(MODEL, model);
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (stack.isOf(Items.VARIANT_SWITCHER_ITEM)) {
-            int model = state.get(MODEL) + 1;
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
+        if (stack.is(Items.VARIANT_SWITCHER_ITEM)) {
+            int model = state.getValue(MODEL) + 1;
             if (model >= 3) {
                 model = 0;
             }
             ((CustomSignBlockEntity) world.getBlockEntity(pos)).setVariant(0);
-            world.setBlockState(pos, state.with(MODEL, model));
-            return ActionResult.CONSUME;
+            world.setBlockAndUpdate(pos, state.setValue(MODEL, model));
+            return InteractionResult.CONSUME;
         }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
     }
 
     @Override
-    public BlockState cycle(World world, BlockPos pos, BlockState state, boolean inverse) {
-        int model = IVariantBlock.cycleInt(state.get(MODEL), 2, inverse);
+    public BlockState cycle(Level world, BlockPos pos, BlockState state, boolean inverse) {
+        int model = IVariantBlock.cycleInt(state.getValue(MODEL), 2, inverse);
         ((CustomSignBlockEntity) world.getBlockEntity(pos)).setVariant(0);
-        return state.with(MODEL, model);
+        return state.setValue(MODEL, model);
     }
 
     @Override
     public int getVariant(BlockState state) {
-        return state.get(MODEL);
+        return state.getValue(MODEL);
     }
 
     @Override

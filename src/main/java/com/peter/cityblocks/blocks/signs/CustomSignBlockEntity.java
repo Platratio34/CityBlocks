@@ -12,51 +12,51 @@ import com.mojang.serialization.Codec;
 import com.peter.cityblocks.gui.CustomSignScreenHandler;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPosScreenPacket> {
 
-    private final Text screenName;
+    private final Component screenName;
 
     private int variant = 0;
     private String[] text = new String[0];
     private ArrayList<SignSticker> stickers = new ArrayList<SignSticker>();
 
     public CustomSignBlockEntity(BlockEntityType<? extends CustomSignBlockEntity> type, BlockPos pos, BlockState state,
-            Text screenName) {
+            Component screenName) {
         super(type, pos, state);
         this.screenName = screenName;
     }
     
     public CustomSignBlock getBlock() {
-        return (CustomSignBlock) getCachedState().getBlock();
+        return (CustomSignBlock) getBlockState().getBlock();
     }
 
     public int getVariant() {
         int maxV = getMaxVariant();
         if (variant > maxV) {
             variant = maxV;
-            markDirty();
+            setChanged();
         }
         return variant;
     }
@@ -83,16 +83,16 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
                     text[textInfo[i].lineN] = textInfo[i].defaultText;
                 }
             }
-            markDirty();
+            setChanged();
         }
     }
 
     public int getMaxVariant() {
-        return getBlock().getMaxVariant(getCachedState());
+        return getBlock().getMaxVariant(getBlockState());
     }
 
     public String getTexture() {
-        return getBlock().getTexture(getCachedState(), getVariant());
+        return getBlock().getTexture(getBlockState(), getVariant());
     }
 
     public String[] getText() {
@@ -107,7 +107,7 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
                     text[textInfo[i].lineN] = textInfo[i].defaultText;
                 }
             }
-            markDirty();
+            setChanged();
         }
         return text;
     }
@@ -138,7 +138,7 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
         // if (world.isClient) {
         //     CityBlocksClientNetworking.sendCustomSignUpdatePacket(this, this.text);
         // }
-        markDirty();
+        setChanged();
     }
 
     public String getLineText(int line) {
@@ -159,11 +159,11 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public int getMaxTextLines() {
-        return getBlock().getMaxTextLines(getCachedState(), getVariant());
+        return getBlock().getMaxTextLines(getBlockState(), getVariant());
     }
 
     public int getMaxTextLines(int texture) {
-        return getBlock().getMaxTextLines(getCachedState(), texture);
+        return getBlock().getMaxTextLines(getBlockState(), texture);
     }
 
     public SignSticker[] getStickers() {
@@ -171,29 +171,29 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     public Vector3d getTexturePosition() {
-        return getBlock().getTexturePosition(getCachedState(), getVariant());
+        return getBlock().getTexturePosition(getBlockState(), getVariant());
     }
     public Vector3d getTextureSize() {
-        return getBlock().getTextureSize(getCachedState(), getVariant());
+        return getBlock().getTextureSize(getBlockState(), getVariant());
     }
     public Vector2f getTextureUVSize() {
-        return getBlock().getTextureUVSize(getCachedState(), getVariant());
+        return getBlock().getTextureUVSize(getBlockState(), getVariant());
     }
 
     public Direction getFacing() {
-        return getBlock().getFacing(getCachedState());
+        return getBlock().getFacing(getBlockState());
     }
 
     public String[] getVariantNames() {
-        return getBlock().getVariantNames(getCachedState());
+        return getBlock().getVariantNames(getBlockState());
     }
 
     public TextLineInfo[] getTextInfo() {
-        return getBlock().getTextInfo(getCachedState(), getVariant());
+        return getBlock().getTextInfo(getBlockState(), getVariant());
     }
 
     @Override
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         return screenName;
     }
 
@@ -203,16 +203,16 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     public static final String NBT_BLOCK_STATE = "block_state";
     
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        view.put(NBT_BLOCK_STATE, NbtCompound.CODEC, getBlock().getNbt(getCachedState(), variant));
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        view.store(NBT_BLOCK_STATE, CompoundTag.CODEC, getBlock().getNbt(getBlockState(), variant));
         view.putInt(NBT_VARIANT, variant);
         if (text.length > 0) {
             ArrayList<String> list = new ArrayList<>();
             for (int i = 0; i < text.length; i++) {
                 list.add(text[i]);
             }
-            view.put(NBT_TEXT, Codec.list(Codec.STRING), list);
+            view.store(NBT_TEXT, Codec.list(Codec.STRING), list);
         }
         // if (stickers.size() > 0) {
         //     view.put(NBT_STICKERS, Codec.list(SignSticker.CODEC), stickers);
@@ -220,10 +220,10 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
         
-        variant = view.getInt(NBT_VARIANT, 0);
+        variant = view.getIntOr(NBT_VARIANT, 0);
         int maxV = getMaxVariant();
         if (variant > maxV) {
             variant = maxV;
@@ -263,51 +263,51 @@ public class CustomSignBlockEntity extends BlockEntity implements ExtendedScreen
     }
 
     @Override
-    public void markDirty() {
-        world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
-        super.markDirty();
+    public void setChanged() {
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        super.setChanged();
     }
 
     public void markDirty(BlockState state) {
-        world.updateListeners(pos, getCachedState(), state, Block.NOTIFY_LISTENERS);
-        super.markDirty();
+        level.sendBlockUpdated(worldPosition, getBlockState(), state, Block.UPDATE_CLIENTS);
+        super.setChanged();
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new CustomSignScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayerEntity)player));
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+        return new CustomSignScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayer)player));
     }
 
     @Override
-    public BlockPosScreenPacket getScreenOpeningData(ServerPlayerEntity player) {
-        return new BlockPosScreenPacket(this.pos);
+    public BlockPosScreenPacket getScreenOpeningData(ServerPlayer player) {
+        return new BlockPosScreenPacket(this.worldPosition);
     }
 
     public boolean isTextOnly() {
-        return getBlock().isTextOnly(getCachedState(), variant);
+        return getBlock().isTextOnly(getBlockState(), variant);
     }
 
-    public static NbtCompound getNbtFromStack(ItemStack stack) {
-        NbtComponent nbtComp = stack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT);
+    public static CompoundTag getNbtFromStack(ItemStack stack) {
+        CustomData nbtComp = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
         if (!nbtComp.isEmpty()) {
-            return nbtComp.copyNbt();
+            return nbtComp.copyTag();
         }
         return null;
     }
-    public static NbtCompound getBlockStateNbtFromStack(ItemStack stack) {
-        NbtComponent nbtComp = stack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT);
+    public static CompoundTag getBlockStateNbtFromStack(ItemStack stack) {
+        CustomData nbtComp = stack.getOrDefault(DataComponents.BLOCK_ENTITY_DATA, CustomData.EMPTY);
         if (!nbtComp.isEmpty()) {
-            NbtCompound nbt = nbtComp.copyNbt();
+            CompoundTag nbt = nbtComp.copyTag();
             return nbt.getCompound(NBT_BLOCK_STATE).orElse(null);
         }
         return null;

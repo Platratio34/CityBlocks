@@ -1,18 +1,16 @@
 package com.peter.cityblocks.gui;
 
 import org.lwjgl.glfw.GLFW;
-
 import com.peter.cityblocks.blocks.signs.CustomSignBlockEntity;
 import com.peter.cityblocks.blocks.signs.TextLineInfo;
 import com.peter.cityblocks.networking.CityBlocksClientNetworking;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.entity.player.Inventory;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-
-public class CustomSignScreen extends HandledScreen<CustomSignScreenHandler> {
+public class CustomSignScreen extends AbstractContainerScreen<CustomSignScreenHandler> {
 
     @SuppressWarnings("unused")
     private final CustomSignScreenHandler handler;
@@ -21,34 +19,34 @@ public class CustomSignScreen extends HandledScreen<CustomSignScreenHandler> {
     private int selectedLineN = -1;
     private String selectedLine = "";
 
-    public CustomSignScreen(CustomSignScreenHandler handler, PlayerInventory inventory, Text title) {
+    public CustomSignScreen(CustomSignScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         this.handler = handler;
         this.signEntity = handler.signEntity;
-        titleY -= 10;
+        titleLabelY -= 10;
     }
 
     @Override
     protected void init() {
         super.init();
-        playerInventoryTitleY = 2000;
+        inventoryLabelY = 2000;
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
 
         
         // if (!signEntity.isTextOnly()) {
             String[] varNames = signEntity.getVariantNames();
             int var = signEntity.getVariant();
-            context.drawText(textRenderer, "Variants:", x - 25, y + 5, Colors.WHITE, true);
+            context.drawString(font, "Variants:", leftPos - 25, topPos + 5, CommonColors.WHITE, true);
             for (int i = 0; i < varNames.length; i++) {
                 String texture = varNames[i];
                 if (texture.length() == 0) {
                     texture = "Text Only ("+signEntity.getMaxTextLines(i)+")";
                 }
-                context.drawText(textRenderer, texture, x - 25, y + 15 + (i * 10),
-                        (var == i) ? Colors.YELLOW : Colors.GREEN, true);
+                context.drawString(font, texture, leftPos - 25, topPos + 15 + (i * 10),
+                        (var == i) ? CommonColors.YELLOW : CommonColors.GREEN, true);
             }
         // }
         
@@ -56,29 +54,29 @@ public class CustomSignScreen extends HandledScreen<CustomSignScreenHandler> {
         if (nLines > 0) {
             String[] lines = signEntity.getText();
             TextLineInfo[] lineInfos = signEntity.getTextInfo();
-            context.drawText(textRenderer, "Text:", x + 75, y + 5, Colors.WHITE, true);
+            context.drawString(font, "Text:", leftPos + 75, topPos + 5, CommonColors.WHITE, true);
             for (int i = 0; i < nLines; i++) {
                 int color = lineInfos[i].color;
-                if (color == Colors.BLACK)
-                    color = Colors.WHITE;
+                if (color == CommonColors.BLACK)
+                    color = CommonColors.WHITE;
                 if (i == selectedLineN)
-                    color = Colors.YELLOW;
+                    color = CommonColors.YELLOW;
                 
-                context.drawText(textRenderer, i + ": \"" + lines[i] + "\"", x + 75, y + 15 + (i * 10), color, true);
+                context.drawString(font, i + ": \"" + lines[i] + "\"", leftPos + 75, topPos + 15 + (i * 10), color, true);
             }
         }
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        mouseX -= x;
-        mouseY -= y;
+        mouseX -= leftPos;
+        mouseY -= topPos;
         // System.out.println(String.format("Click: %f,%f", mouseX, mouseY));
 
         if (mouseX > -25 && mouseX < 60 && mouseY > 15) {

@@ -4,35 +4,34 @@ import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.signal.LampColor;
 import com.peter.cityblocks.blocks.signal.LampState;
 import com.peter.cityblocks.blocks.signal.SignalHeadBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+public record SignalHeadUpdatePayload(ResourceKey<Level> world, BlockPos pos, int lamp, int state, int color, int headId, int lampCount)
+        implements CustomPacketPayload {
 
-public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, int lamp, int state, int color, int headId, int lampCount)
-        implements CustomPayload {
-
-    public static final CustomPayload.Id<SignalHeadUpdatePayload> ID = new CustomPayload.Id<>(
+    public static final CustomPacketPayload.Type<SignalHeadUpdatePayload> ID = new CustomPacketPayload.Type<>(
             CityBlocks.identifier("signal_head_update"));
-    public static final PacketCodec<RegistryByteBuf, SignalHeadUpdatePayload> CODEC = PacketCodec.tuple(
-            RegistryKey.createPacketCodec(RegistryKeys.WORLD), SignalHeadUpdatePayload::world,
-            BlockPos.PACKET_CODEC, SignalHeadUpdatePayload::pos,
-            PacketCodecs.INTEGER, SignalHeadUpdatePayload::lamp,
-            PacketCodecs.INTEGER, SignalHeadUpdatePayload::state,
-            PacketCodecs.INTEGER, SignalHeadUpdatePayload::color,
-            PacketCodecs.INTEGER, SignalHeadUpdatePayload::headId,
-            PacketCodecs.INTEGER, SignalHeadUpdatePayload::lampCount,
+    public static final StreamCodec<RegistryFriendlyByteBuf, SignalHeadUpdatePayload> CODEC = StreamCodec.composite(
+            ResourceKey.streamCodec(Registries.DIMENSION), SignalHeadUpdatePayload::world,
+            BlockPos.STREAM_CODEC, SignalHeadUpdatePayload::pos,
+            ByteBufCodecs.INT, SignalHeadUpdatePayload::lamp,
+            ByteBufCodecs.INT, SignalHeadUpdatePayload::state,
+            ByteBufCodecs.INT, SignalHeadUpdatePayload::color,
+            ByteBufCodecs.INT, SignalHeadUpdatePayload::headId,
+            ByteBufCodecs.INT, SignalHeadUpdatePayload::lampCount,
             SignalHeadUpdatePayload::new
 
     );
 
     @Override
-    public Id<SignalHeadUpdatePayload> getId() {
+    public Type<SignalHeadUpdatePayload> type() {
         return ID;
     }
 
@@ -54,7 +53,7 @@ public record SignalHeadUpdatePayload(RegistryKey<World> world, BlockPos pos, in
     @Override
     public final String toString() {
         return String.format(
-                "SignalHeadUpdatePayload{world=%s; pos=%s; lamp=%d; state=%s; color=%s; headId=%d; lampCount=%d}", world.getValue().toString(), pos.toString(),
+                "SignalHeadUpdatePayload{world=%s; pos=%s; lamp=%d; state=%s; color=%s; headId=%d; lampCount=%d}", world.location().toString(), pos.toString(),
                 lamp, LampState.fromCode(state), LampColor.fromCode(color), headId, lampCount);
     }
 

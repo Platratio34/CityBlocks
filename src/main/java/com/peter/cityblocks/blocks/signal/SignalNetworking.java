@@ -15,7 +15,7 @@ public class SignalNetworking {
         ServerPlayNetworking.registerGlobalReceiver(SignalHeadUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
                 CityBlocks.debug("Received Signal Head Update: {}", payload.toString());
-                SignalHeadBlockEntity entity = (SignalHeadBlockEntity) context.server().getWorld(payload.world())
+                SignalHeadBlockEntity entity = (SignalHeadBlockEntity) context.server().getLevel(payload.world())
                         .getBlockEntity(payload.pos());
                 payload.update(entity);
             });
@@ -24,7 +24,7 @@ public class SignalNetworking {
         ServerPlayNetworking.registerGlobalReceiver(SignalControllerUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
                 CityBlocks.debug("Received Signal Controller Update: {}", payload.toString());
-                SignalControllerBlockEntity entity = (SignalControllerBlockEntity) context.server().getWorld(payload.world())
+                SignalControllerBlockEntity entity = (SignalControllerBlockEntity) context.server().getLevel(payload.world())
                         .getBlockEntity(payload.pos());
                 entity.setCycleMode(payload.cycleMode());
             });

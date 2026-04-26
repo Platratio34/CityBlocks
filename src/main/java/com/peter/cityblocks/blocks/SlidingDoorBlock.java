@@ -1,100 +1,98 @@
 package com.peter.cityblocks.blocks;
 
 import java.util.Map;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.BlockSetType.PressurePlateSensitivity;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import com.peter.cityblocks.CityBlocks;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSetType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.enums.DoorHinge;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.block.BlockSetType.ActivationRule;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 public class SlidingDoorBlock extends DoorBlock {
 
-    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_CLOSED = VoxelShapes.createHorizontalFacingShapeMap(Block.createCuboidZShape(16.0, 13.0, 16.0));
-    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN_RIGHT = VoxelShapes.createHorizontalFacingShapeMap(VoxelShapes.cuboid(14f/16f, 0f/16f, 12f/16f, 30f/16f, 16f/16f, 15f/16f));
-    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN = VoxelShapes.createHorizontalFacingShapeMap(VoxelShapes.cuboid(-14f/16f, 0f/16f, 12f/16f, 2f/16f, 16f/16f, 15f/16f));
+    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_CLOSED = Shapes.rotateHorizontal(Block.boxZ(16.0, 13.0, 16.0));
+    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN_RIGHT = Shapes.rotateHorizontal(Shapes.box(14f/16f, 0f/16f, 12f/16f, 30f/16f, 16f/16f, 15f/16f));
+    private static final Map<Direction, VoxelShape> SHAPES_BY_DIRECTION_OPEN = Shapes.rotateHorizontal(Shapes.box(-14f/16f, 0f/16f, 12f/16f, 2f/16f, 16f/16f, 15f/16f));
 
     public static final String NAME = "sliding_door";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
 
     public static final BlockSetType BLOCK_SET_TYPE = new BlockSetType(
             "sliding_door",
             true,
             true,
             true,
-            ActivationRule.EVERYTHING,
-            BlockSoundGroup.IRON, 
-			SoundEvents.BLOCK_IRON_DOOR_CLOSE,
-			SoundEvents.BLOCK_IRON_DOOR_OPEN,
-			SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
-			SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN,
-			SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF,
-			SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON,
-			SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF,
-			SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON
+            PressurePlateSensitivity.EVERYTHING,
+            SoundType.IRON, 
+			SoundEvents.IRON_DOOR_CLOSE,
+			SoundEvents.IRON_DOOR_OPEN,
+			SoundEvents.IRON_TRAPDOOR_CLOSE,
+			SoundEvents.IRON_TRAPDOOR_OPEN,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF,
+			SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+			SoundEvents.STONE_BUTTON_CLICK_OFF,
+			SoundEvents.STONE_BUTTON_CLICK_ON
     );
-    public static final SlidingDoorBlock BLOCK = Registry.register(Registries.BLOCK, ID,
-            new SlidingDoorBlock(BLOCK_SET_TYPE, new Settings().nonOpaque().registryKey(Blocks.brk(ID))
-                    .mapColor(MapColor.IRON_GRAY).pistonBehavior(PistonBehavior.DESTROY)));
+    public static final SlidingDoorBlock BLOCK = Registry.register(BuiltInRegistries.BLOCK, ID,
+            new SlidingDoorBlock(BLOCK_SET_TYPE, Properties.of().noOcclusion().setId(Blocks.brk(ID))
+                    .mapColor(MapColor.METAL).pushReaction(PushReaction.DESTROY)));
 
     public static final BlockItem ITEM = Blocks.registerBlockItem(BLOCK, ID,
-            new Item.Settings().registryKey(Blocks.irk(ID)));
+            new Item.Properties().setId(Blocks.irk(ID)));
 
-    public SlidingDoorBlock(BlockSetType type, Settings settings) {
+    public SlidingDoorBlock(BlockSetType type, Properties settings) {
         super(type, settings);
     }
     
     @Override
-    protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(FACING);
-        if (!state.get(OPEN)) {
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(FACING);
+        if (!state.getValue(OPEN)) {
             return SHAPES_BY_DIRECTION_CLOSED.get(direction);
         }
-        if (state.get(HINGE) == DoorHinge.RIGHT) {
+        if (state.getValue(HINGE) == DoorHingeSide.RIGHT) {
             return SHAPES_BY_DIRECTION_OPEN_RIGHT.get(direction);
         }
         return SHAPES_BY_DIRECTION_OPEN.get(direction);
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        boolean o1 = state.get(OPEN);
-        ActionResult result = super.onUse(state, world, pos, player, hit);
-        if (world.isClient) {
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        boolean o1 = state.getValue(OPEN);
+        InteractionResult result = super.useWithoutItem(state, world, pos, player, hit);
+        if (world.isClientSide) {
             return result;
         }
         // CityBlocks.LOGGER.info("Test?");
-        if (result == ActionResult.SUCCESS) { // state changed
+        if (result == InteractionResult.SUCCESS) { // state changed
             // CityBlocks.LOGGER.info("Sliding door state change");
-            Direction dir = state.get(FACING);
-            boolean right = state.get(HINGE) == DoorHinge.RIGHT;
+            Direction dir = state.getValue(FACING);
+            boolean right = state.getValue(HINGE) == DoorHingeSide.RIGHT;
             BlockPos checkPos = switch (dir) {
-                case NORTH -> pos.add(right ? -1 : 1, 0, 0);
-                case SOUTH -> pos.add(right ? 1 : -1, 0, 0);
-                case EAST -> pos.add(0, 0, right ? -1 : 1);
-                case WEST -> pos.add(0, 0, right ? 1 : -1);
+                case NORTH -> pos.offset(right ? -1 : 1, 0, 0);
+                case SOUTH -> pos.offset(right ? 1 : -1, 0, 0);
+                case EAST -> pos.offset(0, 0, right ? -1 : 1);
+                case WEST -> pos.offset(0, 0, right ? 1 : -1);
                 default -> pos;
             };
             // CityBlocks.LOGGER.info("Checking {}", checkPos);
@@ -102,7 +100,7 @@ public class SlidingDoorBlock extends DoorBlock {
             if (!(s2.getBlock() instanceof SlidingDoorBlock)) {
                 return result;
             }
-            if (s2.get(FACING) == dir && (s2.get(HINGE) == DoorHinge.RIGHT) != right) {
+            if (s2.getValue(FACING) == dir && (s2.getValue(HINGE) == DoorHingeSide.RIGHT) != right) {
                 setOpen(player, world, s2, checkPos, !o1);
             }
         }

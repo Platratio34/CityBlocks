@@ -13,37 +13,37 @@ import com.peter.cityblocks.blocks.VariantPartialBlock;
 import com.peter.cityblocks.items.Items;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class StreetSignBlock extends CustomSignBlock {
 
     public static final String NAME = "street_sign";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
 
     private static final String[] TEXTURE_PREFIXES = {
             "street_sign_1/street_sign_1_",
@@ -89,64 +89,64 @@ public class StreetSignBlock extends CustomSignBlock {
             "Distance Marker"
     };
 
-    public static final IntProperty MODEL = IntProperty.of("model", 0, TEXTURE_PREFIXES.length-1);
+    public static final IntegerProperty MODEL = IntegerProperty.create("model", 0, TEXTURE_PREFIXES.length-1);
 
-    public static final MapCodec<StreetSignBlock> CODEC = createCodec(StreetSignBlock::new);
+    public static final MapCodec<StreetSignBlock> CODEC = simpleCodec(StreetSignBlock::new);
 
-    public static final CustomSignBlock BLOCK = Registry.register(Registries.BLOCK, ID,
-            new StreetSignBlock(Settings.create().nonOpaque().registryKey(Blocks.brk(ID))));
-    public static final CustomSignBlockItem ITEM = Registry.register(Registries.ITEM, ID,
-            new CustomSignBlockItem(BLOCK, new Item.Settings().registryKey(Blocks.irk(ID))));
+    public static final CustomSignBlock BLOCK = Registry.register(BuiltInRegistries.BLOCK, ID,
+            new StreetSignBlock(Properties.of().noOcclusion().setId(Blocks.brk(ID))));
+    public static final CustomSignBlockItem ITEM = Registry.register(BuiltInRegistries.ITEM, ID,
+            new CustomSignBlockItem(BLOCK, new Item.Properties().setId(Blocks.irk(ID))));
     public static final BlockEntityType<CustomSignBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(StreetSignBlock::createSignBlockEntity, StreetSignBlock.BLOCK).build());
 
-    protected StreetSignBlock(Settings settings) {
+    protected StreetSignBlock(Properties settings) {
         super(settings);
 
-        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(MODEL, 0));
+        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(MODEL, 0));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return super.getPlacementState(ctx).with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return super.getStateForPlacement(ctx).setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return createSignBlockEntity(pos, state);
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING, MODEL);
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, MODEL);
     }
 
     public static CustomSignBlockEntity createSignBlockEntity(BlockPos pos, BlockState state) {
         CustomSignBlockEntity entity = new CustomSignBlockEntity(BLOCK_ENTITY_TYPE, pos, state,
-                Text.translatable(ID.toTranslationKey("block")));
+                Component.translatable(ID.toLanguageKey("block")));
         return entity;
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
     public String getTexture(BlockState state, int texture) {
-        int modelVariant = state.get(MODEL);
+        int modelVariant = state.getValue(MODEL);
         return TEXTURE_PREFIXES[modelVariant] + TEXTURES[modelVariant][texture];
     }
 
     @Override
     public int getMaxVariant(BlockState state) {
-        return TEXTURES[state.get(MODEL)].length - 1;
+        return TEXTURES[state.getValue(MODEL)].length - 1;
     }
 
     @Override
     public int getMaxTextLines(BlockState state, int texture) {
-        return getMaxTextLines(state.get(MODEL), texture);
+        return getMaxTextLines(state.getValue(MODEL), texture);
     }
 
     private int getMaxTextLines(int model, int texture) {
@@ -172,7 +172,7 @@ public class StreetSignBlock extends CustomSignBlock {
 
     @Override
     public TextLineInfo[] getTextInfo(BlockState state, int texture) {
-        int modelVariant = state.get(MODEL);
+        int modelVariant = state.getValue(MODEL);
         if (modelVariant == 1) {
             if (texture == 0) {
                 return new TextLineInfo[] { new TextLineInfo(8, 12, 1.2f, 2.3f).maxWidth(10f) };
@@ -193,8 +193,8 @@ public class StreetSignBlock extends CustomSignBlock {
         } else if (modelVariant == 3) {
             if (texture == 0) {
                 return new TextLineInfo[] {
-                    new TextLineInfo(0, 8.3f, 11, 1.2f, 2.6f).color(Colors.WHITE).maxWidth(12f),
-                        new TextLineInfo(1, 8.3f, 5.5f, 1.2f, 1.75f).color(Colors.WHITE).maxWidth(6f)
+                    new TextLineInfo(0, 8.3f, 11, 1.2f, 2.6f).color(CommonColors.WHITE).maxWidth(12f),
+                        new TextLineInfo(1, 8.3f, 5.5f, 1.2f, 1.75f).color(CommonColors.WHITE).maxWidth(6f)
                     };
             }
         } else if (modelVariant == 4) {
@@ -232,29 +232,29 @@ public class StreetSignBlock extends CustomSignBlock {
         } else if (modelVariant == 9) {
             if (texture == 0) {
                 return new TextLineInfo[] {
-                        new TextLineInfo(0, 8, 3.75f, 8.6f, 1.2f).color(Colors.WHITE).maxWidth(16f),
-                        new TextLineInfo(0, 8, 3.75f, 8.6f, 1.2f).color(Colors.WHITE).rotation(180).maxWidth(16f),
-                        new TextLineInfo(1, 8, 8.75f, 8.6f, 1.2f).color(Colors.WHITE).rotation(90).maxWidth(16f),
-                        new TextLineInfo(1, 8, 8.75f, 8.6f, 1.2f).color(Colors.WHITE).rotation(270).maxWidth(16f)
+                        new TextLineInfo(0, 8, 3.75f, 8.6f, 1.2f).color(CommonColors.WHITE).maxWidth(16f),
+                        new TextLineInfo(0, 8, 3.75f, 8.6f, 1.2f).color(CommonColors.WHITE).rotation(180).maxWidth(16f),
+                        new TextLineInfo(1, 8, 8.75f, 8.6f, 1.2f).color(CommonColors.WHITE).rotation(90).maxWidth(16f),
+                        new TextLineInfo(1, 8, 8.75f, 8.6f, 1.2f).color(CommonColors.WHITE).rotation(270).maxWidth(16f)
                 };
             }
         } else if (modelVariant == 10) {
             if (texture == 0) {
-                return new TextLineInfo[] { new TextLineInfo(8, 10.5f, 1.2f, 2.5f).color(Colors.WHITE).maxWidth(33f) };
+                return new TextLineInfo[] { new TextLineInfo(8, 10.5f, 1.2f, 2.5f).color(CommonColors.WHITE).maxWidth(33f) };
             }
         } else if (modelVariant == 11) {
             if (texture == 0) {
                 return new TextLineInfo[] {
-                        new TextLineInfo(0, 8, 14.5f, 8.6f, 1.5f).color(Colors.WHITE).defaultText("KM").maxWidth(4.5f),
-                        new TextLineInfo(1, 8, 11.5f, 8.6f, 1.75f).color(Colors.WHITE).maxWidth(4.5f),
-                        new TextLineInfo(2, 8, 8f, 8.6f, 1.75f).color(Colors.WHITE).maxWidth(4.5f),
-                        new TextLineInfo(3, 8, 4.5f, 8.6f, 1.75f).color(Colors.WHITE).maxWidth(4.5f)
+                        new TextLineInfo(0, 8, 14.5f, 8.6f, 1.5f).color(CommonColors.WHITE).defaultText("KM").maxWidth(4.5f),
+                        new TextLineInfo(1, 8, 11.5f, 8.6f, 1.75f).color(CommonColors.WHITE).maxWidth(4.5f),
+                        new TextLineInfo(2, 8, 8f, 8.6f, 1.75f).color(CommonColors.WHITE).maxWidth(4.5f),
+                        new TextLineInfo(3, 8, 4.5f, 8.6f, 1.75f).color(CommonColors.WHITE).maxWidth(4.5f)
                 };
             } else if (texture == 1) {
                 return new TextLineInfo[] {
-                        new TextLineInfo(0, 8, 14.5f, 8.6f, 1.5f).color(Colors.WHITE).defaultText("KM").maxWidth(4.5f),
-                        new TextLineInfo(1, 8, 10.0f, 8.6f, 1.75f).color(Colors.WHITE).maxWidth(4.5f),
-                        new TextLineInfo(2, 8, 6.5f, 8.6f, 1.75f).color(Colors.WHITE).maxWidth(4.5f)
+                        new TextLineInfo(0, 8, 14.5f, 8.6f, 1.5f).color(CommonColors.WHITE).defaultText("KM").maxWidth(4.5f),
+                        new TextLineInfo(1, 8, 10.0f, 8.6f, 1.75f).color(CommonColors.WHITE).maxWidth(4.5f),
+                        new TextLineInfo(2, 8, 6.5f, 8.6f, 1.75f).color(CommonColors.WHITE).maxWidth(4.5f)
                 };
             }
         }
@@ -272,18 +272,18 @@ public class StreetSignBlock extends CustomSignBlock {
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos,
-            PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (stack.isOf(Items.VARIANT_SWITCHER_ITEM)) {
-            int model = state.get(MODEL) + 1;
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
+        if (stack.is(Items.VARIANT_SWITCHER_ITEM)) {
+            int model = state.getValue(MODEL) + 1;
             if (model >= TEXTURE_PREFIXES.length) {
                 model = 0;
             }
             ((CustomSignBlockEntity) world.getBlockEntity(pos)).setVariant(0);
-            world.setBlockState(pos, state.with(MODEL, model));
-            return ActionResult.CONSUME;
+            world.setBlockAndUpdate(pos, state.setValue(MODEL, model));
+            return InteractionResult.CONSUME;
         }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -292,10 +292,10 @@ public class StreetSignBlock extends CustomSignBlock {
     }
 
     protected VoxelShape getShape(BlockState state) {
-        int model = state.get(MODEL);
-        Direction facing = state.get(FACING);
+        int model = state.getValue(MODEL);
+        Direction facing = state.getValue(FACING);
         if (model == 9) {
-            return VoxelShapes.union(VariantPartialBlock.cube(-1, 0, 7.5, 18, 5, 1, facing),
+            return Shapes.or(VariantPartialBlock.cube(-1, 0, 7.5, 18, 5, 1, facing),
                     VariantPartialBlock.cube(7.5, 5, -1, 1, 5, 18, facing));
         } else if (model == 10) {
             return VariantPartialBlock.cube(-10, 3, 0, 36, 10, 1, facing);
@@ -307,49 +307,49 @@ public class StreetSignBlock extends CustomSignBlock {
 
     @Override
     public String[] getVariantNames(BlockState state) {
-        return TEXTURES[state.get(MODEL)];
+        return TEXTURES[state.getValue(MODEL)];
     }
 
     @Override
     public boolean isTextOnly(BlockState state, int texture) {
-        return TEXTURES[state.get(MODEL)][texture].length() == 0;
+        return TEXTURES[state.getValue(MODEL)][texture].length() == 0;
     }
 
     @Override
-    public NbtCompound getNbt(BlockState state, int texture) {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putInt("model", state.get(MODEL));
+    public CompoundTag getNbt(BlockState state, int texture) {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt("model", state.getValue(MODEL));
         return nbt;
     }
 
     @Override
-    public BlockState getBlockStateFromNbt(BlockState state, NbtCompound nbt) {
+    public BlockState getBlockStateFromNbt(BlockState state, CompoundTag nbt) {
         int model = nbt.getInt("model").get();
-        return state.with(MODEL, model);
+        return state.setValue(MODEL, model);
     }
 
     @Override
-    public void getTooltip(List<Text> tooltip, NbtCompound nbt, int texture) {
+    public void getTooltip(List<Component> tooltip, CompoundTag nbt, int texture) {
         int model = nbt.getInt("model").get();
-        tooltip.add(Text.of(MODEL_NAMES[model]));
+        tooltip.add(Component.nullToEmpty(MODEL_NAMES[model]));
         String textureName = TEXTURES[model][texture];
         if (textureName.length() > 0) {
-            tooltip.add(Text.of("- " + textureName));
+            tooltip.add(Component.nullToEmpty("- " + textureName));
         } else {
-            tooltip.add(Text.of(String.format("- Text Only (%d)", getMaxTextLines(model, texture))));
+            tooltip.add(Component.nullToEmpty(String.format("- Text Only (%d)", getMaxTextLines(model, texture))));
         }
     }
 
     @Override
-    public BlockState cycle(World world, BlockPos pos, BlockState state, boolean inverse) {
-        int model = IVariantBlock.cycleInt(state.get(MODEL), TEXTURE_PREFIXES.length-1, inverse);
+    public BlockState cycle(Level world, BlockPos pos, BlockState state, boolean inverse) {
+        int model = IVariantBlock.cycleInt(state.getValue(MODEL), TEXTURE_PREFIXES.length-1, inverse);
         ((CustomSignBlockEntity) world.getBlockEntity(pos)).setVariant(0);
-        return state.with(MODEL, model);
+        return state.setValue(MODEL, model);
     }
 
     @Override
     public int getVariant(BlockState state) {
-        return state.get(MODEL);
+        return state.getValue(MODEL);
     }
 
     @Override

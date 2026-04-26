@@ -6,29 +6,29 @@ import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
-public record PedestrianSignalUpdatePayload(RegistryKey<World> world, BlockPos pos, int headId, int state) implements CustomPayload {
+public record PedestrianSignalUpdatePayload(ResourceKey<Level> world, BlockPos pos, int headId, int state) implements CustomPacketPayload {
 
-    public static final CustomPayload.Id<PedestrianSignalUpdatePayload> ID = new CustomPayload.Id<>(
+    public static final CustomPacketPayload.Type<PedestrianSignalUpdatePayload> ID = new CustomPacketPayload.Type<>(
             CityBlocks.identifier("pedestrian_signal_update"));
-    public static final PacketCodec<RegistryByteBuf, PedestrianSignalUpdatePayload> CODEC = PacketCodec.tuple(
-            RegistryKey.createPacketCodec(RegistryKeys.WORLD), PedestrianSignalUpdatePayload::world,
-            BlockPos.PACKET_CODEC, PedestrianSignalUpdatePayload::pos,
-            PacketCodecs.INTEGER, PedestrianSignalUpdatePayload::headId,
-            PacketCodecs.INTEGER, PedestrianSignalUpdatePayload::state,
+    public static final StreamCodec<RegistryFriendlyByteBuf, PedestrianSignalUpdatePayload> CODEC = StreamCodec.composite(
+            ResourceKey.streamCodec(Registries.DIMENSION), PedestrianSignalUpdatePayload::world,
+            BlockPos.STREAM_CODEC, PedestrianSignalUpdatePayload::pos,
+            ByteBufCodecs.INT, PedestrianSignalUpdatePayload::headId,
+            ByteBufCodecs.INT, PedestrianSignalUpdatePayload::state,
             PedestrianSignalUpdatePayload::new
     );
 
     @Override
-    public Id<PedestrianSignalUpdatePayload> getId() {
+    public Type<PedestrianSignalUpdatePayload> type() {
         return ID;
     }
 
@@ -39,7 +39,7 @@ public record PedestrianSignalUpdatePayload(RegistryKey<World> world, BlockPos p
             context.server().execute(() -> {
                 CityBlocks.debug("Received Pedestrian Signal Update: {}", payload.toString());
                 PedestrianSignalBlockEntity entity = (PedestrianSignalBlockEntity) context.server()
-                        .getWorld(payload.world())
+                        .getLevel(payload.world())
                         .getBlockEntity(payload.pos());
                 if (payload.headId() > -1)
                     entity.setHeadId(payload.headId());
@@ -53,7 +53,7 @@ public record PedestrianSignalUpdatePayload(RegistryKey<World> world, BlockPos p
     @Override
     public final String toString() {
         return String.format(
-                "PedestrianSignalUpdatePayload{world=%s; pos=%s; headId=%d; state=%s}", world.getValue().toString(), pos.toString(),
+                "PedestrianSignalUpdatePayload{world=%s; pos=%s; headId=%d; state=%s}", world.location().toString(), pos.toString(),
                 headId, LampState.fromCode(state));
     }
 }

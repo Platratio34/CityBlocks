@@ -5,30 +5,30 @@ import com.peter.cityblocks.blocks.signs.CustomSignBlockEntity;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 
-public record CustomSignUpdatePayload(RegistryKey<World> world, BlockPos pos, int variant, boolean updateText, String text) implements CustomPayload {
+public record CustomSignUpdatePayload(ResourceKey<Level> world, BlockPos pos, int variant, boolean updateText, String text) implements CustomPacketPayload {
 
-    public static final CustomPayload.Id<CustomSignUpdatePayload> ID = new CustomPayload.Id<>(
+    public static final CustomPacketPayload.Type<CustomSignUpdatePayload> ID = new CustomPacketPayload.Type<>(
             CityBlocks.identifier("custom_sign_update"));
-    public static final PacketCodec<RegistryByteBuf, CustomSignUpdatePayload> CODEC = PacketCodec.tuple(
-            RegistryKey.createPacketCodec(RegistryKeys.WORLD), CustomSignUpdatePayload::world,
-            BlockPos.PACKET_CODEC, CustomSignUpdatePayload::pos,
-            PacketCodecs.INTEGER, CustomSignUpdatePayload::variant,
-            PacketCodecs.BOOLEAN, CustomSignUpdatePayload::updateText,
-            PacketCodecs.STRING, CustomSignUpdatePayload::text,
+    public static final StreamCodec<RegistryFriendlyByteBuf, CustomSignUpdatePayload> CODEC = StreamCodec.composite(
+            ResourceKey.streamCodec(Registries.DIMENSION), CustomSignUpdatePayload::world,
+            BlockPos.STREAM_CODEC, CustomSignUpdatePayload::pos,
+            ByteBufCodecs.INT, CustomSignUpdatePayload::variant,
+            ByteBufCodecs.BOOL, CustomSignUpdatePayload::updateText,
+            ByteBufCodecs.STRING_UTF8, CustomSignUpdatePayload::text,
             CustomSignUpdatePayload::new
     );
 
     @Override
-    public Id<CustomSignUpdatePayload> getId() {
+    public Type<CustomSignUpdatePayload> type() {
         return ID;
     }
     
@@ -37,7 +37,7 @@ public record CustomSignUpdatePayload(RegistryKey<World> world, BlockPos pos, in
         PayloadTypeRegistry.playC2S().register(CustomSignUpdatePayload.ID, CustomSignUpdatePayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(CustomSignUpdatePayload.ID, (payload, context) -> {
             context.server().execute(() -> {
-                CustomSignBlockEntity entity = (CustomSignBlockEntity) context.server().getWorld(payload.world())
+                CustomSignBlockEntity entity = (CustomSignBlockEntity) context.server().getLevel(payload.world())
                         .getBlockEntity(payload.pos());
                 if (payload.variant() > -1) {
                     entity.setVariant(payload.variant());

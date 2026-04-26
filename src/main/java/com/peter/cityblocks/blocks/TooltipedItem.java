@@ -1,13 +1,12 @@
 package com.peter.cityblocks.blocks;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.List;
-
-import net.minecraft.item.Item.TooltipContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 
 public interface TooltipedItem {
 
@@ -18,8 +17,8 @@ public interface TooltipedItem {
      * @param tooltipType Tooltip type
      * @param list Tooltip text
      */
-    public default void addTooltip(ItemStack itemStack, TooltipContext tooltipContext, TooltipType tooltipType,
-            List<Text> list) {
+    public default void addTooltip(ItemStack itemStack, TooltipContext tooltipContext, TooltipFlag tooltipType,
+            List<Component> list) {
 
     }
     
@@ -31,7 +30,7 @@ public interface TooltipedItem {
      * @param list Tooltip text
      * @param entityData Block entity data (if present) the item stores
      */
-    public default void addTooltipEntity(ItemStack itemStack, TooltipContext tooltipContext, TooltipType tooltipType, List<Text> list, NbtCompound entityData) {
+    public default void addTooltipEntity(ItemStack itemStack, TooltipContext tooltipContext, TooltipFlag tooltipType, List<Component> list, CompoundTag entityData) {
 
     }
 }

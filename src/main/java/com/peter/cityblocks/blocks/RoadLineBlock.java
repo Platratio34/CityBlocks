@@ -1,11 +1,9 @@
 package com.peter.cityblocks.blocks;
 
 import java.util.HashMap;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.MapColor;
 import com.peter.cityblocks.CityBlocks;
-
-import net.minecraft.block.MapColor;
-import net.minecraft.util.Identifier;
 
 public class RoadLineBlock extends VariantBlock {
 
@@ -14,11 +12,11 @@ public class RoadLineBlock extends VariantBlock {
     public final RoadLineModel[] models;
 
     public final RoadType roadType;
-    public final Identifier color;
+    public final ResourceLocation color;
     public final String itemModelId;
 
-    public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType, Identifier lineColor) {
-        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name, getModelVariants(models, roadType));
+    public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType, ResourceLocation lineColor) {
+        super(new VariantSettings().setVariants(models.length).mapColor(color).forceSolidOn(), name, getModelVariants(models, roadType));
         this.models = models;
         this.roadType = roadType;
         this.color = lineColor;
@@ -26,8 +24,8 @@ public class RoadLineBlock extends VariantBlock {
         itemModelId = name;
     }
 
-    public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType, Identifier lineColor, String itemModelID) {
-        super(new VariantSettings().setVariants(models.length).mapColor(color).solid(), name, getModelVariants(models, roadType));
+    public RoadLineBlock(String name, MapColor color, RoadLineModel[] models, RoadType roadType, ResourceLocation lineColor, String itemModelID) {
+        super(new VariantSettings().setVariants(models.length).mapColor(color).forceSolidOn(), name, getModelVariants(models, roadType));
         this.models = models;
         this.roadType = roadType;
         this.color = lineColor;
@@ -35,8 +33,8 @@ public class RoadLineBlock extends VariantBlock {
         this.itemModelId = itemModelID;
     }
 
-    private static Identifier[] getModelVariants(RoadLineModel[] models, RoadType roadType) {
-        Identifier[] arr = new Identifier[models.length];
+    private static ResourceLocation[] getModelVariants(RoadLineModel[] models, RoadType roadType) {
+        ResourceLocation[] arr = new ResourceLocation[models.length];
         for (int i = 0; i < models.length; i++) {
             arr[i] = CityBlocks.identifier(models[i].model().replace("{}", roadType.extension));
         }
@@ -47,8 +45,8 @@ public class RoadLineBlock extends VariantBlock {
 
     }
 
-    public static final Identifier COLOR_WHITE = Identifier.of("minecraft", "block/calcite");
-    public static final Identifier COLOR_YELLOW = Identifier.of("minecraft", "block/yellow_terracotta");
+    public static final ResourceLocation COLOR_WHITE = ResourceLocation.fromNamespaceAndPath("minecraft", "block/calcite");
+    public static final ResourceLocation COLOR_YELLOW = ResourceLocation.fromNamespaceAndPath("minecraft", "block/yellow_terracotta");
     public static final RoadLineModel[] WHITE_CENTER = new RoadLineModel[] {
         new RoadLineModel("road_line_white_center{}", "road_line_center"),
         new RoadLineModel("road_line_white_center{}_reflector", "road_line_center_reflector")

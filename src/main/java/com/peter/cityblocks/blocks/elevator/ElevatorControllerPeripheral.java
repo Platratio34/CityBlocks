@@ -3,12 +3,11 @@ package com.peter.cityblocks.blocks.elevator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
-
+import net.minecraft.server.level.ServerPlayer;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.AttachedComputerSet;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ElevatorControllerPeripheral implements IPeripheral {
 
@@ -43,7 +42,7 @@ public class ElevatorControllerPeripheral implements IPeripheral {
         return false;
     }
 
-    public boolean canAccess(ServerPlayerEntity player, int fromIndex, int toIndex) {
+    public boolean canAccess(ServerPlayer player, int fromIndex, int toIndex) {
         if (!accessControl)
             return true;
         else if (allowedSrc.contains(fromIndex))

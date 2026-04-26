@@ -15,46 +15,47 @@ import com.peter.cityblocks.gui.CityBlocksScreens;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
-import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.CustomData;
 
 public class CityBlocksClient implements ClientModInitializer {
 	@Override
     public void onInitializeClient() {
-        BlockRenderLayerMap.putBlock(Blocks.SIGN_POST_BLOCK, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(Blocks.SIGN_POST_BLOCK, ChunkSectionLayer.CUTOUT);
 
-        BlockRenderLayerMap.putBlock(Blocks.STREET_SIGN_BLOCK, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(Blocks.STREET_SIGN_BLOCK, ChunkSectionLayer.CUTOUT);
 
         for (RoadLineBlock block : RoadLineBlock.ROAD_LINE_BLOCKS.values()) {
-            BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT);
+            BlockRenderLayerMap.putBlock(block, ChunkSectionLayer.CUTOUT);
         }
 
-        BlockRenderLayerMap.putBlock(Blocks.SLIDING_DOOR_BLOCK, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(Blocks.SLIDING_DOOR_BLOCK, ChunkSectionLayer.CUTOUT);
 
-        BlockEntityRendererFactories.register(SignalHeadBlockEntity.BLOCK_ENTITY_TYPE,
+        BlockEntityRenderers.register(SignalHeadBlockEntity.BLOCK_ENTITY_TYPE,
                 SignalHeadBlockEntityRenderer::new);
 
-        BlockEntityRendererFactories.register(PedestrianSignalBlockEntity.BLOCK_ENTITY_TYPE,
+        BlockEntityRenderers.register(PedestrianSignalBlockEntity.BLOCK_ENTITY_TYPE,
                 PedestrianSignalBlockEntityRenderer::new);
 
-        BlockEntityRendererFactories.register(StreetSignBlock.BLOCK_ENTITY_TYPE,
+        BlockEntityRenderers.register(StreetSignBlock.BLOCK_ENTITY_TYPE,
                 CustomSignBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(BuildingSignBlock.BLOCK_ENTITY_TYPE,
+        BlockEntityRenderers.register(BuildingSignBlock.BLOCK_ENTITY_TYPE,
                 CustomSignBlockEntityRenderer::new);
         
         CityBlocksScreens.register();
 
         ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, tooltipType, list) -> {
             Item i = itemStack.getItem();
-            NbtComponent comp = itemStack.getComponents().get(DataComponentTypes.BLOCK_ENTITY_DATA);
-            NbtCompound entityData = (comp != null) ? comp.copyNbt() : null;
+            CustomData comp = itemStack.getComponents().get(DataComponents.BLOCK_ENTITY_DATA);
+            CompoundTag entityData = (comp != null) ? comp.copyTag() : null;
             if (i instanceof TooltipedItem item) {
                 item.addTooltip(itemStack, tooltipContext, tooltipType, list);
                 if(entityData != null)
@@ -71,7 +72,7 @@ public class CityBlocksClient implements ClientModInitializer {
         CityBlocks.LOGGER.info("City Blocks Client initialized");
     }
     
-    public static SpriteIdentifier blockTexture(String texture) {
-        return new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, CityBlocks.identifier("block/" + texture));
+    public static Material blockTexture(String texture) {
+        return new Material(TextureAtlas.LOCATION_BLOCKS, CityBlocks.identifier("block/" + texture));
     }
 }

@@ -8,33 +8,33 @@ import com.peter.cityblocks.gui.SignalHeadScreenHandler;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class PedestrianSignalBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPosScreenPacket> {
 
     public static final String NAME = "pedestrian_signal_entity";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<PedestrianSignalBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(PedestrianSignalBlockEntity::new, PedestrianSignalBlock.BLOCK).build());
 
     public static final int OFF_STATE = 0;
@@ -57,49 +57,49 @@ public class PedestrianSignalBlockEntity extends BlockEntity implements Extended
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         
         view.putInt(NBT_STATE, state);
         view.putInt(NBT_HEAD_ID, headId);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
 
-        Optional<Integer> optState = view.getOptionalInt(NBT_STATE);
+        Optional<Integer> optState = view.getInt(NBT_STATE);
         if (optState.isPresent()) {
             state = optState.get();
         }
-        Optional<Integer> optId = view.getOptionalInt(NBT_HEAD_ID);
+        Optional<Integer> optId = view.getInt(NBT_HEAD_ID);
         if (optId.isPresent()) {
             headId = optId.get();
         }
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void markDirty() {
-        world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
-        super.markDirty();
+    public void setChanged() {
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        super.setChanged();
     }
 
     public void setState(int state) {
-        if (world.isClient) {
+        if (level.isClientSide) {
             return;
         }
         this.state = state;
-        markDirty();
+        setChanged();
     }
 
     public int getState() {
@@ -107,11 +107,11 @@ public class PedestrianSignalBlockEntity extends BlockEntity implements Extended
     }
 
     public void setHeadId(int id) {
-        if (world.isClient) {
+        if (level.isClientSide) {
             return;
         }
         headId = id;
-        markDirty();
+        setChanged();
     }
 
     public int getHeadId() {
@@ -119,17 +119,17 @@ public class PedestrianSignalBlockEntity extends BlockEntity implements Extended
     }
 
     @Override
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         return CityBlocks.translatableText("block", PedestrianSignalBlock.NAME);
     }
 
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new SignalHeadScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayerEntity)player));
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+        return new SignalHeadScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayer)player));
     }
 
     @Override
-    public BlockPosScreenPacket getScreenOpeningData(ServerPlayerEntity player) {
-        return new BlockPosScreenPacket(pos);
+    public BlockPosScreenPacket getScreenOpeningData(ServerPlayer player) {
+        return new BlockPosScreenPacket(worldPosition);
     }
 }

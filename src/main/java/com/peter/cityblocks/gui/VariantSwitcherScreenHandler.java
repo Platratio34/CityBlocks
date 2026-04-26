@@ -4,28 +4,28 @@ import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.networking.VariantSwitcherScreenPacket;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public class VariantSwitcherScreenHandler extends ScreenHandler {
+public class VariantSwitcherScreenHandler extends AbstractContainerMenu {
 
-    public static final ScreenHandlerType<VariantSwitcherScreenHandler> TYPE = Registry.register(Registries.SCREEN_HANDLER,
+    public static final MenuType<VariantSwitcherScreenHandler> TYPE = Registry.register(BuiltInRegistries.MENU,
             CityBlocks.identifier("variant_switcher"),
             new ExtendedScreenHandlerType<VariantSwitcherScreenHandler, VariantSwitcherScreenPacket>(VariantSwitcherScreenHandler::new, VariantSwitcherScreenPacket.PACKET_CODEC));
 
-    public final RegistryKey<World> world;
+    public final ResourceKey<Level> world;
     public final BlockPos blockPos;
     public final int cState;
 
-    public VariantSwitcherScreenHandler(int syncId, PlayerInventory inventory, VariantSwitcherScreenPacket packet) {
+    public VariantSwitcherScreenHandler(int syncId, Inventory inventory, VariantSwitcherScreenPacket packet) {
         super(TYPE, syncId);
         world = packet.world();
         blockPos = packet.pos();
@@ -33,12 +33,12 @@ public class VariantSwitcherScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot) {
+    public ItemStack quickMoveStack(Player player, int slot) {
         return ItemStack.EMPTY;
     }
 

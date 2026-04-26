@@ -1,12 +1,12 @@
 package com.peter.cityblocks.blocks;
 
-import net.minecraft.block.AbstractBlock.Settings;
-import net.minecraft.state.property.IntProperty;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
-public class VariantSettings extends Settings {
+public class VariantSettings extends Properties {
 
     public int variants;
-    public IntProperty variantProperty;
+    public IntegerProperty variantProperty;
 
     public VariantSettings() {
         super();
@@ -19,7 +19,7 @@ public class VariantSettings extends Settings {
 
     public VariantSettings setVariants(int variants) {
         this.variants = variants;
-        this.variantProperty = IntProperty.of("variant", 0, variants - 1);
+        this.variantProperty = IntegerProperty.create("variant", 0, variants - 1);
         return this;
     }
 }

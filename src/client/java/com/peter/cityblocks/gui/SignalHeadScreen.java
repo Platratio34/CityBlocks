@@ -5,36 +5,35 @@ import com.peter.cityblocks.blocks.signal.LampColor;
 import com.peter.cityblocks.blocks.signal.LampState;
 import com.peter.cityblocks.blocks.signal.PedestrianSignalBlockEntity;
 import com.peter.cityblocks.networking.CityBlocksClientNetworking;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.world.entity.player.Inventory;
 
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
-
-public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
-    private static final Identifier TEXTURE = CityBlocks.identifier("textures/gui/signal_head_gui.png");
+public class SignalHeadScreen extends AbstractContainerScreen<SignalHeadScreenHandler> {
+    private static final ResourceLocation TEXTURE = CityBlocks.identifier("textures/gui/signal_head_gui.png");
 
     private final SignalHeadScreenHandler handler;
 
     protected CustomTextInput idInput = null;
 
-    public SignalHeadScreen(SignalHeadScreenHandler handler, PlayerInventory inventory, Text title) {
+    public SignalHeadScreen(SignalHeadScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         this.handler = handler;
         // addSelectableChild(idInput);
-        titleY -= 20;
+        titleLabelY -= 20;
     }
 
     @Override
     protected void init() {
         super.init();
-        playerInventoryTitleY = 2000;
+        inventoryLabelY = 2000;
         CityBlocks.debug("Creating signal head screen");
         if (idInput == null) {
-            idInput = addDrawableChild(new CustomTextInput(x + 146, y + 19, 3, true));
+            idInput = addRenderableWidget(new CustomTextInput(leftPos + 146, topPos + 19, 3, true));
             idInput.setMaxNum(63);
         }
         if(handler.headEntity != null)
@@ -44,15 +43,15 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
         // TODO put this back?
         // RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         // RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         // RenderSystem.setShaderTexture(0, TEXTURE);
 
-        context.drawTexture(RenderPipelines.BLOCK_SCREEN_EFFECT, TEXTURE, x, y, 0, 0, 150, 150, 150, 150);
+        context.blit(RenderPipelines.BLOCK_SCREEN_EFFECT, TEXTURE, leftPos, topPos, 0, 0, 150, 150, 150, 150);
 
-        context.drawText(textRenderer, "ID: ", x + 130, y + 20, Colors.RED, true);
+        context.drawString(font, "ID: ", leftPos + 130, topPos + 20, CommonColors.RED, true);
         
 
         if (handler.headEntity != null) {
@@ -64,61 +63,61 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
             if(numLamps >= 3)
                 drawLampData(context, 2, 61, 115);
             
-            context.drawText(textRenderer, numLamps+"", x + 20, y + 20, Colors.WHITE, true);
+            context.drawString(font, numLamps+"", leftPos + 20, topPos + 20, CommonColors.WHITE, true);
         }
         if (handler.pedestrianEntity != null) {
             int state = handler.pedestrianEntity.getState();
             String text = "";
-            int color = Colors.WHITE;
+            int color = CommonColors.WHITE;
             switch (state) {
                 case PedestrianSignalBlockEntity.OFF_STATE:
                     text = "off";
-                    color = Colors.WHITE;
+                    color = CommonColors.WHITE;
                     break;
                 case PedestrianSignalBlockEntity.STOP_STATE:
                     text = "stop";
-                    color = Colors.RED;
+                    color = CommonColors.RED;
                     break;
                 case PedestrianSignalBlockEntity.FLASH_STATE:
                     text = "flash";
-                    color = Colors.YELLOW;
+                    color = CommonColors.YELLOW;
                     break;
                 case PedestrianSignalBlockEntity.WALK_STATE:
                     text = "walk";
-                    color = Colors.GREEN;
+                    color = CommonColors.GREEN;
                     break;
 
                 default:
                     break;
             }
-            context.drawText(textRenderer, text, x + 61, y + 25, color, true);
+            context.drawString(font, text, leftPos + 61, topPos + 25, color, true);
         }
     }
 
-    private void drawLampData(DrawContext context, int lamp, int lX, int lY) {
+    private void drawLampData(GuiGraphics context, int lamp, int lX, int lY) {
         LampColor lampColor = handler.headEntity.getColor(lamp);
         LampState lampState = handler.headEntity.getState(lamp);
-        int color = Colors.RED;
+        int color = CommonColors.RED;
         switch (lampColor) {
             case LampColor.AMBER:
-                color = Colors.YELLOW;
+                color = CommonColors.YELLOW;
                 break;
             case LampColor.GREEN:
-                color = Colors.GREEN;
+                color = CommonColors.GREEN;
                 break;
 
             default:
                 break;
         }
-        context.drawText(textRenderer, lampState.name, x + lX, y + lY, color, true);
-        context.drawText(textRenderer, lampColor.name(), x + lX, y + lY + 12, color, true);
+        context.drawString(font, lampState.name, leftPos + lX, topPos + lY, color, true);
+        context.drawString(font, lampColor.name(), leftPos + lX, topPos + lY + 12, color, true);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
-        drawMouseoverTooltip(context, mouseX, mouseY);
+        renderTooltip(context, mouseX, mouseY);
     }
 
     @Override
@@ -151,8 +150,8 @@ public class SignalHeadScreen extends HandledScreen<SignalHeadScreenHandler> {
             return true;
         }
 
-        mouseX -= x;
-        mouseY -= y;
+        mouseX -= leftPos;
+        mouseY -= topPos;
         // System.out.println(String.format("Click: %f,%f", mouseX, mouseY));
 
         if (mouseX > 60 && mouseX < 90 && handler.headEntity != null) {

@@ -5,29 +5,29 @@ import com.peter.cityblocks.blocks.VariantBlock;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-public record VariantSwitcherScreenPacket(RegistryKey<World> world, BlockPos pos, int currentState) implements CustomPayload {
+public record VariantSwitcherScreenPacket(ResourceKey<Level> world, BlockPos pos, int currentState) implements CustomPacketPayload {
 
-    public static final CustomPayload.Id<VariantSwitcherScreenPacket> ID = new CustomPayload.Id<>(CityBlocks.identifier("variant_switcher_screen"));
+    public static final CustomPacketPayload.Type<VariantSwitcherScreenPacket> ID = new CustomPacketPayload.Type<>(CityBlocks.identifier("variant_switcher_screen"));
 
-    public static final PacketCodec<RegistryByteBuf, VariantSwitcherScreenPacket> PACKET_CODEC = PacketCodec.tuple(
-            RegistryKey.createPacketCodec(RegistryKeys.WORLD), VariantSwitcherScreenPacket::world,
-            BlockPos.PACKET_CODEC, VariantSwitcherScreenPacket::pos,
-            PacketCodecs.INTEGER, VariantSwitcherScreenPacket::currentState,
+    public static final StreamCodec<RegistryFriendlyByteBuf, VariantSwitcherScreenPacket> PACKET_CODEC = StreamCodec.composite(
+            ResourceKey.streamCodec(Registries.DIMENSION), VariantSwitcherScreenPacket::world,
+            BlockPos.STREAM_CODEC, VariantSwitcherScreenPacket::pos,
+            ByteBufCodecs.INT, VariantSwitcherScreenPacket::currentState,
         VariantSwitcherScreenPacket::new
     );
 
     @Override
-    public Id<VariantSwitcherScreenPacket> getId() {
+    public Type<VariantSwitcherScreenPacket> type() {
         return ID;
     }
 
@@ -37,11 +37,11 @@ public record VariantSwitcherScreenPacket(RegistryKey<World> world, BlockPos pos
         PayloadTypeRegistry.playC2S().register(VariantSwitcherScreenPacket.ID, VariantSwitcherScreenPacket.PACKET_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(VariantSwitcherScreenPacket.ID, (payload, context) -> {
             context.server().execute(() -> {
-                World world = context.server().getWorld(payload.world());
+                Level world = context.server().getLevel(payload.world());
                 BlockState state = world.getBlockState(payload.pos);
                 VariantBlock vBlock = (VariantBlock)state.getBlock();
                 if (vBlock != null) {
-                    world.setBlockState(payload.pos, state.with(vBlock.variant, payload.currentState));
+                    world.setBlockAndUpdate(payload.pos, state.setValue(vBlock.variant, payload.currentState));
                 }
             });
         });

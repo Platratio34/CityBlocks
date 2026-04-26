@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.mojang.math.Quadrant;
 import com.peter.cityblocks.CityBlocks;
 import com.peter.cityblocks.blocks.Blocks;
 import com.peter.cityblocks.blocks.LargePostBlock;
@@ -24,19 +24,19 @@ import com.peter.cityblocks.items.Keycard;
 
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.block.Block;
-import net.minecraft.client.data.BlockStateModelGenerator;
-import net.minecraft.client.data.BlockStateVariantMap;
-import net.minecraft.client.data.ItemModelGenerator;
-import net.minecraft.client.data.Model;
-import net.minecraft.client.data.Models;
-import net.minecraft.client.data.TextureKey;
-import net.minecraft.client.data.TextureMap;
-import net.minecraft.client.data.VariantsBlockModelDefinitionCreator;
-import net.minecraft.client.render.model.json.ModelVariantOperator;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 public class ItemModelProvider extends FabricModelProvider {
 
@@ -46,60 +46,60 @@ public class ItemModelProvider extends FabricModelProvider {
         super(output);
     }
 
-    private Identifier blockTextureId(String id) {
+    private ResourceLocation blockTextureId(String id) {
         return CityBlocks.identifier("block/" + id);
     }
 
-    private static final Identifier ROAD_LINE_BASE_MODEL = CityBlocks.identifier("block/road_line");
-    private static final Identifier ROAD_LINE_BASE_EAST_MODEL = CityBlocks.identifier("block/road_line_east");
-    private static final Identifier ROAD_LINE_BASE_SOUTH_MODEL = CityBlocks.identifier("block/road_line_south");
-    private static final Identifier ROAD_LINE_BASE_WEST_MODEL = CityBlocks.identifier("block/road_line_west");
-    private static final TextureKey OVERLAY_TEXTURE_KEY = TextureKey.of("overlay");
-    private static final TextureKey TOP_TEXTURE_KEY = TextureKey.of("top");
-    private static final TextureKey BASE_TEXTURE_KEY = TextureKey.of("base");
-    private static final TextureKey LINE_TEXTURE_KEY = TextureKey.of("line");
+    private static final ResourceLocation ROAD_LINE_BASE_MODEL = CityBlocks.identifier("block/road_line");
+    private static final ResourceLocation ROAD_LINE_BASE_EAST_MODEL = CityBlocks.identifier("block/road_line_east");
+    private static final ResourceLocation ROAD_LINE_BASE_SOUTH_MODEL = CityBlocks.identifier("block/road_line_south");
+    private static final ResourceLocation ROAD_LINE_BASE_WEST_MODEL = CityBlocks.identifier("block/road_line_west");
+    private static final TextureSlot OVERLAY_TEXTURE_KEY = TextureSlot.create("overlay");
+    private static final TextureSlot TOP_TEXTURE_KEY = TextureSlot.create("top");
+    private static final TextureSlot BASE_TEXTURE_KEY = TextureSlot.create("base");
+    private static final TextureSlot LINE_TEXTURE_KEY = TextureSlot.create("line");
 
-    private static Identifier blockModelId(VariantBlock block) {
+    private static ResourceLocation blockModelId(VariantBlock block) {
         return CityBlocks.identifier("block/" + block.name);
     }
 
-    private static Identifier blockModelId(VariantBlock block, String variant, boolean dash) {
+    private static ResourceLocation blockModelId(VariantBlock block, String variant, boolean dash) {
         return CityBlocks.identifier("block/" + block.name + (dash ? "_"+ variant : variant) );
     }
 
-    private static Identifier blockModelId(String name) {
+    private static ResourceLocation blockModelId(String name) {
         return CityBlocks.identifier("block/" + name);
     }
 
-    private void registerBlockItemModel(BlockStateModelGenerator blockStateModelGenerator, VariantBlock block) {
-        blockStateModelGenerator.registerParentedItemModel(block, blockModelId(block));
+    private void registerBlockItemModel(BlockModelGenerators blockStateModelGenerator, VariantBlock block) {
+        blockStateModelGenerator.registerSimpleItemModel(block, blockModelId(block));
     }
 
-    private void registerBlockItemModelV(BlockStateModelGenerator blockStateModelGenerator, VariantBlock block, String variant) {
+    private void registerBlockItemModelV(BlockModelGenerators blockStateModelGenerator, VariantBlock block, String variant) {
         registerBlockItemModelV(blockStateModelGenerator, block, variant, true);
     }
 
-    private void registerBlockItemModelV(BlockStateModelGenerator blockStateModelGenerator, VariantBlock block, String variant, boolean dash) {
-        blockStateModelGenerator.registerParentedItemModel(block, blockModelId(block, variant, dash));
+    private void registerBlockItemModelV(BlockModelGenerators blockStateModelGenerator, VariantBlock block, String variant, boolean dash) {
+        blockStateModelGenerator.registerSimpleItemModel(block, blockModelId(block, variant, dash));
     }
 
-    private void registerBlockItemModel(BlockStateModelGenerator blockStateModelGenerator, Block block, String name) {
-        blockStateModelGenerator.registerParentedItemModel(block, blockModelId(name));
+    private void registerBlockItemModel(BlockModelGenerators blockStateModelGenerator, Block block, String name) {
+        blockStateModelGenerator.registerSimpleItemModel(block, blockModelId(name));
     }
 
-    private Identifier roadBlockModelId(String name, RoadType roadType) {
+    private ResourceLocation roadBlockModelId(String name, RoadType roadType) {
         return CityBlocks.identifier("block/" + name.replace("{}", roadType.extension));
     }
 
-    private static final Model ROAD_LINE_MODEL = new Model(Optional.of(ROAD_LINE_BASE_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
-    private static final Model ROAD_LINE_EAST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_EAST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
-    private static final Model ROAD_LINE_SOUTH_MODEL = new Model(Optional.of(ROAD_LINE_BASE_SOUTH_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
-    private static final Model ROAD_LINE_WEST_MODEL = new Model(Optional.of(ROAD_LINE_BASE_WEST_MODEL),
+    private static final ModelTemplate ROAD_LINE_MODEL = new ModelTemplate(Optional.of(ROAD_LINE_BASE_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final ModelTemplate ROAD_LINE_EAST_MODEL = new ModelTemplate(Optional.of(ROAD_LINE_BASE_EAST_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final ModelTemplate ROAD_LINE_SOUTH_MODEL = new ModelTemplate(Optional.of(ROAD_LINE_BASE_SOUTH_MODEL), Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final ModelTemplate ROAD_LINE_WEST_MODEL = new ModelTemplate(Optional.of(ROAD_LINE_BASE_WEST_MODEL),
             Optional.empty(), OVERLAY_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
-    private static final HashMap<String, Model> ROAD_LINE_MODELS = new HashMap<>();
+    private static final HashMap<String, ModelTemplate> ROAD_LINE_MODELS = new HashMap<>();
 
-    private static final Model createRoadLineModel(Identifier id) {
-        return new Model(Optional.of(id), Optional.empty(), LINE_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
+    private static final ModelTemplate createRoadLineModel(ResourceLocation id) {
+        return new ModelTemplate(Optional.of(id), Optional.empty(), LINE_TEXTURE_KEY, TOP_TEXTURE_KEY, BASE_TEXTURE_KEY);
     }
     static {
         ROAD_LINE_MODELS.put("road_line_side", createRoadLineModel(blockModelId("road_line_side")));
@@ -121,9 +121,9 @@ public class ItemModelProvider extends FabricModelProvider {
         ROAD_LINE_MODELS.put("road_line_side_merge_cornerf", createRoadLineModel(blockModelId("road_line_merge_cornerf")));
         ROAD_LINE_MODELS.put("road_line_side_merge_double", createRoadLineModel(blockModelId("road_line_merge_double")));
     }
-    private void registerRoadLineBlockSubModel(BlockStateModelGenerator generator, String id, String overlay,
-            RoadType roadType, Identifier color) {
-        TextureMap map = new TextureMap();
+    private void registerRoadLineBlockSubModel(BlockModelGenerators generator, String id, String overlay,
+            RoadType roadType, ResourceLocation color) {
+        TextureMapping map = new TextureMapping();
         map.put(TOP_TEXTURE_KEY, roadType.topTexture);
         map.put(BASE_TEXTURE_KEY, roadType.baseTexture);
 
@@ -133,63 +133,62 @@ public class ItemModelProvider extends FabricModelProvider {
         // ROAD_LINE_WEST_MODEL.upload(roadBlockModelId(id+"_west", roadType), map, generator.modelCollector);
         if (ROAD_LINE_MODELS.containsKey(overlay)) {
             map.put(LINE_TEXTURE_KEY, color);
-            ROAD_LINE_MODELS.get(overlay).upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
+            ROAD_LINE_MODELS.get(overlay).create(roadBlockModelId(id, roadType), map, generator.modelOutput);
         } else {
             map.put(OVERLAY_TEXTURE_KEY, blockTextureId(overlay));
-            ROAD_LINE_MODEL.upload(roadBlockModelId(id, roadType), map, generator.modelCollector);
-            ROAD_LINE_EAST_MODEL.upload(roadBlockModelId(id+"_east", roadType), map, generator.modelCollector);
-            ROAD_LINE_SOUTH_MODEL.upload(roadBlockModelId(id+"_south", roadType), map, generator.modelCollector);
-            ROAD_LINE_WEST_MODEL.upload(roadBlockModelId(id+"_west", roadType), map, generator.modelCollector);
+            ROAD_LINE_MODEL.create(roadBlockModelId(id, roadType), map, generator.modelOutput);
+            ROAD_LINE_EAST_MODEL.create(roadBlockModelId(id+"_east", roadType), map, generator.modelOutput);
+            ROAD_LINE_SOUTH_MODEL.create(roadBlockModelId(id+"_south", roadType), map, generator.modelOutput);
+            ROAD_LINE_WEST_MODEL.create(roadBlockModelId(id+"_west", roadType), map, generator.modelOutput);
         }
     }
     
-    private void registerRoadLineBlock(BlockStateModelGenerator generator, RoadLineBlock block) {
-        var map = BlockStateVariantMap.models(RoadLineBlock.FACING, block.variant);
+    private void registerRoadLineBlock(BlockModelGenerators generator, RoadLineBlock block) {
+        var map = PropertyDispatch.initial(RoadLineBlock.FACING, block.variant);
         for (int i = 0; i < block.models.length; i++) {
             RoadLineModel model = block.models[i];
             boolean isTextured = !ROAD_LINE_MODELS.containsKey(model.overlay());
-            map.register(Direction.NORTH, i,
-                    BlockStateModelGenerator.createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
-                            .apply(ModelVariantOperator.UV_LOCK.withValue(true)));
+            map.select(Direction.NORTH, i,
+                    BlockModelGenerators.plainVariant(roadBlockModelId(model.model(), block.roadType)).with(VariantMutator.UV_LOCK.withValue(true)));
             if (isTextured) {
-                map.register(Direction.EAST, i, BlockStateModelGenerator
-                        .createWeightedVariant(roadBlockModelId(model.model() + "_east", block.roadType)));
-                map.register(Direction.SOUTH, i, BlockStateModelGenerator
-                        .createWeightedVariant(roadBlockModelId(model.model() + "_south", block.roadType)));
-                map.register(Direction.WEST, i, BlockStateModelGenerator
-                        .createWeightedVariant(roadBlockModelId(model.model() + "_west", block.roadType)));
+                map.select(Direction.EAST, i, BlockModelGenerators
+                        .plainVariant(roadBlockModelId(model.model() + "_east", block.roadType)));
+                map.select(Direction.SOUTH, i, BlockModelGenerators
+                        .plainVariant(roadBlockModelId(model.model() + "_south", block.roadType)));
+                map.select(Direction.WEST, i, BlockModelGenerators
+                        .plainVariant(roadBlockModelId(model.model() + "_west", block.roadType)));
             } else  {
-                map.register(Direction.EAST, i, BlockStateModelGenerator
-                        .createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
-                        .apply(ModelVariantOperator.UV_LOCK.withValue(true))
-                        .apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)));
-                map.register(Direction.SOUTH, i, BlockStateModelGenerator
-                        .createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
-                        .apply(ModelVariantOperator.UV_LOCK.withValue(true))
-                        .apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R180)));
-                map.register(Direction.WEST, i, BlockStateModelGenerator
-                        .createWeightedVariant(roadBlockModelId(model.model(), block.roadType))
-                        .apply(ModelVariantOperator.UV_LOCK.withValue(true))
-                        .apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R270)));
+                map.select(Direction.EAST, i, BlockModelGenerators
+                        .plainVariant(roadBlockModelId(model.model(), block.roadType))
+                        .with(VariantMutator.UV_LOCK.withValue(true))
+                        .with(VariantMutator.Y_ROT.withValue(Quadrant.R90)));
+                map.select(Direction.SOUTH, i, BlockModelGenerators
+                        .plainVariant(roadBlockModelId(model.model(), block.roadType))
+                        .with(VariantMutator.UV_LOCK.withValue(true))
+                        .with(VariantMutator.Y_ROT.withValue(Quadrant.R180)));
+                map.select(Direction.WEST, i, BlockModelGenerators
+                        .plainVariant(roadBlockModelId(model.model(), block.roadType))
+                        .with(VariantMutator.UV_LOCK.withValue(true))
+                        .with(VariantMutator.Y_ROT.withValue(Quadrant.R270)));
             }
             registerRoadLineBlockSubModel(generator, model.model(), model.overlay(), block.roadType, block.color);
         }
-        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
+        generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(map));
     }
 
-    private void registerVariantBlockStates(BlockStateModelGenerator generator, VariantBlock block) {
-        var map = BlockStateVariantMap.models(VariantBlock.FACING, block.variant);
+    private void registerVariantBlockStates(BlockModelGenerators generator, VariantBlock block) {
+        var map = PropertyDispatch.initial(VariantBlock.FACING, block.variant);
         for (int v = 0; v < block.variants; v++) {
-            map.register(Direction.NORTH, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.NORTH)));
-            map.register(Direction.EAST, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.EAST)).apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R90)));
-            map.register(Direction.SOUTH, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.SOUTH)).apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R180)));
-            map.register(Direction.WEST, v, BlockStateModelGenerator.createWeightedVariant(block.modelVariant(v, Direction.WEST)).apply(ModelVariantOperator.ROTATION_Y.withValue(AxisRotation.R270)));
+            map.select(Direction.NORTH, v, BlockModelGenerators.plainVariant(block.modelVariant(v, Direction.NORTH)));
+            map.select(Direction.EAST, v, BlockModelGenerators.plainVariant(block.modelVariant(v, Direction.EAST)).with(VariantMutator.Y_ROT.withValue(Quadrant.R90)));
+            map.select(Direction.SOUTH, v, BlockModelGenerators.plainVariant(block.modelVariant(v, Direction.SOUTH)).with(VariantMutator.Y_ROT.withValue(Quadrant.R180)));
+            map.select(Direction.WEST, v, BlockModelGenerators.plainVariant(block.modelVariant(v, Direction.WEST)).with(VariantMutator.Y_ROT.withValue(Quadrant.R270)));
         }
-        generator.blockStateCollector.accept(VariantsBlockModelDefinitionCreator.of(block).with(map));
+        generator.blockStateOutput.accept(MultiVariantGenerator.dispatch(block).with(map));
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator generator) {
+    public void generateBlockStateModels(BlockModelGenerators generator) {
 
         LOGGER.info("Generating road line block/block-item models:");
         for (RoadLineBlock block : RoadLineBlock.ROAD_LINE_BLOCKS.values()) {
@@ -231,14 +230,14 @@ public class ItemModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
+    public void generateItemModels(ItemModelGenerators itemModelGenerator) {
         LOGGER.info("Generating item models");
-        itemModelGenerator.register(Items.VARIANT_SWITCHER_ITEM, Models.GENERATED);
-        itemModelGenerator.register(Items.SIGNAL_LINKER_ITEM, Models.GENERATED);
-        itemModelGenerator.register(Items.SLIDING_DOOR_BLOCK_ITEM, Models.GENERATED);
+        itemModelGenerator.generateFlatItem(Items.VARIANT_SWITCHER_ITEM, ModelTemplates.FLAT_ITEM);
+        itemModelGenerator.generateFlatItem(Items.SIGNAL_LINKER_ITEM, ModelTemplates.FLAT_ITEM);
+        itemModelGenerator.generateFlatItem(Items.SLIDING_DOOR_BLOCK_ITEM, ModelTemplates.FLAT_ITEM);
 
         for (Keycard card : Keycard.ITEMS) {
-            itemModelGenerator.register(card, Models.GENERATED);
+            itemModelGenerator.generateFlatItem(card, ModelTemplates.FLAT_ITEM);
         }
     }
 

@@ -3,16 +3,15 @@ package com.peter.cityblocks.gui;
 import org.lwjgl.glfw.GLFW;
 
 import com.peter.cityblocks.CityBlocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-
-public class CustomTextInput extends ClickableWidget {
+public class CustomTextInput extends AbstractWidget {
 
     protected String text = "";
     protected int maxLength = 16;
@@ -21,7 +20,7 @@ public class CustomTextInput extends ClickableWidget {
     protected int maxNum = 999;
     protected boolean changed = false;
 
-    protected TextRenderer textRenderer;
+    protected Font textRenderer;
 
     protected static int numInputs = 0;
 
@@ -32,31 +31,31 @@ public class CustomTextInput extends ClickableWidget {
     }
     
     public CustomTextInput(int x, int y, int maxLength, boolean numberOnly) {
-        super(x, y, maxLength * 8, 10, Text.of(""));
+        super(x, y, maxLength * 8, 10, Component.nullToEmpty(""));
         this.maxLength = maxLength;
         this.numberOnly = numberOnly;
-        textRenderer = MinecraftClient.getInstance().textRenderer;
+        textRenderer = Minecraft.getInstance().font;
         numInputs++;
         CityBlocks.debug("CustomTextInput #{}",numInputs);
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    protected void updateWidgetNarration(NarrationElementOutput builder) {
 
     }
 
     float t = 0;
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         int x = getX();
         int y = getY();
-        context.drawText(textRenderer, text, x, y, Colors.WHITE, true);
-        context.drawBorder(x - 2, y - 2, getWidth() + 4, getHeight() + 4, Colors.ALTERNATE_WHITE);
+        context.drawString(textRenderer, text, x, y, CommonColors.WHITE, true);
+        context.renderOutline(x - 2, y - 2, getWidth() + 4, getHeight() + 4, CommonColors.LIGHTER_GRAY);
 
         t += deltaTicks;
         if (isFocused()) {
             if (t % 20 <= 10) {
-                context.drawText(textRenderer, "_", x + (textRenderer.getWidth(text)) + 1, y, Colors.LIGHT_GRAY, true);
+                context.drawString(textRenderer, "_", x + (textRenderer.width(text)) + 1, y, CommonColors.LIGHT_GRAY, true);
             }
         }
     }
@@ -65,7 +64,7 @@ public class CustomTextInput extends ClickableWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY) && isFocused()) {
             setFocused(false);
-            playClickSound(MinecraftClient.getInstance().getSoundManager());
+            playButtonClickSound(Minecraft.getInstance().getSoundManager());
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }

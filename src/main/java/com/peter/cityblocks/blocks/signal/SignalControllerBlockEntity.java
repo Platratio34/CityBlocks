@@ -13,35 +13,35 @@ import java.util.Optional;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryWrapper.WrapperLookup;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup.Provider;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class SignalControllerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPosScreenPacket> {
 
     public static final String NAME = "signal_controller_entity";
-    public static final Identifier ID = CityBlocks.identifier(NAME);
+    public static final ResourceLocation ID = CityBlocks.identifier(NAME);
     public static final BlockEntityType<SignalControllerBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
-            Registries.BLOCK_ENTITY_TYPE, ID,
+            BuiltInRegistries.BLOCK_ENTITY_TYPE, ID,
             FabricBlockEntityTypeBuilder.create(SignalControllerBlockEntity::new, SignalControllerBlock.BLOCK).build());
 
     public static void register() {
@@ -76,16 +76,16 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
         }
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, SignalControllerBlockEntity blockEntity) {
+    public static void clientTick(Level world, BlockPos pos, BlockState state, SignalControllerBlockEntity blockEntity) {
         
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state,
+    public static void serverTick(Level world, BlockPos pos, BlockState state,
             SignalControllerBlockEntity blockEntity) {
         blockEntity.serverTick(world, pos, state);
     }
 
-    private void serverTick(World world, BlockPos pos, BlockState state) {
+    private void serverTick(Level world, BlockPos pos, BlockState state) {
         if (cycleMode == -1) {
             foreachHead((head) -> {
                 head.setStates(new LampState[] { LampState.SOLID_FLASH, LampState.OFF, LampState.OFF });
@@ -95,7 +95,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
             });
         } else if (cycleMode >= 0) {
             cTime++;
-            markDirty();
+            setChanged();
             if (cycles[cycleMode].cycleStates[cPhase].time <= cTime) {
                 cycle();
             }
@@ -117,13 +117,13 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
                 }
             });
             tempChanged = false;
-            markDirty();
+            setChanged();
         }
     }
 
-    public void cycle(PlayerEntity player) {
+    public void cycle(Player player) {
         cycle();
-        player.sendMessage(CityBlocks.translatableText("chat", "signal_controller.cycle",cPhase), false);
+        player.displayClientMessage(CityBlocks.translatableText("chat", "signal_controller.cycle",cPhase), false);
     }
 
     public void cycle() {
@@ -136,7 +136,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
             cPhase = 0;
         }
         updateHeads();
-        markDirty();
+        setChanged();
     }
 
     private void updateHeads() {
@@ -166,10 +166,10 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     private void foreachHead(SignalHeadForeach runnable) {
         ArrayList<BlockPos> toRemove = new ArrayList<BlockPos>();
         for (BlockPos pos : heads) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof SignalHeadBlockEntity)
                 runnable.run((SignalHeadBlockEntity)blockEntity);
-            else if (!world.getBlockState(pos).isOf(SignalHeadBlock.BLOCK)) {
+            else if (!level.getBlockState(pos).is(SignalHeadBlock.BLOCK)) {
                 toRemove.add(pos);
             } else {
                 CityBlocks.LOGGER.warn(
@@ -181,19 +181,19 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
             for (BlockPos blockPos : toRemove) {
                 heads.remove(blockPos);
                 CityBlocks.LOGGER.warn(
-                        String.format("Could not find signal head at %d,%d,%d, removing from list", pos.getX(),
-                                pos.getY(), pos.getZ()));
+                        String.format("Could not find signal head at %d,%d,%d, removing from list", worldPosition.getX(),
+                                worldPosition.getY(), worldPosition.getZ()));
             }
-            markDirty();
+            setChanged();
         }
     }
     private void foreachPedestrian(PedestrianSignalForeach runnable) {
         ArrayList<BlockPos> toRemove = new ArrayList<BlockPos>();
         for (BlockPos pos : pedestrians) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof PedestrianSignalBlockEntity)
                 runnable.run((PedestrianSignalBlockEntity)blockEntity);
-            else if (!world.getBlockState(pos).isOf(PedestrianSignalBlock.BLOCK)) {
+            else if (!level.getBlockState(pos).is(PedestrianSignalBlock.BLOCK)) {
                 toRemove.add(pos);
             } else {
                 CityBlocks.LOGGER.warn(
@@ -205,10 +205,10 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
             for (BlockPos blockPos : toRemove) {
                 pedestrians.remove(blockPos);
                 CityBlocks.LOGGER.warn(
-                        String.format("Could not find pedestrian signal at %d,%d,%d, removing from list", pos.getX(),
-                                pos.getY(), pos.getZ()));
+                        String.format("Could not find pedestrian signal at %d,%d,%d, removing from list", worldPosition.getX(),
+                                worldPosition.getY(), worldPosition.getZ()));
             }
-            markDirty();
+            setChanged();
         }
     }
 
@@ -220,45 +220,45 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     }
 
     @Override
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         return CityBlocks.translatableText("block", SignalControllerBlock.NAME);
     }
 
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new SignalControllerScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayerEntity)player));
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
+        return new SignalControllerScreenHandler(syncId, playerInventory, getScreenOpeningData((ServerPlayer)player));
     }
 
     @Override
-    public BlockPosScreenPacket getScreenOpeningData(ServerPlayerEntity player) {
-        return new BlockPosScreenPacket(pos);
+    public BlockPosScreenPacket getScreenOpeningData(ServerPlayer player) {
+        return new BlockPosScreenPacket(worldPosition);
     }
 
     public boolean link(BlockPos pos) {
-        BlockState blockState = world.getBlockState(pos);
-        if (blockState.isOf(SignalHeadBlock.BLOCK)) {
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.is(SignalHeadBlock.BLOCK)) {
             if (heads.contains(pos)) {
                 heads.remove(pos);
-                markDirty();
+                setChanged();
                 return false;
             }
             heads.add(pos);
-            markDirty();
+            setChanged();
 
-            SignalHeadBlockEntity head = (SignalHeadBlockEntity) world.getBlockEntity(pos);
+            SignalHeadBlockEntity head = (SignalHeadBlockEntity) level.getBlockEntity(pos);
             if (head != null) {
                 head.setStates(tempState[head.headId]);
             }
-        } else if (blockState.isOf(PedestrianSignalBlock.BLOCK)) {
+        } else if (blockState.is(PedestrianSignalBlock.BLOCK)) {
             if (pedestrians.contains(pos)) {
                 pedestrians.remove(pos);
-                markDirty();
+                setChanged();
                 return false;
             }
             pedestrians.add(pos);
-            markDirty();
+            setChanged();
 
-            PedestrianSignalBlockEntity signal = (PedestrianSignalBlockEntity) world.getBlockEntity(pos);
+            PedestrianSignalBlockEntity signal = (PedestrianSignalBlockEntity) level.getBlockEntity(pos);
             if (signal != null) {
                 LampState[] states = tempState[signal.headId];
                 if(states[0] != LampState.OFF) {
@@ -316,7 +316,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     }
 
     public void setCycleMode(int mode) {
-        if (world.isClient) {
+        if (level.isClientSide) {
             return;
         }
         cycleMode = mode;
@@ -337,7 +337,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
         } else if (cycleMode >= 0) {
             updateHeads();
         }
-        markDirty();
+        setChanged();
     }
 
     private static final String NBT_CYCLE_MODE = "cycleMode";
@@ -350,8 +350,8 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     private static final Codec<List<List<Integer>>> INT_ARR_ARR_CODEC = Codec.list(Codec.list(Codec.INT));
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
 
         view.putInt(NBT_CYCLE_MODE, cycleMode);
         view.putInt(NBT_C_PHASE, cPhase);
@@ -361,26 +361,26 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
         for (BlockPos head : heads) {
             headsList.add(List.of(head.getX(), head.getY(), head.getZ()));
         }
-        view.put(NBT_HEADS, INT_ARR_ARR_CODEC, headsList);
+        view.store(NBT_HEADS, INT_ARR_ARR_CODEC, headsList);
 
         List<List<Integer>> pedestriansList = new ArrayList<>();
         for (BlockPos signal : pedestrians) {
             pedestriansList.add(List.of(signal.getX(), signal.getY(), signal.getZ()));
         }
-        view.put(NBT_PEDESTRIAN, INT_ARR_ARR_CODEC, pedestriansList);
+        view.store(NBT_PEDESTRIAN, INT_ARR_ARR_CODEC, pedestriansList);
 
         List<List<Integer>> tempStateList = new ArrayList<>();
         for (int i = 0; i < tempState.length; i++) {
             tempStateList.add(LampState.toIntList(tempState[i]));
         }
-        view.put(NBT_TEMP_STATE, INT_ARR_ARR_CODEC, tempStateList);
+        view.store(NBT_TEMP_STATE, INT_ARR_ARR_CODEC, tempStateList);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
 
-        Optional<Integer> optMode = view.getOptionalInt(NBT_CYCLE_MODE);
+        Optional<Integer> optMode = view.getInt(NBT_CYCLE_MODE);
         if (optMode.isPresent()) {
             cycleMode = optMode.get();
             if (cycleMode >= cycles.length) {
@@ -389,14 +389,14 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
                 cycleMode = -1;
             }
         }
-        Optional<Integer> optPhase = view.getOptionalInt(NBT_C_PHASE);
+        Optional<Integer> optPhase = view.getInt(NBT_C_PHASE);
         if (optPhase.isPresent()) {
             cPhase = optPhase.get();
             if (cPhase < 0) {
                 cPhase = 0;
             }
         }
-        Optional<Integer> optTime = view.getOptionalInt(NBT_C_TIME);
+        Optional<Integer> optTime = view.getInt(NBT_C_TIME);
         if (optTime.isPresent()) {
             cTime = optTime.get();
         }
@@ -428,19 +428,19 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void markDirty() {
-        world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
-        super.markDirty();
+    public void setChanged() {
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        super.setChanged();
     }
 
     public LampState[] getStates(int head) {
@@ -454,7 +454,7 @@ public class SignalControllerBlockEntity extends BlockEntity implements Extended
             tempState[headId][i] = LampState.fromCode(state[i]);
         }
         tempChanged = true;
-        if (world.isClient) {
+        if (level.isClientSide) {
             System.err.println("thing-ing");
         }
     }
