@@ -23,8 +23,12 @@ public class CustomTextInput extends ClickableWidget {
 
     protected TextRenderer textRenderer;
 
+    protected static int numInputs = 0;
+
     public CustomTextInput(int x, int y, int maxLength) {
         this(x, y, maxLength, false);
+        numInputs++;
+        CityBlocks.debug("CustomTextInput #{}",numInputs);
     }
     
     public CustomTextInput(int x, int y, int maxLength, boolean numberOnly) {
@@ -32,7 +36,8 @@ public class CustomTextInput extends ClickableWidget {
         this.maxLength = maxLength;
         this.numberOnly = numberOnly;
         textRenderer = MinecraftClient.getInstance().textRenderer;
-        CityBlocks.debug("Creating custom text input");
+        numInputs++;
+        CityBlocks.debug("CustomTextInput #{}",numInputs);
     }
 
     @Override

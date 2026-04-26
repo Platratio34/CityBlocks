@@ -85,6 +85,7 @@ public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<Signal
         int nLamps = entity.getLampCount();
 
         SpriteIdentifier[] sprites = new SpriteIdentifier[nLamps];
+        boolean[] lampOn = new boolean[nLamps];
         for (int i = 0; i < nLamps; i++) {
             LampState lampState = entity.getState(i);
             if (lampState.flash) {
@@ -100,22 +101,23 @@ public class SignalHeadBlockEntityRenderer implements BlockEntityRenderer<Signal
                     }
                 }
             }
+            lampOn[i] = lampState != LampState.OFF;
             sprites[i] = LAMP_SPRITE_IDS[entity.getColor(i).code][lampState.code];
 
         }
 
         if (nLamps == 3) {
             drawLamp(vertexProvider, matrices, sprites[0], 6.5f, 12.0f, 3.0F,
-                    3, 3, 0, facing);
-
+                3, 3, 0, facing);
+        
             drawLamp(vertexProvider, matrices, sprites[1], 6.5f, 6.5f, 3.0f,
-                    3, 3, 0, facing);
-
+                3, 3, 0, facing);
+        
             drawLamp(vertexProvider, matrices, sprites[2], 6.5f, 1.0f, 3.0f,
-                    3, 3, 0, facing);
+                3, 3, 0, facing);
         } else if (nLamps == 1) {
             drawLamp(vertexProvider, matrices, sprites[0], 6.5f, 6.5f, 3.0F,
-                    3, 3, 0, facing);
+                3, 3, 0, facing);
         }
 
         matrices.pop();
